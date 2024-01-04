@@ -3,4 +3,4 @@
 * Winter 2023
 # Package List
 This repository consists of several ROS packages
-<!-- - <PACKAGE1> - <one sentence description> -->
+- `nuturtle_description` - Visualize the nuturtle
