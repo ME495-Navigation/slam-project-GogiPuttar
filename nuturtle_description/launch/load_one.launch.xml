@@ -7,5 +7,5 @@
     </node>
   
     <!-- rviz will enable us to see the robot -->
-    <node pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share nuturtle_description)/rviz/view_ddrive_odom.rviz"/>
+    <node pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share nuturtle_description)/rviz/burger.rviz"/>
 </launch>
