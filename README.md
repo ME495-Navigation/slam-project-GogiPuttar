@@ -3,4 +3,4 @@
 * Winter 2023
 # Package List
 This repository consists of several ROS packages
-- `nuturtle_description` - 3D models of the TurtleBot3 for simulation and visualization
+- `nuturtle_description` - 3D models of the nuturtle for simulation and visualization
