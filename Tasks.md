@@ -9,7 +9,7 @@
 # Task A
 1. ✅ Task A.1
 2. ✅ Task A.2
-3. ⬜ Task A.3
+3. ✅ Task A.3
 3. ⬜ Task A.4
 3. ⬜ Task A.5
 3. ⬜ Task A.6
