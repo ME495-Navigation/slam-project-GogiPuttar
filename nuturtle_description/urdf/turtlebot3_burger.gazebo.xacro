@@ -48,7 +48,7 @@
   </gazebo>
 
   <gazebo>
-    <plugin name="turtlebot3_burger_controller" filename="libgazebo_ros_diff_drive.so">
+    <!-- <plugin name="turtlebot3_burger_controller" filename="libgazebo_ros_diff_drive.so">
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
       <odometryFrame>odom</odometryFrame>
@@ -67,7 +67,19 @@
       <wheelAcceleration>1</wheelAcceleration>
       <wheelTorque>10</wheelTorque>
       <rosDebugLevel>na</rosDebugLevel>
-    </plugin>
+    </plugin> -->
+
+    <!-- <plugin
+        filename="libignition-gazebo-diff-drive-system.so"
+        name="ignition::gazebo::systems::DiffDrive">
+        <left_joint>wheel_left_joint</left_joint>
+        <right_joint>wheel_right_joint</right_joint>
+        <wheel_separation>0.160</wheel_separation>
+        <wheel_radius>0.033</wheel_radius>
+        <odom_publish_frequency>30</odom_publish_frequency>
+        <frame_id>odom</frame_id>
+        <child_frame_id>base_footprint</child_frame_id>
+      </plugin> -->
   </gazebo>
 
   <gazebo>
