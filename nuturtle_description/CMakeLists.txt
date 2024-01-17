@@ -35,7 +35,7 @@ install(DIRECTORY
 )
 
 install(DIRECTORY
-  rviz
+  config
   DESTINATION share/${PROJECT_NAME}/
 )
 
