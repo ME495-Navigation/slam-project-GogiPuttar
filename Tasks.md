@@ -12,7 +12,7 @@
 3. ✅ Task A.3
 3. ✅ Task A.4
 3. ✅ Task A.5
-3. ⬜ Task A.6
+3. ✅ Task A.6
 
 # Task B
 1. ⬜ Task B.1
