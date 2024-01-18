@@ -17,13 +17,13 @@ def generate_launch_description():
         DeclareLaunchArgument(name="use_rviz", default_value="true",
                               description="true (default): start rviz, otherwise don't start rviz"),
 
-        DeclareLaunchArgument(name="color", default_value="purple",
+        DeclareLaunchArgument(name="color", default_value="red",
                               description="Color of nuturtle's body",
                               choices=["red", "green", "blue", "purple",""]),
 
         SetLaunchConfiguration(name="rviz_color",
                                value=[FindPackageShare("nuturtle_description"),
-                                      TextSubstitution(text="/config/basic"),
+                                      TextSubstitution(text="/config/basic_"),
                                       LaunchConfiguration("color"),
                                       TextSubstitution(text=".rviz")]),
 
@@ -43,7 +43,7 @@ def generate_launch_description():
             namespace=LaunchConfiguration("color"),
             parameters=[
                 { 
-                    "frame_prefix":
+                  "frame_prefix":
                     PathJoinSubstitution([(LaunchConfiguration('color')), '']),
                   "robot_description" :
                  Command([TextSubstitution(text="xacro "),
@@ -54,12 +54,13 @@ def generate_launch_description():
             ]
             ),
         Node(
+            
             package="rviz2",
             executable="rviz2",
             namespace=LaunchConfiguration("color"),
-            arguments=["-d", 
+            arguments=["-d", LaunchConfiguration("rviz_color"),
                        PathJoinSubstitution(
-                           [FindPackageShare("nuturtle_description"), "config", "basic_purple.rviz"])],
+                           [FindPackageShare("nuturtle_description"), LaunchConfiguration("rviz_color")])],
             condition=LaunchConfigurationEquals("use_rviz", "true")
             ),
 
