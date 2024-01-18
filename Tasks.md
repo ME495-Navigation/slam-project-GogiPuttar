@@ -13,6 +13,7 @@
 3. ✅ Task A.4
 3. ✅ Task A.5
 3. ✅ Task A.6
+- Need to resolve python launchfile warnings ⬜
 
 # ⬜ Task B
 1. ⬜ Task B.1
