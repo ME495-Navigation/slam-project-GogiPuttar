@@ -4,9 +4,9 @@ Starts all the nodes to visualize a robot in rviz
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import DeclareLaunchArgument, SetLaunchConfiguration, Shutdown
-from launch.substitutions import Command, PathJoinSubstitution, TextSubstitution, LaunchConfiguration, EqualsSubstitution
-from launch.conditions import IfCondition, LaunchConfigurationEquals
+from launch.actions import DeclareLaunchArgument, SetLaunchConfiguration
+from launch.substitutions import Command, PathJoinSubstitution, TextSubstitution, LaunchConfiguration
+from launch.conditions import LaunchConfigurationEquals
 from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
