@@ -6,7 +6,7 @@
 1. ✅Task 0.3
 1. ✅ Task 0.4
 
-# Task A
+# ✅ Task A
 1. ✅ Task A.1
 2. ✅ Task A.2
 3. ✅ Task A.3
@@ -14,7 +14,7 @@
 3. ✅ Task A.5
 3. ✅ Task A.6
 
-# Task B
+# ⬜ Task B
 1. ⬜ Task B.1
 1. ⬜ Task B.2
 1. ⬜ Task B.3
@@ -22,7 +22,7 @@
 1. ⬜ Task B.5
 1. ⬜ Task B.6
 
-# Task C 
+# ⬜ Task C 
 1. ⬜ Task C.1
 1. ⬜ Task C.2
 1. ⬜ Task C.3
