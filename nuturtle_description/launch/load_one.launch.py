@@ -19,7 +19,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(name="color", default_value="purple",
                               description="Color of nuturtle's body",
-                              choices=["red", "green", "blue", "purple"]),
+                              choices=["red", "green", "blue", "purple",""]),
 
         SetLaunchConfiguration(name="rviz_color",
                                value=[FindPackageShare("nuturtle_description"),
