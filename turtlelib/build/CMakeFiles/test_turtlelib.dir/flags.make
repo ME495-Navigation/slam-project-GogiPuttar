@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = 
+CXX_INCLUDES = -I/home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/include
 
-CXX_FLAGS = 
+CXX_FLAGS = -Wall -Wextra -pedantic
 

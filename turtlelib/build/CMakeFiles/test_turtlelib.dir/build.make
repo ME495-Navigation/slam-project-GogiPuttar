@@ -93,6 +93,7 @@ test_turtlelib_EXTERNAL_OBJECTS =
 test_turtlelib: CMakeFiles/test_turtlelib.dir/tests/test_geometry2d.cpp.o
 test_turtlelib: CMakeFiles/test_turtlelib.dir/build.make
 test_turtlelib: /usr/local/lib/libCatch2Main.a
+test_turtlelib: libturtlelib.a
 test_turtlelib: /usr/local/lib/libCatch2.a
 test_turtlelib: CMakeFiles/test_turtlelib.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable test_turtlelib"

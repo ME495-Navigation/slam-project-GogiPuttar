@@ -56,6 +56,7 @@ namespace turtlelib
     static_assert(almost_equal(rad2deg(0.0), 0.0), "rad2deg) failed");
 
     static_assert(almost_equal(deg2rad(rad2deg(2.1)), 2.1), "deg2rad failed");
+    
 
     /// \brief a 2-Dimensional Point
     struct Point2D

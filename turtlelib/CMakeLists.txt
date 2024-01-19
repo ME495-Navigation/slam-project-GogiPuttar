@@ -12,7 +12,7 @@ project(turtlelib)
 # That is defined to reference the library
 # here: we find the eigen library as per the instruction
 # https://eigen.tuxfamily.org/dox/TopicCMakeGuide.html
-find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+# find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
 # Create a library.  Can specify if it is shared or static but usually
 # you don't need or want to.
@@ -101,7 +101,7 @@ if(BUILD_TESTING)
 
     # A test is just an executable that is linked against the unit testing library
     add_executable(test_turtlelib tests/test_geometry2d.cpp)
-    target_link_libraries(test_turtlelib Catch2::Catch2WithMain) # AnyOtherLibrariesAsNeeded)
+    target_link_libraries(test_turtlelib Catch2::Catch2WithMain turtlelib) # AnyOtherLibrariesAsNeeded)
 
     # register the test with CTest, telling it what executable to run
     add_test(Name tests_for_turtlelib COMMAND test_turtlelib)
