@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/test_turtlelib.dir/tests/test_geometry2d.cpp.o"
   "CMakeFiles/test_turtlelib.dir/tests/test_geometry2d.cpp.o.d"
+  "CMakeFiles/test_turtlelib.dir/tests/test_se2d.cpp.o"
+  "CMakeFiles/test_turtlelib.dir/tests/test_se2d.cpp.o.d"
   "test_turtlelib"
   "test_turtlelib.pdb"
 )

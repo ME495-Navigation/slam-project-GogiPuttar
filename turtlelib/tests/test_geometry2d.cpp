@@ -5,7 +5,6 @@
 #include "turtlelib/geometry2d.hpp"
 
 using turtlelib::normalize_angle;
-using turtlelib::operator-;
 using turtlelib::Point2D;
 using turtlelib::Vector2D;
 using turtlelib::PI;

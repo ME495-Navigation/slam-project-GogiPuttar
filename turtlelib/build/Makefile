@@ -585,6 +585,30 @@ src/geometry2d.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/geometry2d.cpp.s
 .PHONY : src/geometry2d.cpp.s
 
+src/se2d.o: src/se2d.cpp.o
+.PHONY : src/se2d.o
+
+# target to build an object file
+src/se2d.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/se2d.cpp.o
+.PHONY : src/se2d.cpp.o
+
+src/se2d.i: src/se2d.cpp.i
+.PHONY : src/se2d.i
+
+# target to preprocess a source file
+src/se2d.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/se2d.cpp.i
+.PHONY : src/se2d.cpp.i
+
+src/se2d.s: src/se2d.cpp.s
+.PHONY : src/se2d.s
+
+# target to generate assembly for a file
+src/se2d.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/se2d.cpp.s
+.PHONY : src/se2d.cpp.s
+
 tests/test_geometry2d.o: tests/test_geometry2d.cpp.o
 .PHONY : tests/test_geometry2d.o
 
@@ -608,6 +632,30 @@ tests/test_geometry2d.s: tests/test_geometry2d.cpp.s
 tests/test_geometry2d.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_geometry2d.cpp.s
 .PHONY : tests/test_geometry2d.cpp.s
+
+tests/test_se2d.o: tests/test_se2d.cpp.o
+.PHONY : tests/test_se2d.o
+
+# target to build an object file
+tests/test_se2d.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_se2d.cpp.o
+.PHONY : tests/test_se2d.cpp.o
+
+tests/test_se2d.i: tests/test_se2d.cpp.i
+.PHONY : tests/test_se2d.i
+
+# target to preprocess a source file
+tests/test_se2d.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_se2d.cpp.i
+.PHONY : tests/test_se2d.cpp.i
+
+tests/test_se2d.s: tests/test_se2d.cpp.s
+.PHONY : tests/test_se2d.s
+
+# target to generate assembly for a file
+tests/test_se2d.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_se2d.cpp.s
+.PHONY : tests/test_se2d.cpp.s
 
 # Help Target
 help:
@@ -655,9 +703,15 @@ help:
 	@echo "... src/geometry2d.o"
 	@echo "... src/geometry2d.i"
 	@echo "... src/geometry2d.s"
+	@echo "... src/se2d.o"
+	@echo "... src/se2d.i"
+	@echo "... src/se2d.s"
 	@echo "... tests/test_geometry2d.o"
 	@echo "... tests/test_geometry2d.i"
 	@echo "... tests/test_geometry2d.s"
+	@echo "... tests/test_se2d.o"
+	@echo "... tests/test_se2d.i"
+	@echo "... tests/test_se2d.s"
 .PHONY : help
 
 

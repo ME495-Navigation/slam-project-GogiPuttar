@@ -18,11 +18,12 @@
 # ⬜ Task B
 1. ✅ Task B.1
 1. ✅ Task B.2
-1. ⬜ Task B.3
-1. ⬜ Task B.4
+1. ✅ Task B.3
+1. ✅ Task B.4
 1. ⬜ Task B.5
 1. ⬜ Task B.6
 - Need to confirm if doxygen works
+- Need to resolve colcon test Unable to find executable: tests_for_turtlelib
 
 # ⬜ Task C 
 1. ⬜ Task C.1
