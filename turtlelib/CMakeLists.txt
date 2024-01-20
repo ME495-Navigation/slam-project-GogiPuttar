@@ -43,14 +43,14 @@ target_compile_features(turtlelib PUBLIC cxx_std_17)
 
 # Create an executable from the following source code files
 # The Name of the executable creates a cmake "target"
-# add_executable(frame_main src/frame_main.cpp)
+add_executable(frame_main src/frame_main.cpp)
 
 # Use target_link_libraries to add dependencies to a "target"
 # (e.g., a library or executable)
 # This will automatically add all required library files
 # that need to be linked
 # and paths to th locations of header files
-# target_link_libraries(frame_main turtlelib)
+target_link_libraries(frame_main turtlelib)
 
 # install the include files by copying the whole include directory
 install(DIRECTORY include/turtlelib DESTINATION include)
@@ -59,7 +59,7 @@ install(DIRECTORY include/turtlelib DESTINATION include)
 # Also create CMake Export called projet_name-targets
 # The CMake Export contains files that allow other CMake projects
 # to find this project. It must be installed separately.
-install(TARGETS turtlelib
+install(TARGETS frame_main turtlelib
         EXPORT turtlelib-targets)
 
 # The project_name-targets created by install(TARGETS) needs to be installed.

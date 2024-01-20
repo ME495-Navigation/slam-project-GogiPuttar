@@ -19,7 +19,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 set(_cmake_targets_defined "")
 set(_cmake_targets_not_defined "")
 set(_cmake_expected_targets "")
-foreach(_cmake_expected_target IN ITEMS turtlelib::turtlelib)
+foreach(_cmake_expected_target IN ITEMS turtlelib::frame_main turtlelib::turtlelib)
   list(APPEND _cmake_expected_targets "${_cmake_expected_target}")
   if(TARGET "${_cmake_expected_target}")
     list(APPEND _cmake_targets_defined "${_cmake_expected_target}")
@@ -54,6 +54,9 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 if(_IMPORT_PREFIX STREQUAL "/")
   set(_IMPORT_PREFIX "")
 endif()
+
+# Create imported target turtlelib::frame_main
+add_executable(turtlelib::frame_main IMPORTED)
 
 # Create imported target turtlelib::turtlelib
 add_library(turtlelib::turtlelib STATIC IMPORTED)

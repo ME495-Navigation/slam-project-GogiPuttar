@@ -153,7 +153,7 @@ namespace turtlelib
     // Print SE(2) Transform.
     std::ostream & operator<<(std::ostream & os, const Transform2D & tf)
     {
-        return os << "deg: " << tf.rotation() << " x: " << tf.translation().x << " y: " << tf.translation().y;
+        return os << "deg: " << rad2deg(tf.rotation()) << " x: " << tf.translation().x << " y: " << tf.translation().y;
     }
 
     // Read SE(2) Transform.
@@ -167,7 +167,7 @@ namespace turtlelib
         if(next == 'd')
         {
             is >> trash_1; //remove deg:
-            is >> rotationAngle; //assign deg value to rotation
+            is >> rotationAngle; //assign rad value to rotation
             is >> trash_2; //remove x:
             is >> translationVector.x; //assign x value to translation.x
             is >> trash_3; //remove y:

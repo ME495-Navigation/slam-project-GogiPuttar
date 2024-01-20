@@ -163,14 +163,15 @@ TEST_CASE( "SE(2) composition operator works", "[oprator *=]")
 TEST_CASE( "Stream insertion operator << works for SE(2) transform", "[operator<<]") 
 {
     Vector2D displacement{6.9, 69.6};
-    double angle{0.69};
+    double angle{69};
     Transform2D tf{displacement, angle};
 
-    std::string str = "deg: 0.69 x: 6.9 y: 69.6";
+    std::stringstream lsstr, rsstr;
 
-    std::stringstream sstr;
-    sstr << tf;
-    REQUIRE(sstr.str() == str);
+    lsstr << tf;
+    rsstr << "deg: " << rad2deg(normalize_angle(angle)) << " x: 6.9 y: 69.6";
+
+    REQUIRE(lsstr.str() == rsstr.str());
 }
 
 TEST_CASE( "Stream extraction works SE(2) transform", "[operator>>]") // Adapted from Abhishek Sankar

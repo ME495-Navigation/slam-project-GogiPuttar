@@ -185,6 +185,19 @@ turtlelib/fast:
 .PHONY : turtlelib/fast
 
 #=============================================================================
+# Target rules for targets named frame_main
+
+# Build rule for target.
+frame_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 frame_main
+.PHONY : frame_main
+
+# fast build rule for target.
+frame_main/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/frame_main.dir/build.make CMakeFiles/frame_main.dir/build
+.PHONY : frame_main/fast
+
+#=============================================================================
 # Target rules for targets named Experimental
 
 # Build rule for target.
@@ -561,6 +574,30 @@ test_turtlelib/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/build
 .PHONY : test_turtlelib/fast
 
+src/frame_main.o: src/frame_main.cpp.o
+.PHONY : src/frame_main.o
+
+# target to build an object file
+src/frame_main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/frame_main.dir/build.make CMakeFiles/frame_main.dir/src/frame_main.cpp.o
+.PHONY : src/frame_main.cpp.o
+
+src/frame_main.i: src/frame_main.cpp.i
+.PHONY : src/frame_main.i
+
+# target to preprocess a source file
+src/frame_main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/frame_main.dir/build.make CMakeFiles/frame_main.dir/src/frame_main.cpp.i
+.PHONY : src/frame_main.cpp.i
+
+src/frame_main.s: src/frame_main.cpp.s
+.PHONY : src/frame_main.s
+
+# target to generate assembly for a file
+src/frame_main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/frame_main.dir/build.make CMakeFiles/frame_main.dir/src/frame_main.cpp.s
+.PHONY : src/frame_main.cpp.s
+
 src/geometry2d.o: src/geometry2d.cpp.o
 .PHONY : src/geometry2d.o
 
@@ -698,8 +735,12 @@ help:
 	@echo "... NightlySubmit"
 	@echo "... NightlyTest"
 	@echo "... NightlyUpdate"
+	@echo "... frame_main"
 	@echo "... test_turtlelib"
 	@echo "... turtlelib"
+	@echo "... src/frame_main.o"
+	@echo "... src/frame_main.i"
+	@echo "... src/frame_main.s"
 	@echo "... src/geometry2d.o"
 	@echo "... src/geometry2d.i"
 	@echo "... src/geometry2d.s"
