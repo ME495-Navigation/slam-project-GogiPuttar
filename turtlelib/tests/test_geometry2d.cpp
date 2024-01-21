@@ -5,6 +5,7 @@
 #include "turtlelib/geometry2d.hpp"
 
 using turtlelib::normalize_angle;
+using turtlelib::normalizeVector;
 using turtlelib::Point2D;
 using turtlelib::Vector2D;
 using turtlelib::PI;
@@ -100,4 +101,16 @@ TEST_CASE( "Stream extraction works for 2d vector", "[operator>>]") // Adapted f
     REQUIRE( vec_1.y == 4.3 );
     REQUIRE( vec_2.x == 9.5 );
     REQUIRE( vec_2.y == 1.32 );
+}
+
+TEST_CASE( "Vector normalization works", "[operator+]") 
+{
+    Vector2D v{-69, 4.20};
+
+    Vector2D v_hat = normalizeVector(v);
+
+    // Check x.
+    REQUIRE_THAT(v_hat.x, WithinAbs(-0.998153,1.0e-6));
+    // Check y.
+    REQUIRE_THAT(v_hat.y, WithinAbs(0.0607571,1.0e-6));
 }

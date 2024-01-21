@@ -646,6 +646,30 @@ src/se2d.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/se2d.cpp.s
 .PHONY : src/se2d.cpp.s
 
+src/svg.o: src/svg.cpp.o
+.PHONY : src/svg.o
+
+# target to build an object file
+src/svg.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/svg.cpp.o
+.PHONY : src/svg.cpp.o
+
+src/svg.i: src/svg.cpp.i
+.PHONY : src/svg.i
+
+# target to preprocess a source file
+src/svg.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/svg.cpp.i
+.PHONY : src/svg.cpp.i
+
+src/svg.s: src/svg.cpp.s
+.PHONY : src/svg.s
+
+# target to generate assembly for a file
+src/svg.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/svg.cpp.s
+.PHONY : src/svg.cpp.s
+
 tests/test_geometry2d.o: tests/test_geometry2d.cpp.o
 .PHONY : tests/test_geometry2d.o
 
@@ -693,6 +717,30 @@ tests/test_se2d.s: tests/test_se2d.cpp.s
 tests/test_se2d.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_se2d.cpp.s
 .PHONY : tests/test_se2d.cpp.s
+
+tests/test_svg.o: tests/test_svg.cpp.o
+.PHONY : tests/test_svg.o
+
+# target to build an object file
+tests/test_svg.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_svg.cpp.o
+.PHONY : tests/test_svg.cpp.o
+
+tests/test_svg.i: tests/test_svg.cpp.i
+.PHONY : tests/test_svg.i
+
+# target to preprocess a source file
+tests/test_svg.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_svg.cpp.i
+.PHONY : tests/test_svg.cpp.i
+
+tests/test_svg.s: tests/test_svg.cpp.s
+.PHONY : tests/test_svg.s
+
+# target to generate assembly for a file
+tests/test_svg.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_svg.cpp.s
+.PHONY : tests/test_svg.cpp.s
 
 # Help Target
 help:
@@ -747,12 +795,18 @@ help:
 	@echo "... src/se2d.o"
 	@echo "... src/se2d.i"
 	@echo "... src/se2d.s"
+	@echo "... src/svg.o"
+	@echo "... src/svg.i"
+	@echo "... src/svg.s"
 	@echo "... tests/test_geometry2d.o"
 	@echo "... tests/test_geometry2d.i"
 	@echo "... tests/test_geometry2d.s"
 	@echo "... tests/test_se2d.o"
 	@echo "... tests/test_se2d.i"
 	@echo "... tests/test_se2d.s"
+	@echo "... tests/test_svg.o"
+	@echo "... tests/test_svg.i"
+	@echo "... tests/test_svg.s"
 .PHONY : help
 
 

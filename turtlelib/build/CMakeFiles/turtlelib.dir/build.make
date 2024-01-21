@@ -97,19 +97,35 @@ CMakeFiles/turtlelib.dir/src/se2d.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/turtlelib.dir/src/se2d.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/src/se2d.cpp -o CMakeFiles/turtlelib.dir/src/se2d.cpp.s
 
+CMakeFiles/turtlelib.dir/src/svg.cpp.o: CMakeFiles/turtlelib.dir/flags.make
+CMakeFiles/turtlelib.dir/src/svg.cpp.o: /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/src/svg.cpp
+CMakeFiles/turtlelib.dir/src/svg.cpp.o: CMakeFiles/turtlelib.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/turtlelib.dir/src/svg.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/turtlelib.dir/src/svg.cpp.o -MF CMakeFiles/turtlelib.dir/src/svg.cpp.o.d -o CMakeFiles/turtlelib.dir/src/svg.cpp.o -c /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/src/svg.cpp
+
+CMakeFiles/turtlelib.dir/src/svg.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/turtlelib.dir/src/svg.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/src/svg.cpp > CMakeFiles/turtlelib.dir/src/svg.cpp.i
+
+CMakeFiles/turtlelib.dir/src/svg.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/turtlelib.dir/src/svg.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/src/svg.cpp -o CMakeFiles/turtlelib.dir/src/svg.cpp.s
+
 # Object files for target turtlelib
 turtlelib_OBJECTS = \
 "CMakeFiles/turtlelib.dir/src/geometry2d.cpp.o" \
-"CMakeFiles/turtlelib.dir/src/se2d.cpp.o"
+"CMakeFiles/turtlelib.dir/src/se2d.cpp.o" \
+"CMakeFiles/turtlelib.dir/src/svg.cpp.o"
 
 # External object files for target turtlelib
 turtlelib_EXTERNAL_OBJECTS =
 
 libturtlelib.a: CMakeFiles/turtlelib.dir/src/geometry2d.cpp.o
 libturtlelib.a: CMakeFiles/turtlelib.dir/src/se2d.cpp.o
+libturtlelib.a: CMakeFiles/turtlelib.dir/src/svg.cpp.o
 libturtlelib.a: CMakeFiles/turtlelib.dir/build.make
 libturtlelib.a: CMakeFiles/turtlelib.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX static library libturtlelib.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library libturtlelib.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/turtlelib.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/turtlelib.dir/link.txt --verbose=$(VERBOSE)
 

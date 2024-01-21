@@ -1,6 +1,8 @@
-CMakeFiles/frame_main.dir/src/frame_main.cpp.o: \
- /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/src/frame_main.cpp \
- /usr/include/stdc-predef.h /usr/include/c++/11/iostream \
+CMakeFiles/test_turtlelib.dir/tests/test_svg.cpp.o: \
+ /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/tests/test_svg.cpp \
+ /usr/include/stdc-predef.h /usr/include/c++/11/sstream \
+ /usr/include/c++/11/istream /usr/include/c++/11/ios \
+ /usr/include/c++/11/iosfwd \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -11,8 +13,7 @@ CMakeFiles/frame_main.dir/src/frame_main.cpp.o: \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/cpu_defines.h \
- /usr/include/c++/11/pstl/pstl_config.h /usr/include/c++/11/ostream \
- /usr/include/c++/11/ios /usr/include/c++/11/iosfwd \
+ /usr/include/c++/11/pstl/pstl_config.h \
  /usr/include/c++/11/bits/stringfwd.h \
  /usr/include/c++/11/bits/memoryfwd.h /usr/include/c++/11/bits/postypes.h \
  /usr/include/c++/11/cwchar /usr/include/wchar.h \
@@ -143,40 +144,67 @@ CMakeFiles/frame_main.dir/src/frame_main.cpp.o: \
  /usr/include/c++/11/bits/streambuf_iterator.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/ctype_inline.h \
  /usr/include/c++/11/bits/locale_facets.tcc \
- /usr/include/c++/11/bits/basic_ios.tcc \
- /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
+ /usr/include/c++/11/bits/basic_ios.tcc /usr/include/c++/11/ostream \
+ /usr/include/c++/11/bits/ostream.tcc \
  /usr/include/c++/11/bits/istream.tcc \
- /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/include/turtlelib/geometry2d.hpp \
- /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/include/turtlelib/se2d.hpp \
- /usr/include/c++/11/cmath /usr/include/math.h \
- /usr/include/x86_64-linux-gnu/bits/math-vector.h \
- /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
- /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
- /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
- /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
- /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /usr/include/c++/11/bits/specfun.h /usr/include/c++/11/limits \
- /usr/include/c++/11/tr1/gamma.tcc \
- /usr/include/c++/11/tr1/special_function_util.h \
- /usr/include/c++/11/tr1/bessel_function.tcc \
- /usr/include/c++/11/tr1/beta_function.tcc \
- /usr/include/c++/11/tr1/ell_integral.tcc \
- /usr/include/c++/11/tr1/exp_integral.tcc \
- /usr/include/c++/11/tr1/hypergeometric.tcc \
- /usr/include/c++/11/tr1/legendre_function.tcc \
- /usr/include/c++/11/tr1/modified_bessel_func.tcc \
- /usr/include/c++/11/tr1/poly_hermite.tcc \
- /usr/include/c++/11/tr1/poly_laguerre.tcc \
- /usr/include/c++/11/tr1/riemann_zeta.tcc \
- /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/include/turtlelib/svg.hpp \
- /usr/include/c++/11/fstream /usr/include/c++/11/bits/codecvt.h \
- /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
- /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
- /usr/include/c++/11/bits/fstream.tcc /usr/include/c++/11/vector \
+ /usr/include/c++/11/bits/sstream.tcc \
+ /usr/local/include/catch2/catch_test_macros.hpp \
+ /usr/local/include/catch2/internal/catch_test_macro_impl.hpp \
+ /usr/local/include/catch2/catch_user_config.hpp \
+ /usr/local/include/catch2/internal/catch_assertion_handler.hpp \
+ /usr/local/include/catch2/catch_assertion_info.hpp \
+ /usr/local/include/catch2/internal/catch_result_type.hpp \
+ /usr/local/include/catch2/internal/catch_source_line_info.hpp \
+ /usr/include/c++/11/cstddef \
+ /usr/local/include/catch2/internal/catch_stringref.hpp \
+ /usr/include/c++/11/cassert /usr/include/assert.h \
+ /usr/include/c++/11/cstring /usr/include/string.h /usr/include/strings.h \
+ /usr/local/include/catch2/internal/catch_decomposer.hpp \
+ /usr/local/include/catch2/catch_tostring.hpp /usr/include/c++/11/vector \
  /usr/include/c++/11/bits/stl_uninitialized.h \
  /usr/include/c++/11/bits/stl_vector.h \
  /usr/include/c++/11/bits/stl_bvector.h \
- /usr/include/c++/11/bits/vector.tcc
+ /usr/include/c++/11/bits/vector.tcc \
+ /usr/local/include/catch2/internal/catch_compiler_capabilities.hpp \
+ /usr/local/include/catch2/internal/catch_platform.hpp \
+ /usr/local/include/catch2/internal/catch_config_wchar.hpp \
+ /usr/local/include/catch2/internal/catch_reusable_string_stream.hpp \
+ /usr/local/include/catch2/internal/catch_noncopyable.hpp \
+ /usr/local/include/catch2/internal/catch_void_type.hpp \
+ /usr/local/include/catch2/interfaces/catch_interfaces_enum_values_registry.hpp \
+ /usr/include/c++/11/ctime /usr/include/c++/11/ratio \
+ /usr/include/c++/11/chrono /usr/include/c++/11/limits \
+ /usr/include/c++/11/bits/parse_numbers.h \
+ /usr/local/include/catch2/interfaces/catch_interfaces_registry_hub.hpp \
+ /usr/local/include/catch2/internal/catch_unique_ptr.hpp \
+ /usr/local/include/catch2/internal/catch_move_and_forward.hpp \
+ /usr/local/include/catch2/internal/catch_compare_traits.hpp \
+ /usr/local/include/catch2/internal/catch_test_failure_exception.hpp \
+ /usr/local/include/catch2/internal/catch_logical_traits.hpp \
+ /usr/local/include/catch2/interfaces/catch_interfaces_capture.hpp \
+ /usr/local/include/catch2/benchmark/detail/catch_benchmark_stats_fwd.hpp \
+ /usr/local/include/catch2/benchmark/catch_clock.hpp \
+ /usr/local/include/catch2/internal/catch_preprocessor_internal_stringify.hpp \
+ /usr/local/include/catch2/catch_message.hpp \
+ /usr/local/include/catch2/internal/catch_config_prefix_messages.hpp \
+ /usr/local/include/catch2/internal/catch_stream_end_stop.hpp \
+ /usr/local/include/catch2/internal/catch_message_info.hpp \
+ /usr/local/include/catch2/internal/catch_section.hpp \
+ /usr/local/include/catch2/internal/catch_config_static_analysis_support.hpp \
+ /usr/local/include/catch2/catch_section_info.hpp \
+ /usr/local/include/catch2/catch_totals.hpp \
+ /usr/local/include/catch2/catch_timer.hpp \
+ /usr/local/include/catch2/internal/catch_unique_name.hpp \
+ /usr/local/include/catch2/internal/catch_config_counter.hpp \
+ /usr/local/include/catch2/internal/catch_test_registry.hpp \
+ /usr/local/include/catch2/interfaces/catch_interfaces_test_invoker.hpp \
+ /usr/local/include/catch2/internal/catch_preprocessor_remove_parens.hpp \
+ /usr/local/include/catch2/matchers/catch_matchers_floating_point.hpp \
+ /usr/local/include/catch2/matchers/catch_matchers.hpp \
+ /usr/local/include/catch2/matchers/internal/catch_matchers_impl.hpp \
+ /home/adityanair/slam/hw1/slam-project-GogiPuttar/turtlelib/include/turtlelib/svg.hpp \
+ /usr/include/c++/11/iostream /usr/include/c++/11/fstream \
+ /usr/include/c++/11/bits/codecvt.h \
+ /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
+ /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
+ /usr/include/c++/11/bits/fstream.tcc

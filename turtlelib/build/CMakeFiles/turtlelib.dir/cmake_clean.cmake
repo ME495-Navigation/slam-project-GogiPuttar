@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/turtlelib.dir/src/geometry2d.cpp.o.d"
   "CMakeFiles/turtlelib.dir/src/se2d.cpp.o"
   "CMakeFiles/turtlelib.dir/src/se2d.cpp.o.d"
+  "CMakeFiles/turtlelib.dir/src/svg.cpp.o"
+  "CMakeFiles/turtlelib.dir/src/svg.cpp.o.d"
   "libturtlelib.a"
   "libturtlelib.pdb"
 )
