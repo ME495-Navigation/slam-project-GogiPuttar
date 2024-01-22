@@ -21,6 +21,13 @@ find_package(visualization_msgs REQUIRED)
 # find_package(nuturtlebot_msgs REQUIRED)
 find_package(turtlelib REQUIRED)
 
+rosidl_generate_interfaces(${PROJECT_NAME}_srv
+  "srv/Teleport.srv"
+  LIBRARY_NAME ${PROJECT_NAME}
+)
+
+rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME}_srv "rosidl_typesupport_cpp")
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -44,7 +51,7 @@ install(TARGETS
 
 install(DIRECTORY
   # launch
-  # srv
+  srv
   # config
   DESTINATION share/${PROJECT_NAME}/
 )
