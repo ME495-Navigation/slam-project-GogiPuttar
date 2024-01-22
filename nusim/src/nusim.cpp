@@ -11,7 +11,6 @@
 ///     \param obstacles.x (std::vector<double>): Vector of x coordinates for each obstacle [m]
 ///     \param obstacles.y (std::vector<double>): Vector of y coordinates for each obstacle [m]
 ///     \param obstacles.r (double): Radius of cylindrical obstacles [m]
-///     \param obstacles.h (double): Height of cylindrical obstacles [m]
 ///     \param arena_x_length (double): Inner length of arena in x direction [m]
 ///     \param arena_y_length (double): Inner length of arena in y direction [m]
 ///
@@ -88,7 +87,6 @@ std::mt19937 & get_random()
 ///  \param obstacles_x_ (std::vector<double>): Vector of x coordinates for each obstacle [m]
 ///  \param obstacles_y_ (std::vector<double>): Vector of y coordinates for each obstacle [m]
 ///  \param obstacles_r_ (double): Radius of cylindrical obstacles [m]
-///  \param obstacles_h_ (double): Height of cylindrical obstacles [m]
 ///  \param arena_x_length_ (double): Inner length of arena in x direction [m]
 ///  \param arena_y_length_ (double): Inner length of arena in y direction [m]
 
@@ -103,10 +101,9 @@ public:
     auto x0_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto y0_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto theta0_des = rcl_interfaces::msg::ParameterDescriptor{};
-    // auto obstacles_x_des = rcl_interfaces::msg::ParameterDescriptor{};
-    // auto obstacles_y_des = rcl_interfaces::msg::ParameterDescriptor{};
-    // auto obstacles_r_des = rcl_interfaces::msg::ParameterDescriptor{};
-    // auto obstacles_h_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto obstacles_x_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto obstacles_y_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto obstacles_r_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto arena_x_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto arena_y_des = rcl_interfaces::msg::ParameterDescriptor{};
     // auto wheelradius_des = rcl_interfaces::msg::ParameterDescriptor{};
@@ -116,10 +113,9 @@ public:
     x0_des.description = "Initial x coordinate of the robot [m]";
     y0_des.description = "Initial y coordinate of the robot [m]";
     theta0_des.description = "Initial theta angle of the robot [radians]";
-    // obstacles_x_des.description = "Vector of x coordinates for each obstacle [m]";
-    // obstacles_y_des.description = "Vector of y coordinates for each obstacle [m]";
-    // obstacles_r_des.description = "Radius of cylindrical obstacles [m]";
-    // obstacles_h_des.description = "Height of cylindrical obstacles [m]";
+    obstacles_x_des.description = "Vector of x coordinates for each obstacle [m]";
+    obstacles_y_des.description = "Vector of y coordinates for each obstacle [m]";
+    obstacles_r_des.description = "Radius of cylindrical obstacles [m]";
     arena_x_des.description = "Length of arena along x [m]";
     arena_y_des.description = "Length of arena along y [m]";
     // wheelradius_des.description = "The radius of the wheels [m]";
@@ -132,10 +128,9 @@ public:
     declare_parameter("x0", 0.0, x0_des);
     declare_parameter("y0", 0.0, y0_des);
     declare_parameter("theta0", 0.0, theta0_des);
-    // declare_parameter("obstacles.x", std::vector<double>{}, obstacles_x_des);
-    // declare_parameter("obstacles.y", std::vector<double>{}, obstacles_y_des);
-    // declare_parameter("obstacles.r", 0.0, obstacles_r_des);
-    // declare_parameter("obstacles.h", 0.0, obstacles_h_des);
+    declare_parameter("obstacles.x", std::vector<double>{}, obstacles_x_des);
+    declare_parameter("obstacles.y", std::vector<double>{}, obstacles_y_des);
+    declare_parameter("obstacles.r", 0.0, obstacles_r_des);
     declare_parameter("arena_x_length", 0.0, arena_x_des);
     declare_parameter("arena_y_length", 0.0, arena_y_des);
     // declare_parameter("wheelradius", -1.0, wheelradius_des);
@@ -146,10 +141,9 @@ public:
     x0_ = get_parameter("x0").get_parameter_value().get<double>();
     y0_ = get_parameter("y0").get_parameter_value().get<double>();
     theta0_ = get_parameter("theta0").get_parameter_value().get<double>();
-    // obstacles_x_ = get_parameter("obstacles.x").get_parameter_value().get<std::vector<double>>();
-    // obstacles_y_ = get_parameter("obstacles.y").get_parameter_value().get<std::vector<double>>();
-    // obstacles_r_ = get_parameter("obstacles.r").get_parameter_value().get<double>();
-    // obstacles_h_ = get_parameter("obstacles.h").get_parameter_value().get<double>();
+    obstacles_x_ = get_parameter("obstacles.x").get_parameter_value().get<std::vector<double>>();
+    obstacles_y_ = get_parameter("obstacles.y").get_parameter_value().get<std::vector<double>>();
+    obstacles_r_ = get_parameter("obstacles.r").get_parameter_value().get<double>();
     arena_x_ = get_parameter("arena_x_length").get_parameter_value().get<double>();
     arena_y_ = get_parameter("arena_y_length").get_parameter_value().get<double>();
 
@@ -162,7 +156,7 @@ public:
     dt_ = 1.0 / static_cast<double>(rate);
 
     // Create obstacles
-    // create_obstacles_array();
+    create_obstacles_array();
     
     // Create arena
     create_arena_walls();
@@ -175,8 +169,8 @@ public:
 
     // Publishers
     timestep_publisher_ = create_publisher<std_msgs::msg::UInt64>("~/timestep", 10);
-    // obstacles_publisher_ =
-    //   create_publisher<visualization_msgs::msg::MarkerArray>("~/obstacles", 10);
+    obstacles_publisher_ =
+      create_publisher<visualization_msgs::msg::MarkerArray>("~/obstacles", 10);
     walls_publisher_ =
       create_publisher<visualization_msgs::msg::MarkerArray>("~/walls", 10);
     // red_turtle_publisher_ = create_publisher<nav_msgs::msg::Path>("red/path", 10);
@@ -217,17 +211,17 @@ private:
   double y0_ = 0.0;
   double theta0_ = 0;
   double dt_ = 0.0; // Nusim Timer
-//   double obstacles_r_;    // Size of obstacles
-//   double obstacles_h_;
+  double obstacles_r_ = 0.01;    // Size of obstacles
+  double obstacles_h_ = 0.25;
   double wall_height_ = 0.25;   // Height of walls [m]
   double wall_thickness_ = 0.156;  // Thickness of walls [m]
   double arena_x_ = 0.0;    // Length of the arena along x [m]
   double arena_y_ = 0.0;  // Length of the arena along y [m]
 //   double wheelradius_;
 //   double track_width_;
-//   std::vector<double> obstacles_x_;    // Location of obstacles
-//   std::vector<double> obstacles_y_;
-//   visualization_msgs::msg::MarkerArray obstacles_;
+  std::vector<double> obstacles_x_;    // Location of obstacles
+  std::vector<double> obstacles_y_;
+  visualization_msgs::msg::MarkerArray obstacles_;
   visualization_msgs::msg::MarkerArray walls_;
 //   geometry_msgs::msg::PoseStamped red_pose_stamped_;
 //   turtlelib::Wheel delta_wheel_pos_{0.0, 0.0};
@@ -241,7 +235,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::TimerBase::SharedPtr timer2_;
   rclcpp::Publisher<std_msgs::msg::UInt64>::SharedPtr timestep_publisher_;
-//   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr obstacles_publisher_;
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr obstacles_publisher_;
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr walls_publisher_;
 //   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr red_turtle_publisher_;
 //   rclcpp::Subscription<nuturtlebot_msgs::msg::WheelCommands>::SharedPtr red_wheel_cmd_subscriber_;
@@ -383,36 +377,36 @@ private:
 //   }
 
   /// \brief Create obstacles as a MarkerArray and publish them to a topic to display them in Rviz
-//   void create_obstacles_array()
-//   {
-//     if (obstacles_x_.size() != obstacles_y_.size()) {
-//       throw std::runtime_error("x and y coordinate lists are not the same length!");
-//     }
+  void create_obstacles_array()
+  {
+    if (obstacles_x_.size() != obstacles_y_.size()) {
+      throw std::runtime_error("x and y coordinate lists are not the same length!");
+    }
 
-//     for (size_t i = 0; i < obstacles_x_.size(); i++) {
-//       visualization_msgs::msg::Marker obstacle_;
-//       obstacle_.header.frame_id = "nusim/world";
-//       obstacle_.header.stamp = get_clock()->now();
-//       obstacle_.id = i;
-//       obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
-//       obstacle_.action = visualization_msgs::msg::Marker::ADD;
-//       obstacle_.pose.position.x = obstacles_x_.at(i);
-//       obstacle_.pose.position.y = obstacles_y_.at(i);
-//       obstacle_.pose.position.z = obstacles_h_ / 2.0;
-//       obstacle_.pose.orientation.x = 0.0;
-//       obstacle_.pose.orientation.y = 0.0;
-//       obstacle_.pose.orientation.z = 0.0;
-//       obstacle_.pose.orientation.w = 1.0;
-//       obstacle_.scale.x = obstacles_r_ * 2.0;   // Diameter in x
-//       obstacle_.scale.y = obstacles_r_ * 2.0;   // Diameter in y
-//       obstacle_.scale.z = obstacles_h_;         // Height
-//       obstacle_.color.r = 1.0f;
-//       obstacle_.color.g = 0.0f;
-//       obstacle_.color.b = 0.0f;
-//       obstacle_.color.a = 1.0;
-//       obstacles_.markers.push_back(obstacle_);
-//     }
-//   }
+    for (size_t i = 0; i < obstacles_x_.size(); i++) {
+      visualization_msgs::msg::Marker obstacle_;
+      obstacle_.header.frame_id = "nusim/world";
+      obstacle_.header.stamp = get_clock()->now();
+      obstacle_.id = i;
+      obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
+      obstacle_.action = visualization_msgs::msg::Marker::ADD;
+      obstacle_.pose.position.x = obstacles_x_.at(i);
+      obstacle_.pose.position.y = obstacles_y_.at(i);
+      obstacle_.pose.position.z = obstacles_h_ / 2.0;
+      obstacle_.pose.orientation.x = 0.0;
+      obstacle_.pose.orientation.y = 0.0;
+      obstacle_.pose.orientation.z = 0.0;
+      obstacle_.pose.orientation.w = 1.0;
+      obstacle_.scale.x = obstacles_r_ * 2.0;   // Diameter in x
+      obstacle_.scale.y = obstacles_r_ * 2.0;   // Diameter in y
+      obstacle_.scale.z = obstacles_h_;         // Height
+      obstacle_.color.r = 1.0f;
+      obstacle_.color.g = 0.0f;
+      obstacle_.color.b = 0.0f;
+      obstacle_.color.a = 1.0;
+      obstacles_.markers.push_back(obstacle_);
+    }
+  }
 
   /// \brief Create walls as a MarkerArray and publish them to a topic to display them in Rviz
   void create_arena_walls()
@@ -491,7 +485,7 @@ private:
     auto message = std_msgs::msg::UInt64();
     message.data = timestep_++;
     timestep_publisher_->publish(message);
-    // obstacles_publisher_->publish(obstacles_);
+    obstacles_publisher_->publish(obstacles_);
     walls_publisher_->publish(walls_);
     // if (draw_only_ == false) {
     //   update_red_turtle_config();
