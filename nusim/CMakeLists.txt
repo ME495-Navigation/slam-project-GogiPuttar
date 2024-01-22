@@ -10,6 +10,16 @@ find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+find_package(visualization_msgs REQUIRED)
+# find_package(nuturtlebot_msgs REQUIRED)
+find_package(turtlelib REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -22,5 +32,21 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+add_executable(nusim src/nusim.cpp)
+ament_target_dependencies(nusim rclcpp std_msgs std_srvs tf2 tf2_ros visualization_msgs)
+target_link_libraries(nusim turtlelib::turtlelib "${cpp_typesupport_target}")
+
+install(TARGETS
+  nusim
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  # launch
+  # srv
+  # config
+  DESTINATION share/${PROJECT_NAME}/
+)
 
 ament_package()

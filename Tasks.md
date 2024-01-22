@@ -28,7 +28,7 @@
 
 # ⬜ Task C 
 1. ✅ Task C.1
-1. ⬜ Task C.2
+1. ✅ Task C.2
 1. ⬜ Task C.3
 1. ⬜ Task C.4
 1. ⬜ Task C.5
