@@ -8,9 +8,9 @@
 ///     \param x0 (double): Initial x coordinate of the robot [m]
 ///     \param y0 (double): Initial y coordinate of the robot [m]
 ///     \param theta0 (double): Initial theta angle of the robot [radians]
-///     \param obstacles/x (std::vector<double>): Vector of x coordinates for each obstacle [m]
-///     \param obstacles/y (std::vector<double>): Vector of y coordinates for each obstacle [m]
-///     \param obstacles/r (double): Radius of cylindrical obstacles [m]
+///     \param obstacles.x (std::vector<double>): Vector of x coordinates for each obstacle [m]
+///     \param obstacles.y (std::vector<double>): Vector of y coordinates for each obstacle [m]
+///     \param obstacles.r (double): Radius of cylindrical obstacles [m]
 ///     \param arena_x_length (double): Inner length of arena in x direction [m]
 ///     \param arena_y_length (double): Inner length of arena in y direction [m]
 ///
@@ -128,9 +128,9 @@ public:
     declare_parameter("x0", 0.0, x0_des);
     declare_parameter("y0", 0.0, y0_des);
     declare_parameter("theta0", 0.0, theta0_des);
-    declare_parameter("obstacles/x", std::vector<double>{}, obstacles_x_des);
-    declare_parameter("obstacles/y", std::vector<double>{}, obstacles_y_des);
-    declare_parameter("obstacles/r", 0.0, obstacles_r_des);
+    declare_parameter("obstacles.x", std::vector<double>{}, obstacles_x_des);
+    declare_parameter("obstacles.y", std::vector<double>{}, obstacles_y_des);
+    declare_parameter("obstacles.r", 0.0, obstacles_r_des);
     declare_parameter("arena_x_length", 0.0, arena_x_des);
     declare_parameter("arena_y_length", 0.0, arena_y_des);
     // declare_parameter("wheelradius", -1.0, wheelradius_des);
@@ -141,9 +141,9 @@ public:
     x0_ = get_parameter("x0").get_parameter_value().get<double>();
     y0_ = get_parameter("y0").get_parameter_value().get<double>();
     theta0_ = get_parameter("theta0").get_parameter_value().get<double>();
-    obstacles_x_ = get_parameter("obstacles/x").get_parameter_value().get<std::vector<double>>();
-    obstacles_y_ = get_parameter("obstacles/y").get_parameter_value().get<std::vector<double>>();
-    obstacles_r_ = get_parameter("obstacles/r").get_parameter_value().get<double>();
+    obstacles_x_ = get_parameter("obstacles.x").get_parameter_value().get<std::vector<double>>();
+    obstacles_y_ = get_parameter("obstacles.y").get_parameter_value().get<std::vector<double>>();
+    obstacles_r_ = get_parameter("obstacles.r").get_parameter_value().get<double>();
     arena_x_ = get_parameter("arena_x_length").get_parameter_value().get<double>();
     arena_y_ = get_parameter("arena_y_length").get_parameter_value().get<double>();
 

@@ -17,7 +17,7 @@ def generate_launch_description():
         DeclareLaunchArgument(name="use_rviz", default_value="true",
                               description="true (default): start rviz, otherwise don't start rviz"),
 
-        DeclareLaunchArgument(name="color", default_value="red",
+        DeclareLaunchArgument(name="color", default_value="purple",
                               description="Color of nuturtle's body",
                               choices=["red", "green", "blue", "purple",""]),
 

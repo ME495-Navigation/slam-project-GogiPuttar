@@ -50,9 +50,9 @@ install(TARGETS
 )
 
 install(DIRECTORY
-  # launch
+  launch
   srv
-  # config
+  config
   DESTINATION share/${PROJECT_NAME}/
 )
 
