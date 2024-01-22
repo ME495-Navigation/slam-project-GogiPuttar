@@ -26,12 +26,13 @@
 - Need to confirm if doxygen works
 - Need to resolve colcon test Unable to find executable: tests_for_turtlelib
 
-# ⬜ Task C 
+# ✅ Task C 
 1. ✅ Task C.1
 1. ✅ Task C.2
 1. ✅ Task C.3
 1. ✅ Task C.4
 1. ✅ Task C.5
 1. ✅ Task C.6
-1. ⬜ Task C.7
+1. ✅ Task C.7
 
+- Doc strings including all launch files

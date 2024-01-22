@@ -11,4 +11,7 @@ It also loads one turtlebot.
     1. `rviz_config`: defaults to `nusim.rviz` configured to view the robot, arena and obstacles.
 - Runs the `nusim` node to load a world configured by a world yaml file.
 
-    1. `config file`: defaults to `basic_world.yaml` which sets the length, thickness and width of the arena, width and positions of the obstacles, and initial configuration of the robot
+    1. `config file`: defaults to `basic_world.yaml` which sets the length, thickness and width of the arena, width and positions of the obstacles, and initial configuration of the robot.
+
+![](images/nusim1.png)
+
