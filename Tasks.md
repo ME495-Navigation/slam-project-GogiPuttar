@@ -32,5 +32,3 @@
 1. ✅ Task C.5
 1. ✅ Task C.6
 1. ✅ Task C.7
-
-- Doc strings including all launch files
