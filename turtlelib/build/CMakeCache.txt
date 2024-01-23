@@ -15,7 +15,7 @@
 ########################
 
 //Build the documentation
-BUILD_DOCS:BOOL=OFF
+BUILD_DOCS:BOOL=ON
 
 //Build the testing tree.
 BUILD_TESTING:BOOL=ON
@@ -243,14 +243,11 @@ DOXYGEN_DOT_EXECUTABLE:FILEPATH=/usr/bin/dot
 //Doxygen documentation generation tool (https://www.doxygen.nl)
 DOXYGEN_EXECUTABLE:FILEPATH=/usr/bin/doxygen
 
-//The directory containing a CMake configuration file for Eigen3.
-Eigen3_DIR:PATH=/usr/share/eigen3/cmake
-
 //Command to build the project
 MAKECOMMAND:STRING=/home/adityanair/.local/lib/python3.10/site-packages/cmake/data/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
 
 //Path to the memory checking command, used for memory error detection.
-MEMORYCHECK_COMMAND:FILEPATH=MEMORYCHECK_COMMAND-NOTFOUND
+MEMORYCHECK_COMMAND:FILEPATH=/usr/bin/cuda-memcheck
 
 //File that contains suppressions for the memory checker
 MEMORYCHECK_SUPPRESSIONS_FILE:FILEPATH=
