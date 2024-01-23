@@ -78,6 +78,7 @@ Conceptual Questions</h1>
 <ol type="1">
 <li>If you needed to be able to ~normalize~ Vector2D objects (i.e., find the unit vector in the direction of a given Vector2D):<ul>
 <li>Propose three different designs for implementing the ~normalize~ functionality</li>
+<li>Discuss the pros and cons of each proposed method, in light of the C++ Core Guidelines.</li>
 </ul>
 <ol type="a">
 <li><p class="startli">Member function: ``` #include &lt;iostream&gt; #include &lt;cmath&gt;</p>
@@ -88,7 +89,10 @@ Conceptual Questions</h1>
 <p class="startli">// Normalize the vector myVector.normalize();</p>
 <p class="startli">// Display the normalized vector std::cout &lt;&lt; "Normalized Vector (Design 1): (" &lt;&lt; myVector.x &lt;&lt; ", " &lt;&lt; myVector.y &lt;&lt; ")\n";</p>
 <p class="startli">return 0; }</p>
-<p class="startli">```</p>
+<p class="startli">```</p><ul>
+<li>Pros: Encapsulation: This aligns with C++ Core Guidelines [C.9] which recommends using member functions for operations on class instances to achieve encapsulation.</li>
+<li>Cons: Modifies Object State: C++ Core Guidelines [C.4, P.1] suggests minimizing the use of functions that modify object state, especially if it is not immediately obvious.</li>
+</ul>
 </li>
 <li><p class="startli">Free Function:</p>
 <p class="startli">``` #include &lt;iostream&gt; #include &lt;cmath&gt;</p>
@@ -100,34 +104,46 @@ Conceptual Questions</h1>
 <p class="startli">// Normalize the vector Vector2D normalizedVector = normalizeVector(myVector);</p>
 <p class="startli">// Display the normalized vector std::cout &lt;&lt; "Normalized Vector (Design 2): (" &lt;&lt; normalizedVector.x &lt;&lt; ", " &lt;&lt; normalizedVector.y &lt;&lt; ")\n";</p>
 <p class="startli">return 0; }</p>
-<p class="startli">```</p><ol type="i">
-<li><p class="startli">Operator Overloading ``` #include &lt;iostream&gt; #include &lt;cmath&gt;</p>
-<p class="startli">struct Vector2D { double x = 0.0; double y = 0.0;</p>
-<p class="startli">// Operator overloading to normalize the vector Vector2D operator/(double scalar) const { // Check for division by zero to avoid NaN if (scalar != 0.0) { return {x / scalar, y / scalar}; }</p>
-<p class="startli">return *this; // Return original vector if scalar is zero }</p>
-<p class="startli">// Member function to calculate the magnitude of the vector double magnitude() const { return std::sqrt(x*x + y*y); }</p>
-<p class="startli">// Member function to normalize the vector Vector2D normalize() const { double mag = magnitude();</p>
-<p class="startli">// Use the overloaded division operator return *this / mag; } };</p>
-<p class="startli">int main() { // Example vector Vector2D myVector {3.0, 4.0};</p>
-<p class="startli">// Normalize the vector Vector2D normalizedVector = myVector.normalize();</p>
-<p class="startli">// Display the normalized vector std::cout &lt;&lt; "Normalized Vector (Design 3): (" &lt;&lt; normalizedVector.x &lt;&lt; ", " &lt;&lt; normalizedVector.y &lt;&lt; ")\n";</p>
-<p class="startli">return 0; }</p>
-</li>
-</ol>
-<p class="startli">```</p>
-</li>
-</ol>
-<ul>
-<li>Discuss the pros and cons of each proposed method, in light of the C++ Core Guidelines.</li>
-<li>Which of the methods would you implement and why?</li>
+<p class="startli">```</p><ul>
+<li>Pros: Separation of Concerns: This is in line with C++ Core Guidelines, which advocates for separating concerns to improve maintainability.</li>
+<li>Cons: Deviation from Encapsulation: C++ Core Guidelines [C.9] suggests avoiding free functions if they do not require direct access to private class members, as this may break encapsulation.</li>
 </ul>
 </li>
-<li>What is the difference between a class and a struct in C++?</li>
-<li>Why is Vector2D a struct and Transform2D a Class (refer to at least 2 specific C++ core guidelines in your answer)?</li>
-<li>Why are some of the constructors in Transform2D explicit (refer to a specific C++ core guideline in your answer)?</li>
-<li>Why is Transform2D::inv() declared const while Transform2D::operator*=() is not?<ul>
-<li>Refer to [[<a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#con-constants-and-immutability">https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#con-constants-and-immutability</a>][C++ Core Guidelines (Constants and Immutability)]] in your answer </li>
+</ol>
+</li>
+</ol>
+<p>Operator Overloading ``` #include &lt;iostream&gt; #include &lt;cmath&gt;</p>
+<p>struct Vector2D { double x = 0.0; double y = 0.0;</p>
+<p>// Operator overloading to normalize the vector Vector2D operator/(double scalar) const { // Check for division by zero to avoid NaN if (scalar != 0.0) { return {x / scalar, y / scalar}; }</p>
+<p>return *this; // Return original vector if scalar is zero }</p>
+<p>// Member function to calculate the magnitude of the vector double magnitude() const { return std::sqrt(x*x + y*y); }</p>
+<p>// Member function to normalize the vector Vector2D normalize() const { double mag = magnitude();</p>
+<p>// Use the overloaded division operator return *this / mag; } };</p>
+<p>int main() { // Example vector Vector2D myVector {3.0, 4.0};</p>
+<p>// Normalize the vector Vector2D normalizedVector = myVector.normalize();</p>
+<p>// Display the normalized vector std::cout &lt;&lt; "Normalized Vector (Design 3): (" &lt;&lt; normalizedVector.x &lt;&lt; ", " &lt;&lt; normalizedVector.y &lt;&lt; ")\n";</p>
+<p>return 0; }</p>
+<p>```</p><ul>
+<li>Pros: Ensures consistency with standard library types, which aligns with C++ Core Guidelines [F.47].</li>
+<li>Cons: The choice of operator/= for normalization may not be immediately intuitive. C++ Core Guidelines [F.15] advises against overloading operators in ways that might surprise users.</li>
 </ul>
+<p>Which of the methods would you implement and why?</p>
+<p>I would implement method 2, since I value maintainability and Method 1 and 3 can surprise the user by making the code less readable.</p>
+<ol type="1">
+<li><p class="startli">What is the difference between a class and a struct in C++?</p>
+<p class="startli">Members of a class have a default access level of private. You need to use the public, protected, and private keywords to specify the access level explicitly.</p>
+<p class="startli">Members of a struct have a default access level of public. You can still use the public, protected, and private keywords to change the access level explicitly if needed.</p>
+</li>
+<li><p class="startli">Why is Vector2D a struct and Transform2D a Class (refer to at least 2 specific C++ core guidelines in your answer)?</p>
+<p class="startli">C.8 says use class rather than struct if any members are public. C.2 says Use class if the class has an invariant; use struct if the data members can vary independently. Here, translation and rotation are invariants since they're usually applied together (and not independently) for any transform.</p>
+</li>
+<li><p class="startli">Why are some of the constructors in Transform2D explicit (refer to a specific C++ core guideline in your answer)?</p>
+<p class="startli">C.46: By default, declare single-argument constructors explicit.</p>
+</li>
+<li><p class="startli">Why is Transform2D::inv() declared const while Transform2D::operator*=() is not?</p><ul>
+<li>Refer to [[<a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#con-constants-and-immutability">https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#con-constants-and-immutability</a>][C++ Core Guidelines (Constants and Immutability)]] in your answer</li>
+</ul>
+<p class="startli">Transform2D::operator*=() includes an assignment and changes the members of its owner, therefore it cannot be immutable, as they are supposed to be by default. </p>
 </li>
 </ol>
 </div></div><!-- PageDoc -->

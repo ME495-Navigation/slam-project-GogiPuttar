@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['normalize_5fangle_36',['normalize_angle',['../geometry2d_8hpp.html#aa5346908b3d20a3e4c4bddbbbfbf8b44',1,'turtlelib']]]
+  ['inv_50',['inv',['../classturtlelib_1_1Transform2D.html#a25ac01908c8f3de685640fc20af25e93',1,'turtlelib::Transform2D']]]
 ];

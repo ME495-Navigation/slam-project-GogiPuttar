@@ -3,7 +3,7 @@ var indexSectionsWithContent =
   0: "adginoprstvxy",
   1: "pstv",
   2: "gs",
-  3: "adinort",
+  3: "adginorst",
   4: "opxy",
   5: "o",
   6: "t"

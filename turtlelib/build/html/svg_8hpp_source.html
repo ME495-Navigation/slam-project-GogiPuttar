@@ -69,7 +69,7 @@ $(function() {
 <div class="title">svg.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// SVG.h</span></div>
+<a href="svg_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// SVG.h</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef SVG_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#define SVG_H</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
@@ -77,24 +77,41 @@ $(function() {
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;fstream&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classSVG.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSVG.html">SVG</a> {</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <a class="code" href="classSVG.html">SVG</a>(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordtype">void</span> addRectangle(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordtype">void</span> addCircle(<span class="keywordtype">int</span> cx, <span class="keywordtype">int</span> cy, <span class="keywordtype">int</span> r, <span class="keyword">const</span> std::string&amp; color);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> addLine(<span class="keywordtype">int</span> x1, <span class="keywordtype">int</span> y1, <span class="keywordtype">int</span> x2, <span class="keywordtype">int</span> y2, <span class="keyword">const</span> std::string&amp; stroke);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">void</span> addText(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keyword">const</span> std::string&amp; text);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">void</span> saveToFile(<span class="keyword">const</span> std::string&amp; filename, <span class="keyword">const</span> std::string&amp; additionalContent);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">int</span> getWidth();</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">int</span> width;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">int</span> height;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::vector&lt;std::string&gt; elements;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;};</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SVG_H</span></div>
-<div class="ttc" id="aclassSVG_html"><div class="ttname"><a href="classSVG.html">SVG</a></div><div class="ttdef"><b>Definition:</b> svg.hpp:9</div></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classSVG.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSVG.html">SVG</a> {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classSVG.html#ac11f28d97e3aaa2ddb6de475f8a8755f">SVG</a>(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSVG.html#a9765e0d8adf25903ab64c15eb80eeff7">addRectangle</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSVG.html#a3f3c728bfe5612c314689019131d1c4d">addCircle</a>(<span class="keywordtype">int</span> cx, <span class="keywordtype">int</span> cy, <span class="keywordtype">int</span> r, <span class="keyword">const</span> std::string&amp; color);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSVG.html#af8f0589a85196f7b267d10798bbcdb85">addLine</a>(<span class="keywordtype">int</span> x1, <span class="keywordtype">int</span> y1, <span class="keywordtype">int</span> x2, <span class="keywordtype">int</span> y2, <span class="keyword">const</span> std::string&amp; stroke);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSVG.html#aa6d261825522fa81f0857614d3a32346">addText</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSVG.html#a041abb42a0d86aa8e3e93ce81a6f44e4">saveToFile</a>(<span class="keyword">const</span> std::string&amp; filename, <span class="keyword">const</span> std::string&amp; additionalContent);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classSVG.html#ab9f3b513d1352a8973bb64ee69d40ced">getWidth</a>();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    </div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classSVG.html#a71321e0f34d881169019cc2ded7da8bd">   59</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classSVG.html#a71321e0f34d881169019cc2ded7da8bd">getHeight</a>();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">int</span> width;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">int</span> height;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    std::vector&lt;std::string&gt; elements;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;};</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SVG_H</span></div>
+<div class="ttc" id="aclassSVG_html"><div class="ttname"><a href="classSVG.html">SVG</a></div><div class="ttdoc">SVG File generator class.</div><div class="ttdef"><b>Definition:</b> svg.hpp:13</div></div>
+<div class="ttc" id="aclassSVG_html_a041abb42a0d86aa8e3e93ce81a6f44e4"><div class="ttname"><a href="classSVG.html#a041abb42a0d86aa8e3e93ce81a6f44e4">SVG::saveToFile</a></div><div class="ttdeci">void saveToFile(const std::string &amp;filename, const std::string &amp;additionalContent)</div><div class="ttdoc">saves the .svg to a specific file</div><div class="ttdef"><b>Definition:</b> svg.cpp:27</div></div>
+<div class="ttc" id="aclassSVG_html_a3f3c728bfe5612c314689019131d1c4d"><div class="ttname"><a href="classSVG.html#a3f3c728bfe5612c314689019131d1c4d">SVG::addCircle</a></div><div class="ttdeci">void addCircle(int cx, int cy, int r, const std::string &amp;color)</div><div class="ttdoc">Creates a circle in the .svg.</div><div class="ttdef"><b>Definition:</b> svg.cpp:13</div></div>
+<div class="ttc" id="aclassSVG_html_a71321e0f34d881169019cc2ded7da8bd"><div class="ttname"><a href="classSVG.html#a71321e0f34d881169019cc2ded7da8bd">SVG::getHeight</a></div><div class="ttdeci">int getHeight()</div><div class="ttdoc">Gets the height of the image.</div></div>
+<div class="ttc" id="aclassSVG_html_a9765e0d8adf25903ab64c15eb80eeff7"><div class="ttname"><a href="classSVG.html#a9765e0d8adf25903ab64c15eb80eeff7">SVG::addRectangle</a></div><div class="ttdeci">void addRectangle(int x, int y, int width, int height)</div><div class="ttdoc">Adds a rectangle to the .svg.</div><div class="ttdef"><b>Definition:</b> svg.cpp:8</div></div>
+<div class="ttc" id="aclassSVG_html_aa6d261825522fa81f0857614d3a32346"><div class="ttname"><a href="classSVG.html#aa6d261825522fa81f0857614d3a32346">SVG::addText</a></div><div class="ttdeci">void addText(int x, int y, const std::string &amp;text)</div><div class="ttdoc">Adds text to the .svg.</div><div class="ttdef"><b>Definition:</b> svg.cpp:23</div></div>
+<div class="ttc" id="aclassSVG_html_ab9f3b513d1352a8973bb64ee69d40ced"><div class="ttname"><a href="classSVG.html#ab9f3b513d1352a8973bb64ee69d40ced">SVG::getWidth</a></div><div class="ttdeci">int getWidth()</div><div class="ttdoc">Gets the width of the image.</div><div class="ttdef"><b>Definition:</b> svg.cpp:42</div></div>
+<div class="ttc" id="aclassSVG_html_ac11f28d97e3aaa2ddb6de475f8a8755f"><div class="ttname"><a href="classSVG.html#ac11f28d97e3aaa2ddb6de475f8a8755f">SVG::SVG</a></div><div class="ttdeci">SVG(int width, int height)</div><div class="ttdoc">Creates the .svg file.</div><div class="ttdef"><b>Definition:</b> svg.cpp:4</div></div>
+<div class="ttc" id="aclassSVG_html_af8f0589a85196f7b267d10798bbcdb85"><div class="ttname"><a href="classSVG.html#af8f0589a85196f7b267d10798bbcdb85">SVG::addLine</a></div><div class="ttdeci">void addLine(int x1, int y1, int x2, int y2, const std::string &amp;stroke)</div><div class="ttdoc">Adds a line in the .svg.</div><div class="ttdef"><b>Definition:</b> svg.cpp:18</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
