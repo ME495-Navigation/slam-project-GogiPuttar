@@ -104,5 +104,5 @@ if(BUILD_TESTING)
     target_link_libraries(test_turtlelib Catch2::Catch2WithMain turtlelib) # AnyOtherLibrariesAsNeeded)
 
     # register the test with CTest, telling it what executable to run
-    add_test(Name tests_for_turtlelib COMMAND test_turtlelib)
+    add_test(NAME tests_for_turtlelib COMMAND test_turtlelib)
 endif()

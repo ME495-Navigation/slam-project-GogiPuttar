@@ -1,3 +1,4 @@
+<!-- Starts all the nodes to visualize 4 robots in rviz. -->
 <launch>
 
     <!-- Load purple nuturtle. -->

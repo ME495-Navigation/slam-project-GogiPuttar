@@ -13,7 +13,6 @@
 3. ✅ Task A.4
 3. ✅ Task A.5
 3. ✅ Task A.6
-- Need to resolve python launchfile warnings ⬜
 
 # ⬜ Task B
 1. ✅ Task B.1
@@ -24,7 +23,6 @@
 1. ✅ Task B.6
 1. ⬜ Task B.7
 - Need to confirm if doxygen works
-- Need to resolve colcon test Unable to find executable: tests_for_turtlelib
 
 # ✅ Task C 
 1. ✅ Task C.1
