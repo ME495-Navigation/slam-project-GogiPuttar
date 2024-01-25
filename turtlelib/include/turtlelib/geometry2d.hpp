@@ -137,6 +137,30 @@ namespace turtlelib
     // Normalize Vector
     Vector2D normalizeVector(const Vector2D & v);
 
+    /// \brief Subtracting two vectors yields a new vector
+    /// \param va Vector A
+    /// \param vb Vector B
+    /// \return Vector A relative to vector B
+    Vector2D operator-(const vector2D & va, const vector2D & vb);
+
+    /// \brief Adding two vectors yields a new vector
+    /// \param va Vector A
+    /// \param vb Vector B
+    /// \return Resultant vector
+    Vector2D operator+(const vector2D & va, const vector2D & vb);
+
+    /// \brief Scaling a vector
+    /// \param scale scalar
+    /// \param v Vector to be scaled
+    /// \return Scaled vector
+    Vector2D operator*(const double & scale, const vector2D & v);
+
+    /// \brief Scaling a vector
+    /// \param v Vector to be scaled
+    /// \param scale scalar
+    /// \return Scaled vector
+    Vector2D operator*(const vector2D & v, const double & scale);
+
 }
 
 #endif

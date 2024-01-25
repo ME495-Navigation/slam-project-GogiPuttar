@@ -103,7 +103,7 @@ TEST_CASE( "Stream extraction works for 2d vector", "[operator>>]") // Adapted f
     REQUIRE( vec_2.y == 1.32 );
 }
 
-TEST_CASE( "Vector normalization works", "[operator+]") 
+TEST_CASE( "Vector normalization works", "[normalizeVector]") 
 {
     Vector2D v{-69, 4.20};
 
@@ -113,4 +113,28 @@ TEST_CASE( "Vector normalization works", "[operator+]")
     REQUIRE_THAT(v_hat.x, WithinAbs(-0.998153,1.0e-6));
     // Check y.
     REQUIRE_THAT(v_hat.y, WithinAbs(0.0607571,1.0e-6));
+}
+
+TEST_CASE( "Vector subtraction works", "[operator-]") 
+{
+    Vector2D va{-69, 4.20}, vb{-4.20, 6.9}, vab{0,0};
+
+    vab = va - vb;
+
+    // Check x.
+    REQUIRE_THAT(vab.x, WithinAbs(-64.8,1.0e-6));
+    // Check y.
+    REQUIRE_THAT(vab.y, WithinAbs(-2.7,1.0e-6));
+}
+
+TEST_CASE( "Vector addition works", "[operator+]") 
+{
+    Vector2D va{-69, 4.20}, vb{-4.20, 6.9}, vab{0,0};
+
+    vab = va + vb;
+
+    // Check x.
+    REQUIRE_THAT(vab.x, WithinAbs(-73.2,1.0e-6));
+    // Check y.
+    REQUIRE_THAT(vab.y, WithinAbs(11.1,1.0e-6));
 }
