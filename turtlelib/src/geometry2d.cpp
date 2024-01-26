@@ -87,22 +87,22 @@ namespace turtlelib
         return v_hat;
     }
 
-    Vector2D operator-(const vector2D & va, const vector2D & vb)
+    Vector2D operator-(const Vector2D & va, const Vector2D & vb)
     {
         return Vector2D{va.x - vb.x, va.y - vb.y};
     }
 
-    Vector2D operator+(const vector2D & va, const vector2D & vb)
+    Vector2D operator+(const Vector2D & va, const Vector2D & vb)
     {
         return Vector2D{va.x + vb.x, va.y + vb.y};
     }
 
-    Vector2D operator*(const double & scale, const vector2D & v)
+    Vector2D operator*(const double & scale, const Vector2D & v)
     {
         return Vector2D{scale * v.x, scale * v.y};
     }
 
-    Vector2D operator*(const vector2D & v, const double & scale);
+    Vector2D operator*(const Vector2D & v, const double & scale)
     {
         return Vector2D{scale * v.x, scale * v.y};
     }

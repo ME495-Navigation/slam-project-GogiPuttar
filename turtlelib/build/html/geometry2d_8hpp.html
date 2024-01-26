@@ -142,6 +142,18 @@ Functions</h2></td></tr>
 <tr class="memitem:ac8f83359bac23a2334ac6207b975936d"><td class="memItemLeft" align="right" valign="top"><a id="ac8f83359bac23a2334ac6207b975936d"></a>
 Vector2D&#160;</td><td class="memItemRight" valign="bottom"><b>turtlelib::normalizeVector</b> (const Vector2D &amp;v)</td></tr>
 <tr class="separator:ac8f83359bac23a2334ac6207b975936d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b265360f86135c496143e78578a5a8f"><td class="memItemLeft" align="right" valign="top">Vector2D&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="geometry2d_8hpp.html#a2b265360f86135c496143e78578a5a8f">turtlelib::operator-</a> (const Vector2D &amp;va, const Vector2D &amp;vb)</td></tr>
+<tr class="memdesc:a2b265360f86135c496143e78578a5a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtracting two vectors yields a new vector.  <a href="geometry2d_8hpp.html#a2b265360f86135c496143e78578a5a8f">More...</a><br /></td></tr>
+<tr class="separator:a2b265360f86135c496143e78578a5a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8919832b29e3047ab458f7142b3721a"><td class="memItemLeft" align="right" valign="top">Vector2D&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="geometry2d_8hpp.html#af8919832b29e3047ab458f7142b3721a">turtlelib::operator+</a> (const Vector2D &amp;va, const Vector2D &amp;vb)</td></tr>
+<tr class="memdesc:af8919832b29e3047ab458f7142b3721a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adding two vectors yields a new vector.  <a href="geometry2d_8hpp.html#af8919832b29e3047ab458f7142b3721a">More...</a><br /></td></tr>
+<tr class="separator:af8919832b29e3047ab458f7142b3721a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26d6d7244bfb22eb41385d27114febb3"><td class="memItemLeft" align="right" valign="top">Vector2D&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="geometry2d_8hpp.html#a26d6d7244bfb22eb41385d27114febb3">turtlelib::operator*</a> (const double &amp;scale, const Vector2D &amp;v)</td></tr>
+<tr class="memdesc:a26d6d7244bfb22eb41385d27114febb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scaling a vector.  <a href="geometry2d_8hpp.html#a26d6d7244bfb22eb41385d27114febb3">More...</a><br /></td></tr>
+<tr class="separator:a26d6d7244bfb22eb41385d27114febb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8e7c288debef6e8d0700efd46b4bc1b"><td class="memItemLeft" align="right" valign="top">Vector2D&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="geometry2d_8hpp.html#ab8e7c288debef6e8d0700efd46b4bc1b">turtlelib::operator*</a> (const Vector2D &amp;v, const double &amp;scale)</td></tr>
+<tr class="memdesc:ab8e7c288debef6e8d0700efd46b4bc1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scaling a vector.  <a href="geometry2d_8hpp.html#ab8e7c288debef6e8d0700efd46b4bc1b">More...</a><br /></td></tr>
+<tr class="separator:ab8e7c288debef6e8d0700efd46b4bc1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -268,8 +280,84 @@ constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 
 </div>
 </div>
+<a id="a26d6d7244bfb22eb41385d27114febb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26d6d7244bfb22eb41385d27114febb3">&#9670;&nbsp;</a></span>operator*() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector2D turtlelib::operator* </td>
+          <td>(</td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>scale</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Vector2D.html">Vector2D</a> &amp;&#160;</td>
+          <td class="paramname"><em>v</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Scaling a vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">scale</td><td>scalar </td></tr>
+    <tr><td class="paramname">v</td><td>Vector to be scaled </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Scaled vector </dd></dl>
+
+</div>
+</div>
+<a id="ab8e7c288debef6e8d0700efd46b4bc1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8e7c288debef6e8d0700efd46b4bc1b">&#9670;&nbsp;</a></span>operator*() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector2D turtlelib::operator* </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Vector2D.html">Vector2D</a> &amp;&#160;</td>
+          <td class="paramname"><em>v</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>scale</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Scaling a vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>Vector to be scaled </td></tr>
+    <tr><td class="paramname">scale</td><td>scalar </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Scaled vector </dd></dl>
+
+</div>
+</div>
 <a id="aea44d39a22ab19fb6c0cecb7bb0e490c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea44d39a22ab19fb6c0cecb7bb0e490c">&#9670;&nbsp;</a></span>operator+()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aea44d39a22ab19fb6c0cecb7bb0e490c">&#9670;&nbsp;</a></span>operator+() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -306,8 +394,46 @@ constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 
 </div>
 </div>
+<a id="af8919832b29e3047ab458f7142b3721a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8919832b29e3047ab458f7142b3721a">&#9670;&nbsp;</a></span>operator+() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector2D turtlelib::operator+ </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Vector2D.html">Vector2D</a> &amp;&#160;</td>
+          <td class="paramname"><em>va</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Vector2D.html">Vector2D</a> &amp;&#160;</td>
+          <td class="paramname"><em>vb</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adding two vectors yields a new vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">va</td><td>Vector A </td></tr>
+    <tr><td class="paramname">vb</td><td>Vector B </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Resultant vector </dd></dl>
+
+</div>
+</div>
 <a id="ab4a745b5f636d5d9b36321cc5be64c7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4a745b5f636d5d9b36321cc5be64c7d">&#9670;&nbsp;</a></span>operator-()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4a745b5f636d5d9b36321cc5be64c7d">&#9670;&nbsp;</a></span>operator-() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -341,6 +467,44 @@ constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a vector that points from p1 to p2 NOTE: this is not implemented in terms of -= because subtracting two Point2D yields a Vector2D </dd></dl>
+
+</div>
+</div>
+<a id="a2b265360f86135c496143e78578a5a8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b265360f86135c496143e78578a5a8f">&#9670;&nbsp;</a></span>operator-() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector2D turtlelib::operator- </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Vector2D.html">Vector2D</a> &amp;&#160;</td>
+          <td class="paramname"><em>va</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Vector2D.html">Vector2D</a> &amp;&#160;</td>
+          <td class="paramname"><em>vb</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Subtracting two vectors yields a new vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">va</td><td>Vector A </td></tr>
+    <tr><td class="paramname">vb</td><td>Vector B </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector A relative to vector B </dd></dl>
 
 </div>
 </div>

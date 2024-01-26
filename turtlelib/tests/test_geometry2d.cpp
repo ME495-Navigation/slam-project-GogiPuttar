@@ -138,3 +138,22 @@ TEST_CASE( "Vector addition works", "[operator+]")
     // Check y.
     REQUIRE_THAT(vab.y, WithinAbs(11.1,1.0e-6));
 }
+
+TEST_CASE( "Vector scaling works", "[operator*]") 
+{
+    double scale = -69.0;
+    Vector2D v{-69, 4.20}, vs1{0,0}, vs2{0,0};
+
+    vs1 = scale * v;
+    vs2 = v * scale;
+
+    // Check x.
+    REQUIRE_THAT(vs1.x, WithinAbs(4761,1.0e-6));
+    // Check y.
+    REQUIRE_THAT(vs1.y, WithinAbs(-289.8,1.0e-6));
+
+    // Check x.
+    REQUIRE_THAT(vs2.x, WithinAbs(4761,1.0e-6));
+    // Check y.
+    REQUIRE_THAT(vs2.y, WithinAbs(-289.8,1.0e-6));
+}
