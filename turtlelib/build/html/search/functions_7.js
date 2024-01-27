@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['savetofile_61',['saveToFile',['../classSVG.html#a041abb42a0d86aa8e3e93ce81a6f44e4',1,'SVG']]],
-  ['svg_62',['SVG',['../classSVG.html#ac11f28d97e3aaa2ddb6de475f8a8755f',1,'SVG']]]
+  ['rad2deg_67',['rad2deg',['../geometry2d_8hpp.html#a61c288863ff74346e761950749593acd',1,'turtlelib']]],
+  ['rotation_68',['rotation',['../classturtlelib_1_1Transform2D.html#ab053e48454bcfaf84fb34a756dd0c26a',1,'turtlelib::Transform2D']]]
 ];

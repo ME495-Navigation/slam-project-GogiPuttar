@@ -107,4 +107,44 @@ namespace turtlelib
         return Vector2D{scale * v.x, scale * v.y};
     }
 
+    Vector2D operator-=(Vector2D & lhv, const Vector2D & rhv)
+    {
+        lhv = lhv - rhv;
+        return lhv;
+    }
+
+    Vector2D operator+=(Vector2D & lhv, const Vector2D & rhv)
+    {
+        lhv = lhv + rhv;
+        return lhv;
+    }
+
+    Vector2D operator*=(Vector2D & lhv, const double & scale)
+    {
+        lhv = scale * scale * lhv;
+        lhv = lhv * (1/scale);
+        return lhv;
+    }
+
+    double dot(const Vector2D & va, const Vector2D & vb)
+    {
+        return va.x * vb.x + va.y * vb.y;
+    }
+
+    double magnitude(const Vector2D & v)
+    {
+        return sqrt(dot(v,v));
+    }
+
+    double angle(const Vector2D & va, const Vector2D & vb)
+    {
+        if (va.x == 0.0 && va.y == 0.0) || (vb.x == 0.0 && vb.y == 0.0)
+        {
+            return 0.0;
+        }
+        else
+        {
+            return normalize_angle(atan2(va.y, va.x) - atan2(vb.y, vb.x));
+        }
+    }
 }

@@ -157,3 +157,91 @@ TEST_CASE( "Vector scaling works", "[operator*]")
     // Check y.
     REQUIRE_THAT(vs2.y, WithinAbs(-289.8,1.0e-6));
 }
+
+TEST_CASE( "Composed vector subtraction works", "[operator-=]") 
+{
+    Vector2D va{-69, 4.20}, vb{-4.20, 6.9};
+
+    va -= vb;
+
+    // Check x.
+    REQUIRE_THAT(va.x, WithinAbs(-64.8,1.0e-6));
+    // Check y.
+    REQUIRE_THAT(va.y, WithinAbs(-2.7,1.0e-6));
+}
+
+TEST_CASE( "Composed vector addition works", "[operator+=]") 
+{
+    Vector2D va{-69, 4.20}, vb{-4.20, 6.9};
+
+    va += vb;
+
+    // Check x.
+    REQUIRE_THAT(va.x, WithinAbs(-73.2,1.0e-6));
+    // Check y.
+    REQUIRE_THAT(va.y, WithinAbs(11.1,1.0e-6));
+}
+
+TEST_CASE( "Composed vector scaling works", "[operator*=]") 
+{
+    double scale = -69.0;
+    Vector2D v{-69, 4.20};
+
+    v *= scale;
+
+    // Check x.
+    REQUIRE_THAT(v.x, WithinAbs(4761,1.0e-6));
+    // Check y.
+    REQUIRE_THAT(v.y, WithinAbs(-289.8,1.0e-6));
+}
+
+TEST_CASE( "Dot product works", "[dot()]") 
+{
+    Vector2D va{-69, 4.20}, vb{-4.20, 6.9};
+
+    double prod = dot(va, vb);
+
+    // Check scalar.
+    REQUIRE_THAT(prod, WithinAbs(-64.8,1.0e-6));
+}
+
+TEST_CASE( "Magnitude works", "[magnitude()]") 
+{
+    Vector2D v{-69, 4.20};
+
+    double mag = magnitude(v);
+
+    // Check scalar.
+    REQUIRE_THAT(mag, WithinAbs(-64.8,1.0e-6));
+}
+
+TEST_CASE( "Angle works", "[magnitude()]") 
+{
+    Vector2D v1{-69, 4.20}, v2{69, 420}, v3{0,0}, v4{-1,0}, v5{-1, -1.0e-5};
+
+    double mag = magnitude(v);
+
+    // Check angles in one direction
+    REQUIRE_THAT(angle(v1,v2), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v1,v3), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v1,v4), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v1,v5), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v2,v3), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v2,v4), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v2,v5), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v3,v4), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v3,v5), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v4,v5), WithinAbs(-64.8,1.0e-6));
+
+    // Check angles in the opposite direction
+    REQUIRE_THAT(angle(v5,v4), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v5,v3), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v5,v2), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v5,v1), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v4,v3), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v4,v4), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v4,v5), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v3,v4), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v3,v5), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v2,v5), WithinAbs(-64.8,1.0e-6));
+}

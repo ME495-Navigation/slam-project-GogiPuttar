@@ -117,7 +117,7 @@ Conceptual Questions</h1>
 <p>// Operator overloading to normalize the vector Vector2D operator/(double scalar) const { // Check for division by zero to avoid NaN if (scalar != 0.0) { return {x / scalar, y / scalar}; }</p>
 <p>return *this; // Return original vector if scalar is zero }</p>
 <p>// Member function to calculate the magnitude of the vector double magnitude() const { return std::sqrt(x*x + y*y); }</p>
-<p>// Member function to normalize the vector Vector2D normalize() const { double mag = magnitude();</p>
+<p>// Member function to normalize the vector Vector2D normalize() const { double mag = <a class="el" href="geometry2d_8hpp.html#acab5ba90dd396376761b7c712a485318" title="Magnitude of a vector is a non-negative scalar.">magnitude()</a>;</p>
 <p>// Use the overloaded division operator return *this / mag; } };</p>
 <p>int main() { // Example vector Vector2D myVector {3.0, 4.0};</p>
 <p>// Normalize the vector Vector2D normalizedVector = myVector.normalize();</p>
@@ -140,10 +140,10 @@ Conceptual Questions</h1>
 <li><p class="startli">Why are some of the constructors in Transform2D explicit (refer to a specific C++ core guideline in your answer)?</p>
 <p class="startli">C.46: By default, declare single-argument constructors explicit.</p>
 </li>
-<li><p class="startli">Why is Transform2D::inv() declared const while Transform2D::operator*=() is not?</p><ul>
+<li><p class="startli">Why is Transform2D::inv() declared const while <a class="el" href="geometry2d_8hpp.html#ae91f48b103514330622c87b16d786074" title="Multiplying a vector with a scalar, scales the vector.">Transform2D::operator*=()</a> is not?</p><ul>
 <li>Refer to [[<a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#con-constants-and-immutability">https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#con-constants-and-immutability</a>][C++ Core Guidelines (Constants and Immutability)]] in your answer</li>
 </ul>
-<p class="startli">Transform2D::operator*=() includes an assignment and changes the members of its owner, therefore it cannot be immutable, as they are supposed to be by default. </p>
+<p class="startli"><a class="el" href="geometry2d_8hpp.html#ae91f48b103514330622c87b16d786074" title="Multiplying a vector with a scalar, scales the vector.">Transform2D::operator*=()</a> includes an assignment and changes the members of its owner, therefore it cannot be immutable, as they are supposed to be by default. </p>
 </li>
 </ol>
 </div></div><!-- PageDoc -->

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['rad2deg_21',['rad2deg',['../geometry2d_8hpp.html#a61c288863ff74346e761950749593acd',1,'turtlelib']]],
-  ['rotation_22',['rotation',['../classturtlelib_1_1Transform2D.html#ab053e48454bcfaf84fb34a756dd0c26a',1,'turtlelib::Transform2D']]]
+  ['pi_23',['PI',['../geometry2d_8hpp.html#a506fa4b4fbcbaee2fb5362b4b8179bad',1,'turtlelib']]],
+  ['point2d_24',['Point2D',['../structturtlelib_1_1Point2D.html',1,'turtlelib']]]
 ];

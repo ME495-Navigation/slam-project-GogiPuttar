@@ -161,6 +161,37 @@ namespace turtlelib
     /// \return Scaled vector
     Vector2D operator*(const Vector2D & v, const double & scale);
 
+    /// \brief Subtracting a vector from a vector, changes the vector
+    /// \param rhv Right Hand Vector
+    /// \return Diminished vector
+    Vector2D operator-=(Vector2D & lhv, const Vector2D & rhv);
+
+    /// \brief Adding a vector to a vector, changes the vector
+    /// \param rhv Right Hand Vector
+    /// \return Extended vector
+    Vector2D operator+=(Vector2D & lhv, const Vector2D & rhv);    
+
+    /// \brief Multiplying a vector with a scalar, scales the vector
+    /// \param rhv Right Hand Vector
+    /// \return Scaled vector
+    Vector2D operator*=(Vector2D & lhv, const double & scale);   
+
+    /// \brief Dot product of two vectors yields a scalar
+    /// \param va Vector A
+    /// \param vb Vector B
+    /// \return Dot product
+    double dot(const Vector2D & va, const Vector2D & vb);
+
+    /// \brief Magnitude of a vector is a non-negative scalar
+    /// \param v Vector 
+    /// \return Magnitude
+    double magnitude(const Vector2D & v);
+
+    /// \brief Compute the angle between two vectors
+    /// \param va Vector A
+    /// \param vb Vector B
+    /// \return Angle(V_a) - Angle(V_b) (positive counterclockwise) 
+    double magnitude(const Vector2D & va, const Vector2D & vb);
 }
 
 #endif
