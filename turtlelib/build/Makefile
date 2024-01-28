@@ -587,6 +587,30 @@ test_turtlelib/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/build
 .PHONY : test_turtlelib/fast
 
+src/diff_drive.o: src/diff_drive.cpp.o
+.PHONY : src/diff_drive.o
+
+# target to build an object file
+src/diff_drive.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/diff_drive.cpp.o
+.PHONY : src/diff_drive.cpp.o
+
+src/diff_drive.i: src/diff_drive.cpp.i
+.PHONY : src/diff_drive.i
+
+# target to preprocess a source file
+src/diff_drive.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/diff_drive.cpp.i
+.PHONY : src/diff_drive.cpp.i
+
+src/diff_drive.s: src/diff_drive.cpp.s
+.PHONY : src/diff_drive.s
+
+# target to generate assembly for a file
+src/diff_drive.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/diff_drive.cpp.s
+.PHONY : src/diff_drive.cpp.s
+
 src/frame_main.o: src/frame_main.cpp.o
 .PHONY : src/frame_main.o
 
@@ -682,6 +706,30 @@ src/svg.s: src/svg.cpp.s
 src/svg.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/svg.cpp.s
 .PHONY : src/svg.cpp.s
+
+tests/test_diff_drive.o: tests/test_diff_drive.cpp.o
+.PHONY : tests/test_diff_drive.o
+
+# target to build an object file
+tests/test_diff_drive.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_diff_drive.cpp.o
+.PHONY : tests/test_diff_drive.cpp.o
+
+tests/test_diff_drive.i: tests/test_diff_drive.cpp.i
+.PHONY : tests/test_diff_drive.i
+
+# target to preprocess a source file
+tests/test_diff_drive.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_diff_drive.cpp.i
+.PHONY : tests/test_diff_drive.cpp.i
+
+tests/test_diff_drive.s: tests/test_diff_drive.cpp.s
+.PHONY : tests/test_diff_drive.s
+
+# target to generate assembly for a file
+tests/test_diff_drive.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_diff_drive.cpp.s
+.PHONY : tests/test_diff_drive.cpp.s
 
 tests/test_geometry2d.o: tests/test_geometry2d.cpp.o
 .PHONY : tests/test_geometry2d.o
@@ -800,6 +848,9 @@ help:
 	@echo "... frame_main"
 	@echo "... test_turtlelib"
 	@echo "... turtlelib"
+	@echo "... src/diff_drive.o"
+	@echo "... src/diff_drive.i"
+	@echo "... src/diff_drive.s"
 	@echo "... src/frame_main.o"
 	@echo "... src/frame_main.i"
 	@echo "... src/frame_main.s"
@@ -812,6 +863,9 @@ help:
 	@echo "... src/svg.o"
 	@echo "... src/svg.i"
 	@echo "... src/svg.s"
+	@echo "... tests/test_diff_drive.o"
+	@echo "... tests/test_diff_drive.i"
+	@echo "... tests/test_diff_drive.s"
 	@echo "... tests/test_geometry2d.o"
 	@echo "... tests/test_geometry2d.i"
 	@echo "... tests/test_geometry2d.s"

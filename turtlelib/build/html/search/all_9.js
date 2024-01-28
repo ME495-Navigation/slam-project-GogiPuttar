@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['savetofile_29',['saveToFile',['../classSVG.html#a041abb42a0d86aa8e3e93ce81a6f44e4',1,'SVG']]],
-  ['se2d_2ehpp_30',['se2d.hpp',['../se2d_8hpp.html',1,'']]],
-  ['svg_31',['SVG',['../classSVG.html',1,'SVG'],['../classSVG.html#ac11f28d97e3aaa2ddb6de475f8a8755f',1,'SVG::SVG()']]],
-  ['svg_2ehpp_32',['svg.hpp',['../svg_8hpp.html',1,'']]]
+  ['rad2deg_33',['rad2deg',['../geometry2d_8hpp.html#a61c288863ff74346e761950749593acd',1,'turtlelib']]],
+  ['rotation_34',['rotation',['../classturtlelib_1_1Transform2D.html#ab053e48454bcfaf84fb34a756dd0c26a',1,'turtlelib::Transform2D']]]
 ];

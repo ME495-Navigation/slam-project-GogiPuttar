@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['vector2d_37',['Vector2D',['../structturtlelib_1_1Vector2D.html',1,'turtlelib']]]
+  ['theta_39',['theta',['../structturtlelib_1_1pose.html#a86bb9fa43093b25aabfe6f7fd1a26024',1,'turtlelib::pose']]],
+  ['transform2d_40',['Transform2D',['../classturtlelib_1_1Transform2D.html#af02e23ce05599c9b378ea6bfbcc8d2dc',1,'turtlelib::Transform2D::Transform2D()'],['../classturtlelib_1_1Transform2D.html#a4ddd1cc18c672d413ebfd6752d33d554',1,'turtlelib::Transform2D::Transform2D(Vector2D trans)'],['../classturtlelib_1_1Transform2D.html#a206dfc425001c3a0ca1ab5336690f630',1,'turtlelib::Transform2D::Transform2D(double radians)'],['../classturtlelib_1_1Transform2D.html#aea373c83b9f293c2d5009db45258e994',1,'turtlelib::Transform2D::Transform2D(Vector2D trans, double radians)'],['../classturtlelib_1_1Transform2D.html',1,'turtlelib::Transform2D']]],
+  ['translation_41',['translation',['../classturtlelib_1_1Transform2D.html#a006a7b8e1a66ae557979f0a226f7571c',1,'turtlelib::Transform2D']]],
+  ['turtlelib_20library_42',['Turtlelib Library',['../index.html',1,'']]],
+  ['twist2d_43',['Twist2D',['../structturtlelib_1_1Twist2D.html',1,'turtlelib']]]
 ];

@@ -55,3 +55,7 @@
 1. ⬜ Task F.3
 1. ⬜ Task F.4
 1. ⬜ Task F.5
+
+
+Incomplete: ⬜
+Complete: ✅
