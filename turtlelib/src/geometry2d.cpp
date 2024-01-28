@@ -138,6 +138,28 @@ namespace turtlelib
 
     double angle(const Vector2D & va, const Vector2D & vb)
     {
-        return normalize_angle(atan2(va.y, va.x) - atan2(vb.y, vb.x));
+        double angle_a = 0.0, angle_b = 0.0;
+        
+        // Check for first edge case for atan2
+        if(va.x == -0.0 && (va.y == 0.0 || va.y == -0.0))
+        {
+            angle_a = atan2(0.0,0.0);
+        }
+        else
+        {
+            angle_a = atan2(va.y, va.x);
+        }
+
+        // Check for second edge case for atan2
+        if(vb.x == -0.0 && (vb.y == 0.0 || vb.y == -0.0))
+        {
+            angle_b = atan2(0.0,0.0);
+        }
+        else
+        {
+            angle_b = atan2(vb.y, vb.x);
+        }
+        
+        return normalize_angle(angle_a - angle_b);
     }
 }

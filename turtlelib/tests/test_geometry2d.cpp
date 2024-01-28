@@ -217,32 +217,32 @@ TEST_CASE( "Magnitude works", "[magnitude()]")
 
 TEST_CASE( "Angle works", "[magnitude()]") 
 {
-    Vector2D v1{-69, 4.20}, v2{69, 420}, v3{0,0}, v4{-1,0}, v5{-1, -1.0e-5};
-    Vector2D v01{0.0,0.0}, v02{0.0,-0.0}, v03{-0.0,-0.0}, v04{-0.0,-0.0};
+    Vector2D v1{-69, -4.20}, v2{69, 420}, v3{-0.0,0}, v4{-1,-0.0}, v5{-1, -1.0e-5};
+    Vector2D v01{0.0,0.0}, v02{0.0,-0.0}, v03{-0.0,-0.0}, v04{-0.0,0.0};
 
     // Check angles in one direction
-    REQUIRE_THAT(angle(v1,v2), WithinAbs(-1.672832955380525,1.0e-6));
-    REQUIRE_THAT(angle(v1,v3), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v1,v4), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v1,v5), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v2,v3), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v2,v4), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v2,v5), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v3,v4), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v3,v5), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v4,v5), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v1,v2), WithinAbs(1.794422067130102,1.0e-6));
+    REQUIRE_THAT(angle(v1,v3), WithinAbs(-3.080798097715004,1.0e-6));
+    REQUIRE_THAT(angle(v1,v4), WithinAbs(0.060794555874789,1.0e-6));
+    REQUIRE_THAT(angle(v1,v5), WithinAbs(0.060784555874789,1.0e-6));
+    REQUIRE_THAT(angle(v2,v3), WithinAbs(1.407965142334479,1.0e-6));
+    REQUIRE_THAT(angle(v2,v4), WithinAbs(-1.733627511255314,1.0e-6));
+    REQUIRE_THAT(angle(v2,v5), WithinAbs(-1.733637511255314,1.0e-6));
+    REQUIRE_THAT(angle(v3,v4), WithinAbs(PI,1.0e-6));
+    REQUIRE_THAT(angle(v3,v5), WithinAbs(3.141582653589793,1.0e-6));
+    REQUIRE_THAT(angle(v4,v5), WithinAbs(-9.999999999621423e-06,1.0e-6));
 
     // Check angles in the opposite direction
-    REQUIRE_THAT(angle(v5,v4), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v5,v3), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v5,v2), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v5,v1), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v4,v3), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v4,v4), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v4,v5), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v3,v4), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v3,v5), WithinAbs(-64.8,1.0e-6));
-    REQUIRE_THAT(angle(v2,v5), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v5,v4), WithinAbs(9.999999999621423e-06,1.0e-6));
+    REQUIRE_THAT(angle(v5,v3), WithinAbs(-3.141582653589793,1.0e-6));
+    REQUIRE_THAT(angle(v5,v2), WithinAbs(1.733637511255314,1.0e-6));
+    REQUIRE_THAT(angle(v5,v1), WithinAbs(-0.060784555874789,1.0e-6));
+    REQUIRE_THAT(angle(v4,v3), WithinAbs(3.141592653589793,1.0e-6));
+    REQUIRE_THAT(angle(v4,v2), WithinAbs(1.733627511255314,1.0e-6));
+    REQUIRE_THAT(angle(v4,v1), WithinAbs(-0.060794555874789,1.0e-6));
+    REQUIRE_THAT(angle(v3,v2), WithinAbs(-1.407965142334479,1.0e-6));
+    REQUIRE_THAT(angle(v3,v1), WithinAbs(3.080798097715004,1.0e-6));
+    REQUIRE_THAT(angle(v2,v1), WithinAbs(-1.794422067130102,1.0e-6));
 
     // Check zero cases 
     REQUIRE_THAT(angle(v01,v01), WithinAbs(0.0,1.0e-6));
@@ -250,3 +250,5 @@ TEST_CASE( "Angle works", "[magnitude()]")
     REQUIRE_THAT(angle(v03,v01), WithinAbs(0.0,1.0e-6));
     REQUIRE_THAT(angle(v04,v01), WithinAbs(0.0,1.0e-6));
 }
+
+
