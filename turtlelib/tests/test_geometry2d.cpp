@@ -202,7 +202,7 @@ TEST_CASE( "Dot product works", "[dot()]")
     double prod = dot(va, vb);
 
     // Check scalar.
-    REQUIRE_THAT(prod, WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(prod, WithinAbs(318.78,1.0e-6));
 }
 
 TEST_CASE( "Magnitude works", "[magnitude()]") 
@@ -212,17 +212,16 @@ TEST_CASE( "Magnitude works", "[magnitude()]")
     double mag = magnitude(v);
 
     // Check scalar.
-    REQUIRE_THAT(mag, WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(mag, WithinAbs(69.1277079,1.0e-6));
 }
 
 TEST_CASE( "Angle works", "[magnitude()]") 
 {
     Vector2D v1{-69, 4.20}, v2{69, 420}, v3{0,0}, v4{-1,0}, v5{-1, -1.0e-5};
-
-    double mag = magnitude(v);
+    Vector2D v01{0.0,0.0}, v02{0.0,-0.0}, v03{-0.0,-0.0}, v04{-0.0,-0.0};
 
     // Check angles in one direction
-    REQUIRE_THAT(angle(v1,v2), WithinAbs(-64.8,1.0e-6));
+    REQUIRE_THAT(angle(v1,v2), WithinAbs(-1.672832955380525,1.0e-6));
     REQUIRE_THAT(angle(v1,v3), WithinAbs(-64.8,1.0e-6));
     REQUIRE_THAT(angle(v1,v4), WithinAbs(-64.8,1.0e-6));
     REQUIRE_THAT(angle(v1,v5), WithinAbs(-64.8,1.0e-6));
@@ -244,4 +243,10 @@ TEST_CASE( "Angle works", "[magnitude()]")
     REQUIRE_THAT(angle(v3,v4), WithinAbs(-64.8,1.0e-6));
     REQUIRE_THAT(angle(v3,v5), WithinAbs(-64.8,1.0e-6));
     REQUIRE_THAT(angle(v2,v5), WithinAbs(-64.8,1.0e-6));
+
+    // Check zero cases 
+    REQUIRE_THAT(angle(v01,v01), WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT(angle(v02,v01), WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT(angle(v03,v01), WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT(angle(v04,v01), WithinAbs(0.0,1.0e-6));
 }

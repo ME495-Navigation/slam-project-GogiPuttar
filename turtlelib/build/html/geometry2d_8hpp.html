@@ -169,9 +169,9 @@ Vector2D&#160;</td><td class="memItemRight" valign="bottom"><b>turtlelib::normal
 <tr class="memitem:acab5ba90dd396376761b7c712a485318"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="geometry2d_8hpp.html#acab5ba90dd396376761b7c712a485318">turtlelib::magnitude</a> (const Vector2D &amp;v)</td></tr>
 <tr class="memdesc:acab5ba90dd396376761b7c712a485318"><td class="mdescLeft">&#160;</td><td class="mdescRight">Magnitude of a vector is a non-negative scalar.  <a href="geometry2d_8hpp.html#acab5ba90dd396376761b7c712a485318">More...</a><br /></td></tr>
 <tr class="separator:acab5ba90dd396376761b7c712a485318"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6dfabd2612327bd270f52c7824cd1bce"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="geometry2d_8hpp.html#a6dfabd2612327bd270f52c7824cd1bce">turtlelib::magnitude</a> (const Vector2D &amp;va, const Vector2D &amp;vb)</td></tr>
-<tr class="memdesc:a6dfabd2612327bd270f52c7824cd1bce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the angle between two vectors.  <a href="geometry2d_8hpp.html#a6dfabd2612327bd270f52c7824cd1bce">More...</a><br /></td></tr>
-<tr class="separator:a6dfabd2612327bd270f52c7824cd1bce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92e9e10ce41fd80df7aadc3dece9310f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="geometry2d_8hpp.html#a92e9e10ce41fd80df7aadc3dece9310f">turtlelib::angle</a> (const Vector2D &amp;va, const Vector2D &amp;vb)</td></tr>
+<tr class="memdesc:a92e9e10ce41fd80df7aadc3dece9310f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the angle between two vectors.  <a href="geometry2d_8hpp.html#a92e9e10ce41fd80df7aadc3dece9310f">More...</a><br /></td></tr>
+<tr class="separator:a92e9e10ce41fd80df7aadc3dece9310f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -233,6 +233,45 @@ constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if abs(d1 - d2) &lt; epsilon NOTE: implement this in the header file constexpr means that the function can be computed at compile time if given a compile-time constant as input </dd></dl>
+
+</div>
+</div>
+<a id="a92e9e10ce41fd80df7aadc3dece9310f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92e9e10ce41fd80df7aadc3dece9310f">&#9670;&nbsp;</a></span>angle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double turtlelib::angle </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Vector2D.html">Vector2D</a> &amp;&#160;</td>
+          <td class="paramname"><em>va</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Vector2D.html">Vector2D</a> &amp;&#160;</td>
+          <td class="paramname"><em>vb</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the angle between two vectors. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">va</td><td>Vector A </td></tr>
+    <tr><td class="paramname">vb</td><td>Vector B </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Angle(V_a) - Angle(V_b) (positive counterclockwise) <br  />
+ </dd></dl>
 
 </div>
 </div>
@@ -310,7 +349,7 @@ constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 </div>
 </div>
 <a id="acab5ba90dd396376761b7c712a485318"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acab5ba90dd396376761b7c712a485318">&#9670;&nbsp;</a></span>magnitude() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#acab5ba90dd396376761b7c712a485318">&#9670;&nbsp;</a></span>magnitude()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -333,45 +372,6 @@ constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Magnitude </dd></dl>
-
-</div>
-</div>
-<a id="a6dfabd2612327bd270f52c7824cd1bce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6dfabd2612327bd270f52c7824cd1bce">&#9670;&nbsp;</a></span>magnitude() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double turtlelib::magnitude </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Vector2D.html">Vector2D</a> &amp;&#160;</td>
-          <td class="paramname"><em>va</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Vector2D.html">Vector2D</a> &amp;&#160;</td>
-          <td class="paramname"><em>vb</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Compute the angle between two vectors. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">va</td><td>Vector A </td></tr>
-    <tr><td class="paramname">vb</td><td>Vector B </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Angle(V_a) - Angle(V_b) (positive counterclockwise) <br  />
- </dd></dl>
 
 </div>
 </div>

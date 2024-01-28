@@ -138,13 +138,6 @@ namespace turtlelib
 
     double angle(const Vector2D & va, const Vector2D & vb)
     {
-        if (va.x == 0.0 && va.y == 0.0) || (vb.x == 0.0 && vb.y == 0.0)
-        {
-            return 0.0;
-        }
-        else
-        {
-            return normalize_angle(atan2(va.y, va.x) - atan2(vb.y, vb.x));
-        }
+        return normalize_angle(atan2(va.y, va.x) - atan2(vb.y, vb.x));
     }
 }

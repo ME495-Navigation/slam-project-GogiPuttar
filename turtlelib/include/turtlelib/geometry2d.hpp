@@ -191,7 +191,7 @@ namespace turtlelib
     /// \param va Vector A
     /// \param vb Vector B
     /// \return Angle(V_a) - Angle(V_b) (positive counterclockwise) 
-    double magnitude(const Vector2D & va, const Vector2D & vb);
+    double angle(const Vector2D & va, const Vector2D & vb);
 }
 
 #endif
