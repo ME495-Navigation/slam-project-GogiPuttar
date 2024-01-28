@@ -23,7 +23,7 @@
 1. ✅ Task B.6
 1. ✅ Task B.7
 1. ✅ Task B.8
-1. ⬜ Task B.9
+1. ✅ Task B.9
 
 # ✅ Task C 
 1. ✅ Task C.1

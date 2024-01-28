@@ -212,37 +212,45 @@ TEST_CASE( "SE(2) multiplication operator works", "[operator *]")
 
 TEST_CASE( "Twist integration works", "[integrate_twist()]") 
 {
-    Twist2D v1{3.1, 0, 0};
-    Twist2D v2{0, -6.9, -42};
-    Twist2D v3{3.1, 6.9, 42};
-    Twist2D v4{0.43, -6.9, -4.2};
-    Twist2D v5{-6.9, -69, 4.20};
-    
-    Transform2D tf1 = integrate_twist(v1);
-    Transform2D tf2 = integrate_twist(v2);
-    Transform2D tf3 = integrate_twist(v3);
-
     // Check for pure rotation
+    
+    Twist2D v1{3.1, 0, 0};
+    Transform2D tf1 = integrate_twist(v1);
+    
     REQUIRE_THAT( tf1.rotation(), WithinAbs(3.1,1.0e-6));
     REQUIRE_THAT( tf1.translation().x, WithinAbs(0.0,1.0e-6));
     REQUIRE_THAT( tf1.translation().y, WithinAbs(0.0,1.0e-6));  
 
     // Check for pure translation
+
+    Twist2D v2{0, -6.9, -42};
+    Transform2D tf2 = integrate_twist(v2);
+
     REQUIRE_THAT( tf2.rotation(), WithinAbs(0.0,1.0e-6));
     REQUIRE_THAT( tf2.translation().x, WithinAbs(-6.9,1.0e-6));
     REQUIRE_THAT( tf2.translation().y, WithinAbs(-42,1.0e-6));  
 
     // Check for general twist
-    REQUIRE_THAT( tf3.rotation(), WithinAbs(0.0,1.0e-6));
-    REQUIRE_THAT( tf3.translation().x, WithinAbs(-6.9,1.0e-6));
-    REQUIRE_THAT( tf3.translation().y, WithinAbs(-42,1.0e-6)); 
+
+    Twist2D v3{3.1, 6.9, 42};
+    Transform2D tf3 = integrate_twist(v3); 
+
+    REQUIRE_THAT( tf3.rotation(), WithinAbs(3.1,1.0e-6));
+    REQUIRE_THAT( tf3.translation().x, WithinAbs(-26.992506368,1.0e-6));
+    REQUIRE_THAT( tf3.translation().y, WithinAbs(5.0130388255,1.0e-6)); 
 
     // Check for large radius of curvature
-    REQUIRE_THAT( tf2.rotation(), WithinAbs(0.0,1.0e-6));
-    REQUIRE_THAT( tf2.translation().x, WithinAbs(-6.9,1.0e-6));
-    REQUIRE_THAT( tf2.translation().y, WithinAbs(-42,1.0e-6));  
+
+    Twist2D v4{0.26, -6.9, -4.2};
+    Transform2D tf4 = integrate_twist(v4); 
+
+    REQUIRE_THAT( tf4.rotation(), WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT( tf4.translation().x, WithinAbs(-6.9,1.0e-6));
+    REQUIRE_THAT( tf4.translation().y, WithinAbs(-4.2,1.0e-6));  
 
     // Check for improper twist
 
+    Twist2D v5{6.9, -6.9, -4.2};
 
+    REQUIRE_THROWS(integrate_twist(v5));
 }
