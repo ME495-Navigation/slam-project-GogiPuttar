@@ -117,10 +117,40 @@ std::istream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <tr class="memitem:a20b5f7907e660e6ed153c9531f9a7a87"><td class="memItemLeft" align="right" valign="top">Transform2D&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="se2d_8hpp.html#a20b5f7907e660e6ed153c9531f9a7a87">turtlelib::operator*</a> (Transform2D lhs, const Transform2D &amp;rhs)</td></tr>
 <tr class="memdesc:a20b5f7907e660e6ed153c9531f9a7a87"><td class="mdescLeft">&#160;</td><td class="mdescRight">multiply two transforms together, returning their composition  <a href="se2d_8hpp.html#a20b5f7907e660e6ed153c9531f9a7a87">More...</a><br /></td></tr>
 <tr class="separator:a20b5f7907e660e6ed153c9531f9a7a87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc5750589e37249dc975fc9d345b311c"><td class="memItemLeft" align="right" valign="top">Transform2D&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="se2d_8hpp.html#abc5750589e37249dc975fc9d345b311c">turtlelib::integrate_twist</a> (const Twist2D &amp;twist)</td></tr>
+<tr class="memdesc:abc5750589e37249dc975fc9d345b311c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the transformation corresponding to a rigid body following a constant twist (from its original frame) for one time-unit.  <a href="se2d_8hpp.html#abc5750589e37249dc975fc9d345b311c">More...</a><br /></td></tr>
+<tr class="separator:abc5750589e37249dc975fc9d345b311c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Two-dimensional rigid body transformations. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="abc5750589e37249dc975fc9d345b311c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc5750589e37249dc975fc9d345b311c">&#9670;&nbsp;</a></span>integrate_twist()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Transform2D turtlelib::integrate_twist </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structturtlelib_1_1Twist2D.html">Twist2D</a> &amp;&#160;</td>
+          <td class="paramname"><em>twist</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the transformation corresponding to a rigid body following a constant twist (from its original frame) for one time-unit. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">twist</td><td>- twist to be applied </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Transform corresponding to applied twist </dd></dl>
+
+</div>
+</div>
 <a id="a20b5f7907e660e6ed153c9531f9a7a87"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a20b5f7907e660e6ed153c9531f9a7a87">&#9670;&nbsp;</a></span>operator*()</h2>
 

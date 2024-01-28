@@ -124,6 +124,11 @@ namespace turtlelib
     /// HINT: This function should be implemented in terms of *=
     Transform2D operator*(Transform2D lhs, const Transform2D & rhs);
 
+    /// \brief Compute the transformation corresponding to a rigid body following a constant twist (from its original frame) for one time-unit
+    /// \param twist - twist to be applied
+    /// \return Transform corresponding to applied twist
+    Transform2D integrate_twist(const Twist2D & twist);
+
 }
 
 #endif

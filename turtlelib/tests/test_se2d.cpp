@@ -44,7 +44,7 @@ TEST_CASE( "Stream extraction works for 2d twist", "[operator>>]") // Adapted fr
     REQUIRE_THAT( tw_2.y, WithinAbs(69.0,1.0e-6));
 }
 
-TEST_CASE( "Initialization works for SE(2) identity transform", "[Transform2d()]") 
+TEST_CASE( "Initialization works for SE(2) identity transform", "[Transform2D()]") 
 {
     Transform2D tf;
 
@@ -53,7 +53,7 @@ TEST_CASE( "Initialization works for SE(2) identity transform", "[Transform2d()]
     REQUIRE_THAT( tf.translation().y, WithinAbs(0.0,1.0e-6));    
 }
 
-TEST_CASE( "Initialization works for SE(2) pure translation transform", "[Transform2d(Vector2D)]") 
+TEST_CASE( "Initialization works for SE(2) pure translation transform", "[Transform2D(Vector2D)]") 
 {
     Vector2D displacement{69.0, 69.0};
     Transform2D tf{displacement};
@@ -63,7 +63,7 @@ TEST_CASE( "Initialization works for SE(2) pure translation transform", "[Transf
     REQUIRE_THAT( tf.translation().y, WithinAbs(69.0,1.0e-6));    
 }
 
-TEST_CASE( "Initialization works for SE(2) pure rotation transform", "[Transform2d(double)]") 
+TEST_CASE( "Initialization works for SE(2) pure rotation transform", "[Transform2D(double)]") 
 {
     double angle{-6.9*PI};
     Transform2D tf{angle};
@@ -73,7 +73,7 @@ TEST_CASE( "Initialization works for SE(2) pure rotation transform", "[Transform
     REQUIRE_THAT( tf.translation().y, WithinAbs(0.0,1.0e-6));    
 }
 
-TEST_CASE( "Initialization works for general SE(2) transform", "[Transform2d(Vector2D, double)]") 
+TEST_CASE( "Initialization works for general SE(2) transform", "[Transform2D(Vector2D, double)]") 
 {
     Vector2D displacement{4.20, 6.9};
     double angle{-6.9*PI};
@@ -84,7 +84,7 @@ TEST_CASE( "Initialization works for general SE(2) transform", "[Transform2d(Vec
     REQUIRE_THAT( tf.translation().y, WithinAbs(6.9,1.0e-6));    
 }
 
-TEST_CASE( "SE(2) transformation of a 2D point works", "[Transform2d() Point2D]") 
+TEST_CASE( "SE(2) transformation of a 2D point works", "[Transform2D() Point2D]") 
 {
     Vector2D displacement{4.20, 6.9};
     double angle{6.9};
@@ -99,7 +99,7 @@ TEST_CASE( "SE(2) transformation of a 2D point works", "[Transform2d() Point2D]"
     REQUIRE_THAT( newp.y, WithinAbs(14.317279794805081,1.0e-6));    
 }
 
-TEST_CASE( "SE(2) transformation of a 2D vector works", "[Transform2d() Vector2D]") 
+TEST_CASE( "SE(2) transformation of a 2D vector works", "[Transform2D() Vector2D]") 
 {
     Vector2D displacement{4.20, 6.9};
     double angle{6.9};
@@ -114,7 +114,7 @@ TEST_CASE( "SE(2) transformation of a 2D vector works", "[Transform2d() Vector2D
     REQUIRE_THAT( newv.y, WithinAbs(7.417279794805081,1.0e-6));    
 }
 
-TEST_CASE( "SE(2) transformation of a 2D twist works", "[Transform2d() Twist2D]") 
+TEST_CASE( "SE(2) transformation of a 2D twist works", "[Transform2D() Twist2D]") 
 {
     Vector2D displacement{4.20, 6.9};
     double angle{6.9};
@@ -193,7 +193,7 @@ TEST_CASE( "Stream extraction works SE(2) transform", "[operator>>]") // Adapted
     REQUIRE_THAT( tf_2.translation().y, WithinAbs(69.0, 1.0e-6) );
 }
 
-TEST_CASE( "SE(2) multiplication operator works", "[oprator *]") 
+TEST_CASE( "SE(2) multiplication operator works", "[operator *]") 
 {
     Vector2D displacement_1{4.20, 6.9};
     double angle_1{-6.9*PI};
@@ -208,4 +208,41 @@ TEST_CASE( "SE(2) multiplication operator works", "[oprator *]")
     REQUIRE_THAT( tf_3.rotation(), WithinAbs(-0.7*PI,1.0e-6));
     REQUIRE_THAT( tf_3.translation().x, WithinAbs(-1.064418586061780,1.0e-6));
     REQUIRE_THAT( tf_3.translation().y, WithinAbs(0.773345370373218,1.0e-6));  
+}
+
+TEST_CASE( "Twist integration works", "[integrate_twist()]") 
+{
+    Twist2D v1{3.1, 0, 0};
+    Twist2D v2{0, -6.9, -42};
+    Twist2D v3{3.1, 6.9, 42};
+    Twist2D v4{0.43, -6.9, -4.2};
+    Twist2D v5{-6.9, -69, 4.20};
+    
+    Transform2D tf1 = integrate_twist(v1);
+    Transform2D tf2 = integrate_twist(v2);
+    Transform2D tf3 = integrate_twist(v3);
+
+    // Check for pure rotation
+    REQUIRE_THAT( tf1.rotation(), WithinAbs(3.1,1.0e-6));
+    REQUIRE_THAT( tf1.translation().x, WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT( tf1.translation().y, WithinAbs(0.0,1.0e-6));  
+
+    // Check for pure translation
+    REQUIRE_THAT( tf2.rotation(), WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT( tf2.translation().x, WithinAbs(-6.9,1.0e-6));
+    REQUIRE_THAT( tf2.translation().y, WithinAbs(-42,1.0e-6));  
+
+    // Check for general twist
+    REQUIRE_THAT( tf3.rotation(), WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT( tf3.translation().x, WithinAbs(-6.9,1.0e-6));
+    REQUIRE_THAT( tf3.translation().y, WithinAbs(-42,1.0e-6)); 
+
+    // Check for large radius of curvature
+    REQUIRE_THAT( tf2.rotation(), WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT( tf2.translation().x, WithinAbs(-6.9,1.0e-6));
+    REQUIRE_THAT( tf2.translation().y, WithinAbs(-42,1.0e-6));  
+
+    // Check for improper twist
+
+
 }

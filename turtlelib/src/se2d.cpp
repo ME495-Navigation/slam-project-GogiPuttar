@@ -188,5 +188,67 @@ namespace turtlelib
         return lhs;
     }
 
+    Transform2D integrate_twist(const Twist2D & twist)
+    {
+        // Original Body frame is {b}
+        
+        // Check if angular increment is reasonable 
+        if(normalize_angle(twist.omega) != twist.omega)
+        {
+            throw std::runtime_error("Angular increment is too large. Check verity of twist's angular velcoity, or decrease timestep.");
+            return Transform2D{};
+        }
+        
+        // Maximum radius of curvature according to practical standards.
+        double R_max = 30.0, R = 0.0;
+
+        // Check for pure translation
+        bool pureTranslationFlag = false;
+
+        // Case when there is no omega
+        if(almost_equal(twist.omega, 0.0))
+        {
+            pureTranslationFlag = true;
+        }
+        else
+        {
+            R = magnitude(Vector2D{twist.x, twist.y}) / twist.omega;
+
+            // Case when omega radius of curvature is too large to be considered substantial 
+            if(R > R_max)
+            {
+                pureTranslationFlag = true;
+                R = 0.0;
+            }
+        }
+
+        // Screw axis frame {s}
+        double rotation_s = atan2(twist.y, twist.x);
+        Vector2D translation_s{-R * sin(rotation_s), R * cos(rotation_s)};
+        Transform2D T_bs{translation_s, rotation_s};
+
+        // Screw rotation transform {s} -> {S}
+        Transform2D T_sS{twist.omega};
+
+        // New body frame {B}
+        if(pureTranslationFlag)
+        {
+            // Transform2D T_bB{};
+            Transform2D T_bB{Vector2D{twist.x, twist.y}};
+            // return T_bB;    
+
+            Transform2D T_bA{Vector2D{twist.x, twist.y}};
+            return T_bA;     
+        }
+        else
+        {
+            Transform2D T_bB = T_bs * T_sS * T_bs.inv();
+            return T_bB;        
+        }
+
+        // Unanticipated error
+        throw std::runtime_error("TWIST INTEGRATION FAILS.");
+        return Transform2D{};
+    }
 
 }
