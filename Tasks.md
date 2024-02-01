@@ -36,7 +36,7 @@
 1. ⬜ Task C.8
 
 # ⬜ Task D
-1. ⬜ Task D.1
+1. ✅ Task D.1
 1. ⬜ Task D.2
 1. ⬜ Task D.3
 
