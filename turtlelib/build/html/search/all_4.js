@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['magnitude_15',['magnitude',['../geometry2d_8hpp.html#acab5ba90dd396376761b7c712a485318',1,'turtlelib']]]
+  ['left_15',['left',['../structturtlelib_1_1wheelAngles.html#af0960b18145e5e14d49dced925b84b45',1,'turtlelib::wheelAngles']]]
 ];

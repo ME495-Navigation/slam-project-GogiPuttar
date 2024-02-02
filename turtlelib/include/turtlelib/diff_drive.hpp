@@ -13,7 +13,7 @@ namespace turtlelib
 {
 
     /// \brief represent a mobile robot's pose
-    struct pose
+    struct pose2D
     {
         /// \brief angle with the world frame
         double theta = 0.0;
@@ -25,23 +25,47 @@ namespace turtlelib
         double y = 0.0;
     };
 
+    /// \brief represent a mobile robot's pose
+    struct wheelAngles
+    {
+        /// \brief left wheel angle
+        double left = 0.0;
+
+        /// \brief right wheel angle
+        double right = 0.0;
+    };
+
     /// \brief models the kinematics of a differential drive robot with a given wheel track and wheel radius
     class DiffDrive
     {
 
     private:
 
+        /// \brief angle of rotation of wheels, in radians
+        wheelAngles phi;
+    
+        /// \brief pose of the mobile robot in the world frame
+        pose2D q;
+
     public:
 
-        /// \brief angle of rotation of the right wheel, in radians
-        double phi_l;
-        /// \brief angle of rotation of the right wheel, in radians
-        double phi_r;
-        /// \brief angle of rotation of the right wheel, in radians
-        pose q;
-
-        /// \brief Initialize the kinematics
+        /// \brief Initialize the kinematics for a new Diff Drive robot
         DiffDrive();
+
+        /// \brief Initialize the kinematics for a general Diff Drive robot
+        explicit DiffDrive(wheelAngles wheels, pose2D pose);
+
+        // Get translation vector.
+        wheelAngles wheels() const;
+
+        // Get rotation angle.
+        pose2D pose() const;
+
+        // Drive the robot forward through the wheels (compute forward velocity kinematics)
+        void driveWheels(wheelAngles delta_phi) const;
+
+        // Drive the robot forward by defining its twist (compute inverse velocity kinematics)
+        void driveTwist(Twist2D delta_q) const;
 
         // /// \brief create a transformation that is a pure translation
         // /// \param trans - the vector by which to translate
