@@ -84,22 +84,28 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1DiffDrive.html#af12802e0426ecc1c43346d3b6a439278">DiffDrive</a> ()</td></tr>
 <tr class="memdesc:af12802e0426ecc1c43346d3b6a439278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the kinematics for a new Diff Drive robot. <br /></td></tr>
 <tr class="separator:af12802e0426ecc1c43346d3b6a439278"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3e5cc1b6a28cd740facd5189565bfd9"><td class="memItemLeft" align="right" valign="top"><a id="ac3e5cc1b6a28cd740facd5189565bfd9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1DiffDrive.html#ac3e5cc1b6a28cd740facd5189565bfd9">DiffDrive</a> (<a class="el" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> wheels, <a class="el" href="structturtlelib_1_1pose2D.html">pose2D</a> pose)</td></tr>
-<tr class="memdesc:ac3e5cc1b6a28cd740facd5189565bfd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the kinematics for a general Diff Drive robot. <br /></td></tr>
-<tr class="separator:ac3e5cc1b6a28cd740facd5189565bfd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa79f0a9c6f639b07dd5387abd49043d7"><td class="memItemLeft" align="right" valign="top"><a id="aa79f0a9c6f639b07dd5387abd49043d7"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1DiffDrive.html#aa79f0a9c6f639b07dd5387abd49043d7">DiffDrive</a> (double radius, double sep, <a class="el" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> wheels, <a class="el" href="structturtlelib_1_1pose2D.html">pose2D</a> pose)</td></tr>
+<tr class="memdesc:aa79f0a9c6f639b07dd5387abd49043d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the kinematics for a general Diff Drive robot. <br /></td></tr>
+<tr class="separator:aa79f0a9c6f639b07dd5387abd49043d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a272b370eae9dbb57983546051dd1c13c"><td class="memItemLeft" align="right" valign="top"><a id="a272b370eae9dbb57983546051dd1c13c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>driveWheels</b> (<a class="el" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> delta_phi)</td></tr>
+<tr class="separator:a272b370eae9dbb57983546051dd1c13c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91365df5f9c255d7a3ed0506155e0a8d"><td class="memItemLeft" align="right" valign="top"><a id="a91365df5f9c255d7a3ed0506155e0a8d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>driveTwist</b> (<a class="el" href="structturtlelib_1_1Twist2D.html">Twist2D</a> delta_q) const</td></tr>
+<tr class="separator:a91365df5f9c255d7a3ed0506155e0a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d5ea256a3fab99ab9a39e5b0bbb5e6a"><td class="memItemLeft" align="right" valign="top"><a id="a2d5ea256a3fab99ab9a39e5b0bbb5e6a"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>radius</b> () const</td></tr>
+<tr class="separator:a2d5ea256a3fab99ab9a39e5b0bbb5e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c2f96fddf8a114a0c8b5004a2da13f3"><td class="memItemLeft" align="right" valign="top"><a id="a2c2f96fddf8a114a0c8b5004a2da13f3"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>separation</b> () const</td></tr>
+<tr class="separator:a2c2f96fddf8a114a0c8b5004a2da13f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab28c2b99f7cfe5ffba17e5d1674f9a72"><td class="memItemLeft" align="right" valign="top"><a id="ab28c2b99f7cfe5ffba17e5d1674f9a72"></a>
 <a class="el" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a>&#160;</td><td class="memItemRight" valign="bottom"><b>wheels</b> () const</td></tr>
 <tr class="separator:ab28c2b99f7cfe5ffba17e5d1674f9a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9400d601c373dcb2b580bffb15cbf23e"><td class="memItemLeft" align="right" valign="top"><a id="a9400d601c373dcb2b580bffb15cbf23e"></a>
 <a class="el" href="structturtlelib_1_1pose2D.html">pose2D</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pose</b> () const</td></tr>
 <tr class="separator:a9400d601c373dcb2b580bffb15cbf23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b34578957e2dd118712ae56eeada1b7"><td class="memItemLeft" align="right" valign="top"><a id="a6b34578957e2dd118712ae56eeada1b7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>driveWheels</b> (<a class="el" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> delta_phi) const</td></tr>
-<tr class="separator:a6b34578957e2dd118712ae56eeada1b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91365df5f9c255d7a3ed0506155e0a8d"><td class="memItemLeft" align="right" valign="top"><a id="a91365df5f9c255d7a3ed0506155e0a8d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>driveTwist</b> (<a class="el" href="structturtlelib_1_1Twist2D.html">Twist2D</a> delta_q) const</td></tr>
-<tr class="separator:a91365df5f9c255d7a3ed0506155e0a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>models the kinematics of a differential drive robot with a given wheel track and wheel radius </p>

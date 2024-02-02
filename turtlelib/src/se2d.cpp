@@ -195,7 +195,7 @@ namespace turtlelib
         // Check if angular increment is reasonable 
         if(normalize_angle(twist.omega) != twist.omega)
         {
-            throw std::logic_error("Angular increment is too large. Verify twist's angular velcoity, or decrease timestep.");
+            throw std::logic_error("Angular increment is too large. Verify twist's angular velocity, or decrease timestep.");
             return Transform2D{};
         }
         
@@ -247,7 +247,7 @@ namespace turtlelib
         }
 
         // Unanticipated error
-        throw std::runtime_error("TWIST INTEGRATION FAILS.");
+        throw std::runtime_error("TWIST INTEGRATION FAILED.");
         return Transform2D{};
     }
 

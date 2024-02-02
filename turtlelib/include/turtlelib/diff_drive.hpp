@@ -41,6 +41,12 @@ namespace turtlelib
 
     private:
 
+        /// \brief radius of wheels, in meters
+        double wheel_radius;
+
+        /// \brief separation between wheels, in meters
+        double wheel_sep;
+
         /// \brief angle of rotation of wheels, in radians
         wheelAngles phi;
     
@@ -53,19 +59,25 @@ namespace turtlelib
         DiffDrive();
 
         /// \brief Initialize the kinematics for a general Diff Drive robot
-        explicit DiffDrive(wheelAngles wheels, pose2D pose);
-
-        // Get translation vector.
-        wheelAngles wheels() const;
-
-        // Get rotation angle.
-        pose2D pose() const;
+        explicit DiffDrive(double radius, double sep, wheelAngles wheels, pose2D pose);
 
         // Drive the robot forward through the wheels (compute forward velocity kinematics)
-        void driveWheels(wheelAngles delta_phi) const;
+        void driveWheels(wheelAngles delta_phi);
 
         // Drive the robot forward by defining its twist (compute inverse velocity kinematics)
         void driveTwist(Twist2D delta_q) const;
+
+        // Get wheel radius
+        double radius() const;
+
+        // Get wheel separation
+        double separation() const;
+
+        // Get wheel angles
+        wheelAngles wheels() const;
+
+        // Get pose
+        pose2D pose() const;
 
         // /// \brief create a transformation that is a pure translation
         // /// \param trans - the vector by which to translate
