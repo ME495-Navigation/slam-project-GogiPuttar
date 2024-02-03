@@ -35,10 +35,10 @@
 1. ✅ Task C.7
 1. ⬜ Task C.8
 
-# ✅ Task D
+# ⬜ Task D
 1. ✅ Task D.1
 1. ✅ Task D.2
-1. ✅ Task D.3
+1. ⬜ Task D.3
 
 # ⬜ Task E
 1. ⬜ Task E.1
