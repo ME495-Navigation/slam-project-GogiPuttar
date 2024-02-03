@@ -85,6 +85,8 @@ public:
   : Node("nusim"), timestep_(0)
   {
     // Parameter descirption
+      // it is possible using brace syntax to avoid these temporary variables
+      // instead you can construct these in pklace where they are used
     auto rate_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto x0_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto y0_des = rcl_interfaces::msg::ParameterDescriptor{};
@@ -276,6 +278,10 @@ private:
   /// \brief Create walls as a MarkerArray and publish them to a topic to display them in Rviz
   void create_arena_walls()
   {
+      // The if statements based on index make this loop a bit superflouous
+      /// it would be okay to just publish the walls directly
+      // The if statements based on index make this loop a bit superflouous
+      /// it would be okay to just publish the walls directly as each has very little in common
     for (int i = 0; i <= 3; i++) {
       visualization_msgs::msg::Marker wall_;
       wall_.header.frame_id = "nusim/world";

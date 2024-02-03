@@ -59,7 +59,7 @@ namespace turtlelib
     // Transform a point.
     Point2D Transform2D::operator()(Point2D p) const
     {
-        Point2D newp{};
+        Point2D newp{}; // can initialize newp in constructor instead of assigning to each value individually
 
         // Rotate.
         newp.x = p.x * cos(rotationAngle) - p.y * sin(rotationAngle);
@@ -74,7 +74,7 @@ namespace turtlelib
     // Transform a vector.
     Vector2D Transform2D::operator()(Vector2D v) const
     {
-        Vector2D newv{};
+        Vector2D newv{};// can initialize newp in constructor instead of assigning to each value individually
 
         // Rotate.
         newv.x = v.x * cos(rotationAngle) - v.y * sin(rotationAngle);
@@ -100,7 +100,7 @@ namespace turtlelib
     Transform2D Transform2D::inv() const
     {
         Vector2D newTranslationVector{};
-        double newRotationAngle{};
+        double newRotationAngle{}; // const auto newRotationAngle = -rotationAngle;
 
         // R^T
         newRotationAngle = -rotationAngle;
@@ -110,7 +110,7 @@ namespace turtlelib
         newTranslationVector.y = -(translationVector.x * sin(newRotationAngle) + translationVector.y * cos(newRotationAngle));
 
         // Create inverted Transform
-        Transform2D inv{newTranslationVector, newRotationAngle};
+        Transform2D inv{newTranslationVector, newRotationAngle}; // can just do return{newTranslationVector, newRotationAngle}, no need for this temporary
 
         return inv;
     }
@@ -127,6 +127,7 @@ namespace turtlelib
         Point2D temp{rhs.translation().x, rhs.translation().y};
 
         // R_a * p_rhs + p_a, which is equivalent to T_a * p_rhs
+        /// A more clear way of doing this operation is
         Vector2D newTranslationVector{(*this)(temp).x, (*this)(temp).y};
 
         // Rewrite this transform as the composed transform.
@@ -159,6 +160,7 @@ namespace turtlelib
     // Read SE(2) Transform.
     std::istream & operator>>(std::istream & is, Transform2D & tf) // Adapted from Abhishek Sankar
     {
+        // These can be declared much closer to where they are used
         std::string trash_1, trash_2, trash_3;
         double rotationAngle {};
         Vector2D translationVector {};

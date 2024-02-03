@@ -52,11 +52,11 @@ public:
     
     /// \brief Gets the width of the image
     /// \return the width of the .svg
-    int getWidth();
+    int getWidth(); // should be const
     
     /// \brief Gets the height of the image
     /// \return the height of the .svg
-    int getHeight();
+    int getHeight(); /// should be const
 
 private:
     /// \brief width of the svg file

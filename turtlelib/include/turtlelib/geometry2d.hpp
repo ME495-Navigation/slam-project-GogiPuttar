@@ -135,6 +135,7 @@ namespace turtlelib
     std::istream & operator>>(std::istream & is, Vector2D & v);
 
     // Normalize Vector
+    //! This documentation is incomplete and not in doxygen format
     Vector2D normalizeVector(const Vector2D & v);
 
 }

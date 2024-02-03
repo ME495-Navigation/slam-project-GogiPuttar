@@ -76,6 +76,7 @@ namespace turtlelib
 
         if(v_norm == 0.0)
         {
+            // you should probably throw an exception here rather than printing a message
             std::cout << "INVALID VECTOR." << std::endl;
         }
         else
@@ -84,6 +85,8 @@ namespace turtlelib
             v_hat.y = v.y / v_norm;
         }
 
-        return v_hat;
+
+
+       return v_hat;
     }
 }

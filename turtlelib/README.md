@@ -148,7 +148,7 @@ A library for handling transformations in SE(2) and other turtlebot-related math
    - Which of the methods would you implement and why?
 
    I would implement method 2, since I value maintainability and Method 1 and 3 can surprise the user by making the code less readable.
-
+   - Implementation for all three was not necessary to implement this, but good work!
 2. What is the difference between a class and a struct in C++?
 
     Members of a class have a default access level of private.
