@@ -19,6 +19,11 @@ namespace turtlelib
     wheel_radius{radius}, wheel_sep{sep}, phi{normalize_angle(wheels.left), normalize_angle(wheels.right)}, q{normalize_angle(pose.theta), pose.x, pose.y} 
     {}
 
+    // Create a general Diff Drive starting at the origin
+    DiffDrive::DiffDrive(double radius, double sep) :
+    wheel_radius{radius}, wheel_sep{sep}, phi{0.0, 0.0}, q{0.0, 0.0, 0.0} 
+    {}
+
     // Drive the robot forward through the wheels (compute forward velocity kinematics)
     void DiffDrive::driveWheels(wheelAngles delta_phi)
     {

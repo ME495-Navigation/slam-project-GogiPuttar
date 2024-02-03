@@ -116,42 +116,44 @@ $(function() {
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classturtlelib_1_1DiffDrive.html#af12802e0426ecc1c43346d3b6a439278">DiffDrive</a>(<span class="keywordtype">double</span> radius, <span class="keywordtype">double</span> sep, <a class="code" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> wheels, <a class="code" href="structturtlelib_1_1pose2D.html">pose2D</a> pose);</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">// Drive the robot forward through the wheels (compute forward velocity kinematics)</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordtype">void</span> driveWheels(<a class="code" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> delta_phi);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classturtlelib_1_1DiffDrive.html#af12802e0426ecc1c43346d3b6a439278">DiffDrive</a>(<span class="keywordtype">double</span> radius, <span class="keywordtype">double</span> sep);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">// Drive the robot forward by defining its twist (compute inverse velocity kinematics)</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordtype">void</span> driveTwist(<a class="code" href="structturtlelib_1_1Twist2D.html">Twist2D</a> V_b);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">// Drive the robot forward through the wheels (compute forward velocity kinematics)</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordtype">void</span> driveWheels(<a class="code" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> delta_phi);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">// Get wheel radius</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordtype">double</span> radius() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">// Drive the robot forward by defining its twist (compute inverse velocity kinematics)</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordtype">void</span> driveTwist(<a class="code" href="structturtlelib_1_1Twist2D.html">Twist2D</a> V_b);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">// Get wheel separation</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordtype">double</span> separation() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">// Get wheel radius</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordtype">double</span> radius() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">// Get wheel angles</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <a class="code" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> wheels() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">// Get wheel separation</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordtype">double</span> separation() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="comment">// Get pose</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <a class="code" href="structturtlelib_1_1pose2D.html">pose2D</a> pose() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="comment">// Get wheel angles</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <a class="code" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> wheels() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="comment">// /// \brief create a transformation that is a pure translation</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="comment">// /// \param trans - the vector by which to translate</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">// explicit DiffDrive(Vector2D trans);</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">// /// \brief create a pure rotation</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">// /// \param radians - angle of the rotation, in radians</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="comment">// explicit DiffDrive(double radians);</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="comment">// /// \brief Create a transformation with a translational and rotational</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">// /// component</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">// /// \param trans - the translation</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">// /// \param radians - the rotation, in radians</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="comment">// DiffDrive(Vector2D trans, double radians);</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    };</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="comment">// Get pose</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="structturtlelib_1_1pose2D.html">pose2D</a> pose() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="comment">// /// \brief create a transformation that is a pure translation</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">// /// \param trans - the vector by which to translate</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">// explicit DiffDrive(Vector2D trans);</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">// /// \brief create a pure rotation</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="comment">// /// \param radians - angle of the rotation, in radians</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">// explicit DiffDrive(double radians);</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">// /// \brief Create a transformation with a translational and rotational</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="comment">// /// component</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="comment">// /// \param trans - the translation</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="comment">// /// \param radians - the rotation, in radians</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="comment">// DiffDrive(Vector2D trans, double radians);</span></div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    };</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassturtlelib_1_1DiffDrive_html"><div class="ttname"><a href="classturtlelib_1_1DiffDrive.html">turtlelib::DiffDrive</a></div><div class="ttdoc">models the kinematics of a differential drive robot with a given wheel track and wheel radius</div><div class="ttdef"><b>Definition:</b> diff_drive.hpp:40</div></div>
 <div class="ttc" id="aclassturtlelib_1_1DiffDrive_html_af12802e0426ecc1c43346d3b6a439278"><div class="ttname"><a href="classturtlelib_1_1DiffDrive.html#af12802e0426ecc1c43346d3b6a439278">turtlelib::DiffDrive::DiffDrive</a></div><div class="ttdeci">DiffDrive()</div><div class="ttdoc">Initialize the kinematics for a new Diff Drive robot.</div><div class="ttdef"><b>Definition:</b> diff_drive.cpp:13</div></div>
 <div class="ttc" id="adiff__drive_8hpp_html"><div class="ttname"><a href="diff__drive_8hpp.html">diff_drive.hpp</a></div><div class="ttdoc">Two-dimensional rigid body transformations.</div></div>

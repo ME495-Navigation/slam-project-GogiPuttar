@@ -41,20 +41,19 @@
 1. ⬜ Task D.3
 
 # ⬜ Task E
-1. ⬜ Task E.1
+1. ✅ Task E.1
 1. ⬜ Task E.2
 1. ⬜ Task E.3
 1. ⬜ Task E.4
 1. ⬜ Task E.5
 1. ⬜ Task E.6
+- Did not do logging
 
 
 # ⬜ Task F
 1. ⬜ Task F.1
 1. ⬜ Task F.2
 1. ⬜ Task F.3
-1. ⬜ Task F.4
-1. ⬜ Task F.5
 
 
 Incomplete: ⬜

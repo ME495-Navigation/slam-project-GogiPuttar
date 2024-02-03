@@ -18,7 +18,6 @@
   <depend>tf2_ros</depend>
   <depend>tf2</depend>
   <depend>visualization_msgs</depend>
-  <depend>nuturtlebot_msgs</depend>
   <depend>turtlelib</depend>
 
   <depend>rclcpp</depend>

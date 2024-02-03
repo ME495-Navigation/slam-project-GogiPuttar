@@ -33,7 +33,7 @@ TEST_CASE( "Initialization works for new DiffDrive", "[DiffDrive()]")
     REQUIRE_THAT( turtle.pose().y, WithinAbs(0.0,1.0e-6));
 }
 
-TEST_CASE( "Initialization works for general DiffDrive", "[DiffDrive()]") 
+TEST_CASE( "Initialization works for general DiffDrive", "[DiffDrive(double radius, double sep, wheelAngles wheels, pose2D pose)]") 
 {
     DiffDrive turtle{69, 420, wheelAngles{6.9, 4.20}, pose2D{69, 6.9, 0.69}};
 
@@ -44,6 +44,19 @@ TEST_CASE( "Initialization works for general DiffDrive", "[DiffDrive()]")
     REQUIRE_THAT( turtle.pose().theta, WithinAbs(normalize_angle(69),1.0e-6));
     REQUIRE_THAT( turtle.pose().x, WithinAbs(6.9,1.0e-6));
     REQUIRE_THAT( turtle.pose().y, WithinAbs(0.69,1.0e-6));
+}
+
+TEST_CASE( "Initialization works for a DiffDrive at the origin", "[DiffDrive(double radius, double sep)]") 
+{
+    DiffDrive turtle{69, 420};
+
+    REQUIRE_THAT( turtle.radius(), WithinAbs(69.0,1.0e-6));
+    REQUIRE_THAT( turtle.separation(), WithinAbs(420.0,1.0e-6));
+    REQUIRE_THAT( turtle.wheels().left, WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT( turtle.wheels().right, WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT( turtle.pose().theta, WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT( turtle.pose().x, WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT( turtle.pose().y, WithinAbs(0.0,1.0e-6));
 }
 
 TEST_CASE( "Driving through wheels works", "[driveWheels()]") 

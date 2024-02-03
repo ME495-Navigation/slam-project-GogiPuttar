@@ -61,6 +61,9 @@ namespace turtlelib
         /// \brief Initialize the kinematics for a general Diff Drive robot
         explicit DiffDrive(double radius, double sep, wheelAngles wheels, pose2D pose);
 
+        /// \brief Initialize the radius and wheel separation for a diff drive robot
+        explicit DiffDrive(double radius, double sep);
+
         // Drive the robot forward through the wheels (compute forward velocity kinematics)
         void driveWheels(wheelAngles delta_phi);
 
