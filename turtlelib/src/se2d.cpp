@@ -235,10 +235,7 @@ namespace turtlelib
         {
             // Transform2D T_bB{};
             Transform2D T_bB{Vector2D{twist.x, twist.y}};
-            // return T_bB;    
-
-            Transform2D T_bA{Vector2D{twist.x, twist.y}};
-            return T_bA;     
+            return T_bB;    
         }
         else
         {

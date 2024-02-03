@@ -65,7 +65,7 @@ namespace turtlelib
         void driveWheels(wheelAngles delta_phi);
 
         // Drive the robot forward by defining its twist (compute inverse velocity kinematics)
-        void driveTwist(Twist2D delta_q) const;
+        void driveTwist(Twist2D V_b);
 
         // Get wheel radius
         double radius() const;

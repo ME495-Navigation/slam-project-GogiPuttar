@@ -147,7 +147,29 @@ CMakeFiles/test_turtlelib.dir/tests/test_diff_drive.cpp.o: \
  /usr/include/c++/11/bits/basic_ios.tcc /usr/include/c++/11/ostream \
  /usr/include/c++/11/bits/ostream.tcc \
  /usr/include/c++/11/bits/istream.tcc \
- /usr/include/c++/11/bits/sstream.tcc \
+ /usr/include/c++/11/bits/sstream.tcc /usr/include/c++/11/cmath \
+ /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+ /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+ /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
+ /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
+ /usr/include/c++/11/bits/specfun.h /usr/include/c++/11/limits \
+ /usr/include/c++/11/tr1/gamma.tcc \
+ /usr/include/c++/11/tr1/special_function_util.h \
+ /usr/include/c++/11/tr1/bessel_function.tcc \
+ /usr/include/c++/11/tr1/beta_function.tcc \
+ /usr/include/c++/11/tr1/ell_integral.tcc \
+ /usr/include/c++/11/tr1/exp_integral.tcc \
+ /usr/include/c++/11/tr1/hypergeometric.tcc \
+ /usr/include/c++/11/tr1/legendre_function.tcc \
+ /usr/include/c++/11/tr1/modified_bessel_func.tcc \
+ /usr/include/c++/11/tr1/poly_hermite.tcc \
+ /usr/include/c++/11/tr1/poly_laguerre.tcc \
+ /usr/include/c++/11/tr1/riemann_zeta.tcc \
  /usr/local/include/catch2/catch_test_macros.hpp \
  /usr/local/include/catch2/internal/catch_test_macro_impl.hpp \
  /usr/local/include/catch2/catch_user_config.hpp \
@@ -173,8 +195,7 @@ CMakeFiles/test_turtlelib.dir/tests/test_diff_drive.cpp.o: \
  /usr/local/include/catch2/internal/catch_void_type.hpp \
  /usr/local/include/catch2/interfaces/catch_interfaces_enum_values_registry.hpp \
  /usr/include/c++/11/ctime /usr/include/c++/11/ratio \
- /usr/include/c++/11/chrono /usr/include/c++/11/limits \
- /usr/include/c++/11/bits/parse_numbers.h \
+ /usr/include/c++/11/chrono /usr/include/c++/11/bits/parse_numbers.h \
  /usr/local/include/catch2/interfaces/catch_interfaces_registry_hub.hpp \
  /usr/local/include/catch2/internal/catch_unique_ptr.hpp \
  /usr/local/include/catch2/internal/catch_move_and_forward.hpp \

@@ -28,14 +28,14 @@ namespace turtlelib
         // Get body twist from wheel rotations
         Twist2D V_b;
         V_b.omega = (wheel_radius / wheel_sep) * (delta_phi.right - delta_phi.left);
-        V_b.x = (wheel_radius / 2) * cos(q.theta) * (delta_phi.right + delta_phi.left);
-        V_b.y = (wheel_radius / 2) * sin(q.theta) * (delta_phi.right + delta_phi.left);
+        V_b.x = (wheel_radius / 2) * (delta_phi.right + delta_phi.left);
+        V_b.y = 0;
         
         // Transform from body {b} to new body {B}
-        Transform2D TbB = integrate_twist(V_b);
+        Transform2D T_bB = integrate_twist(V_b);
 
         // Transform from world {w} to new body {B}
-        Transform2D T_wB = T_wb * TbB;
+        Transform2D T_wB = T_wb * T_bB;
 
         // Update wheel angles
         phi.left = normalize_angle(phi.left + delta_phi.left);
@@ -45,6 +45,41 @@ namespace turtlelib
         q.theta = T_wB.rotation();
         q.x = T_wB.translation().x;
         q.y = T_wB.translation().y;
+        
+    }
+
+    // Drive the robot forward by defining its twist (compute inverse velocity kinematics)
+    void DiffDrive::driveTwist(Twist2D V_b)
+    {
+        if(V_b.y > 0.0)
+        {
+            throw std::logic_error("Angular increment is too large. Verify twist's angular velocity, or decrease timestep.");
+        }
+        else
+        {
+            // Transform from world {w} to body {b}
+            Transform2D T_wb{Vector2D{q.x, q.y}, q.theta};
+
+            // Transform from body {b} to new body {B}
+            Transform2D T_bB = integrate_twist(V_b);
+
+            // Transform from world {w} to new body {B}
+            Transform2D T_wB = T_wb * T_bB;
+
+            // Get wheel rotations from body twist
+            wheelAngles delta_phi;
+            delta_phi.left =  (1 / wheel_radius) * (V_b.x - (wheel_sep / 2) * V_b.omega);
+            delta_phi.right =  (1 / wheel_radius) * (V_b.x + (wheel_sep / 2) * V_b.omega);
+
+            // Update wheel angles
+            phi.left = normalize_angle(phi.left + delta_phi.left);
+            phi.right = normalize_angle(phi.right + delta_phi.right);
+
+            // Update pose
+            q.theta = T_wB.rotation();
+            q.x = T_wB.translation().x;
+            q.y = T_wB.translation().y;
+        }   
     }
 
     // GETTERS.
