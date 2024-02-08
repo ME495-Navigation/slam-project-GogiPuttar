@@ -118,11 +118,11 @@ $(function() {
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classturtlelib_1_1DiffDrive.html#af12802e0426ecc1c43346d3b6a439278">DiffDrive</a>(<span class="keywordtype">double</span> radius, <span class="keywordtype">double</span> sep);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">// Drive the robot forward through the wheels (compute forward velocity kinematics)</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordtype">void</span> driveWheels(<a class="code" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> delta_phi);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">// Drive the robot forward through the wheels, and return the resulting body twist (compute forward velocity kinematics)</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="structturtlelib_1_1Twist2D.html">Twist2D</a> driveWheels(<a class="code" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> delta_phi);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">// Drive the robot forward by defining its twist (compute inverse velocity kinematics)</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordtype">void</span> driveTwist(<a class="code" href="structturtlelib_1_1Twist2D.html">Twist2D</a> V_b);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">// Drive the robot forward by defining its twist, and return required wheel angle increment (compute inverse velocity kinematics)</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> TwistToWheels(<a class="code" href="structturtlelib_1_1Twist2D.html">Twist2D</a> V_b);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">// Get wheel radius</span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordtype">double</span> radius() <span class="keyword">const</span>;</div>

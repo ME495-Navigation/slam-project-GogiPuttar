@@ -122,60 +122,72 @@ TEST_CASE( "Driving through wheels works", "[driveWheels()]")
     REQUIRE_THAT( turtle4.pose().y, WithinAbs(-1.2146835484,1.0e-6));
 }
 
-TEST_CASE( "Driving directly through twist works", "[driveTwist()]") 
+TEST_CASE( "Getting wheel increments from body twist works", "[TwistToWheels()]") 
 {
     // No motion
     DiffDrive turtle0{0.69, 0.420, wheelAngles{6.9, 4.20}, pose2D{69, 69, 420}};
     Twist2D V_b0;
 
-    turtle0.driveTwist(V_b0);
+    wheelAngles del_wheels0 = turtle0.TwistToWheels(V_b0);
+    turtle0.driveWheels(del_wheels0);
 
     REQUIRE_THAT( turtle0.wheels().left, WithinAbs(normalize_angle(6.9),1.0e-6));
     REQUIRE_THAT( turtle0.wheels().right, WithinAbs(normalize_angle(4.20),1.0e-6));
     REQUIRE_THAT( turtle0.pose().theta, WithinAbs(normalize_angle(69),1.0e-6));
     REQUIRE_THAT( turtle0.pose().x, WithinAbs(69.0,1.0e-6));
     REQUIRE_THAT( turtle0.pose().y, WithinAbs(420.0,1.0e-6));
+    REQUIRE_THAT( del_wheels0.left, WithinAbs(0.0,1.0e-6));
+    REQUIRE_THAT( del_wheels0.right, WithinAbs(0.0,1.0e-6));
     
     // Linear motion
     DiffDrive turtle1{0.69, 0.420, wheelAngles{6.9, 4.20}, pose2D{69, 69, 420}};
     Twist2D V_b1{0.0, 0.69 * 6.9, 0.0};
 
-    turtle1.driveTwist(V_b1);
+    wheelAngles del_wheels1 = turtle1.TwistToWheels(V_b1);
+    turtle1.driveWheels(del_wheels1);
 
     REQUIRE_THAT( turtle1.wheels().left, WithinAbs(normalize_angle(6.9 + 6.9),1.0e-6));
     REQUIRE_THAT( turtle1.wheels().right, WithinAbs(normalize_angle(4.20 + 6.9),1.0e-6));
     REQUIRE_THAT( turtle1.pose().theta, WithinAbs(normalize_angle(69),1.0e-6));
     REQUIRE_THAT( turtle1.pose().x, WithinAbs(69.0 + 0.69 * 6.9 * cos(69.0),1.0e-6));
     REQUIRE_THAT( turtle1.pose().y, WithinAbs(420.0 + 0.69 * 6.9 * sin(69.0),1.0e-6));
+    REQUIRE_THAT( del_wheels1.left, WithinAbs(6.9,1.0e-6));
+    REQUIRE_THAT( del_wheels1.right, WithinAbs(6.9,1.0e-6));
     
     // Spinning in place
     DiffDrive turtle2{69, 420, wheelAngles{6.9, 4.20}, pose2D{69, 6.9, 0.69}};
     Twist2D V_b2{-0.69 * 69 / 210, 0.0, 0.0};
 
-    turtle2.driveTwist(V_b2);
+    wheelAngles del_wheels2 = turtle2.TwistToWheels(V_b2);
+    turtle2.driveWheels(del_wheels2);
 
     REQUIRE_THAT( turtle2.wheels().left, WithinAbs(normalize_angle(6.9 + 0.69),1.0e-6));
     REQUIRE_THAT( turtle2.wheels().right, WithinAbs(normalize_angle(4.20 - 0.69),1.0e-6));
     REQUIRE_THAT( turtle2.pose().theta, WithinAbs(normalize_angle(69 - 2 * 0.69 * 69.0 / 420.0 ),1.0e-6));
     REQUIRE_THAT( turtle2.pose().x, WithinAbs(6.9,1.0e-6));
     REQUIRE_THAT( turtle2.pose().y, WithinAbs(0.69,1.0e-6));
+    REQUIRE_THAT( del_wheels2.left, WithinAbs(0.69,1.0e-6));
+    REQUIRE_THAT( del_wheels2.right, WithinAbs(-0.69,1.0e-6));
     
     // Quarter circular arc
     DiffDrive turtle3{0.69, 0.420, wheelAngles{6.9, 4.20}, pose2D{69, 69, 420}};
-    Twist2D V_b3{PI/2, 0.63 * PI/2, 0.0};
+    Twist2D V_b3{PI/2.0, 0.63 * PI/2.0, 0.0};
 
-    turtle3.driveTwist(V_b3);
+    wheelAngles del_wheels3 = turtle3.TwistToWheels(V_b3);
+    turtle3.driveWheels(del_wheels3);
 
-    REQUIRE_THAT( turtle3.wheels().left, WithinAbs(normalize_angle(6.9 + (0.420 / 0.69) * (PI / 2)),1.0e-6));
-    REQUIRE_THAT( turtle3.wheels().right, WithinAbs(normalize_angle(4.20 + 2 * (0.420 / 0.69) * (PI / 2)),1.0e-6));
-    REQUIRE_THAT( turtle3.pose().theta, WithinAbs(normalize_angle(69 + PI/2),1.0e-6));
-    REQUIRE_THAT( turtle3.pose().x, WithinAbs(69 + 0.63 * sqrt(2) * cos(69 + PI/4),1.0e-6));
-    REQUIRE_THAT( turtle3.pose().y, WithinAbs(420 + 0.63 * sqrt(2) * sin(69 + PI/4),1.0e-6));
+    REQUIRE_THAT( turtle3.wheels().left, WithinAbs(normalize_angle(6.9 + (0.420 / 0.69) * (PI / 2.0)),1.0e-6));
+    REQUIRE_THAT( turtle3.wheels().right, WithinAbs(normalize_angle(4.20 + 2.0 * (0.420 / 0.69) * (PI / 2.0)),1.0e-6));
+    REQUIRE_THAT( turtle3.pose().theta, WithinAbs(normalize_angle(69 + PI/2.0),1.0e-6));
+    REQUIRE_THAT( turtle3.pose().x, WithinAbs(69 + 0.63 * sqrt(2) * cos(69 + PI/4.0),1.0e-6));
+    REQUIRE_THAT( turtle3.pose().y, WithinAbs(420 + 0.63 * sqrt(2) * sin(69 + PI/4.0),1.0e-6));
+    REQUIRE_THAT( del_wheels3.left, WithinAbs((0.42/0.69)*PI/2.0,1.0e-6));
+    REQUIRE_THAT( del_wheels3.right, WithinAbs(2.0*(0.42/0.69)*PI/2.0,1.0e-6));
 
     //  Invalid Twist
     DiffDrive turtle5{0.69, 0.420, wheelAngles{6.9, 4.20}, pose2D{69, 69, 420}};
-    Twist2D V_b5{PI/2, 0.63 * PI/2, 0.0004};
+    Twist2D V_b5{PI/2, 0.63 * PI/2, -0.0004};
 
-    REQUIRE_THROWS(turtle5.driveTwist(V_b5));
+    REQUIRE_THROWS(turtle5.TwistToWheels(V_b5));
 }
 

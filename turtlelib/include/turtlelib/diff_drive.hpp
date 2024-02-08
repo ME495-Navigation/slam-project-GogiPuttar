@@ -64,11 +64,11 @@ namespace turtlelib
         /// \brief Initialize the radius and wheel separation for a diff drive robot
         explicit DiffDrive(double radius, double sep);
 
-        // Drive the robot forward through the wheels (compute forward velocity kinematics)
-        void driveWheels(wheelAngles delta_phi);
+        // Drive the robot forward through the wheels, and return the resulting body twist (compute forward velocity kinematics)
+        Twist2D driveWheels(wheelAngles delta_phi);
 
-        // Drive the robot forward by defining its twist (compute inverse velocity kinematics)
-        void driveTwist(Twist2D V_b);
+        // Given a body twist, return required wheel angle increment (compute inverse velocity kinematics)
+        wheelAngles TwistToWheels(Twist2D V_b);
 
         // Get wheel radius
         double radius() const;
