@@ -2,7 +2,7 @@
 /// \brief The turtle_control node handles the control of the physical/red robot.
 ///
 /// PARAMETERS:
-///     \param wheelradius (double): The radius of the wheels [m]
+///     \param wheel_radius (double): The radius of the wheels [m]
 ///     \param track_width (double): The distance between the wheels [m]
 ///     \param motor_cmd_max (double): Maximum motor command value in ticks velocity
 ///     \param motor_cmd_per_rad_sec (double): Motor command to rad/s conversion factor
@@ -45,7 +45,7 @@ using namespace std::chrono_literals;
 ///        sensor_data and converts it to joint states for the robot and publishes it to the joint
 ///        states topic.
 ///
-///  \param wheelradius_ (double): The radius of the wheels [m]
+///  \param wheel_radius_ (double): The radius of the wheels [m]
 ///  \param track_width_ (double): The distance between the wheels [m]
 ///  \param motor_cmd_max_ (double): Maximum motor command value in ticks velocity
 ///  \param motor_cmd_per_rad_sec_ (double): Motor command to rad/s conversion factor
@@ -65,13 +65,13 @@ public:
   : Node("turtle_control")
   {
     // Parameter descirption
-    auto wheelradius_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto wheel_radius_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto track_width_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto motor_cmd_max_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto motor_cmd_per_rad_sec_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto encoder_ticks_per_rad_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto collision_radius_des = rcl_interfaces::msg::ParameterDescriptor{};
-    wheelradius_des.description = "The radius of the wheels [m]";
+    wheel_radius_des.description = "The radius of the wheels [m]";
     track_width_des.description = "The distance between the wheels [m]";
     motor_cmd_max_des.description =
       "The motors are provided commands in the interval \
@@ -85,7 +85,7 @@ public:
                                             detection [m]";
 
     // Declare default parameters values
-    declare_parameter("wheelradius", -1.0, wheelradius_des);
+    declare_parameter("wheel_radius", -1.0, wheel_radius_des);
     declare_parameter("track_width", -1.0, track_width_des);
     declare_parameter("motor_cmd_max", -1.0, motor_cmd_max_des);
     declare_parameter("motor_cmd_per_rad_sec", -1.0, motor_cmd_per_rad_sec_des);
@@ -93,7 +93,7 @@ public:
     declare_parameter("collision_radius", -1.0, collision_radius_des);
 
     // Get params - Read params from yaml file that is passed in the launch file
-    wheelradius_ = get_parameter("wheelradius").get_parameter_value().get<double>();
+    wheel_radius_ = get_parameter("wheel_radius").get_parameter_value().get<double>();
     track_width_ = get_parameter("track_width").get_parameter_value().get<double>();
     motor_cmd_max_ = get_parameter("motor_cmd_max").get_parameter_value().get<double>();
     motor_cmd_per_rad_sec_ =
@@ -106,7 +106,7 @@ public:
     check_yaml_params();
 
     // Create Diff Drive Object
-    turtle_ = turtlelib::DiffDrive(wheelradius_, track_width_);
+    turtle_ = turtlelib::DiffDrive(wheel_radius_, track_width_);
 
     // Publishers
     wheel_cmd_publisher_ = create_publisher<nuturtlebot_msgs::msg::WheelCommands>(
@@ -127,7 +127,7 @@ public:
 
 private:
   // Variables
-  double wheelradius_;
+  double wheel_radius_;
   double track_width_;
   double motor_cmd_max_;
   double motor_cmd_per_rad_sec_;
@@ -152,12 +152,14 @@ private:
     body_twist_.omega = msg.angular.z;
     body_twist_.x = msg.linear.x;
     body_twist_.y = msg.linear.y;
+
     // Perform Inverse kinematics to get the wheel velocities from the twist
-    turtle_.driveTwist(body_twist_);
-    del_wheel_angles_ = turtle_.wheels();
+    del_wheel_angles_ = turtle_.TwistToWheels(body_twist_);
+
     // Convert rad/sec to ticks
     wheel_cmd_.left_velocity = del_wheel_angles_.left / motor_cmd_per_rad_sec_;
     wheel_cmd_.right_velocity = del_wheel_angles_.right / motor_cmd_per_rad_sec_;
+
     // Limit max wheel command speed and publish wheel command
     wheel_cmd_.left_velocity = limit_wheel_vel(wheel_cmd_.left_velocity);
     wheel_cmd_.right_velocity = limit_wheel_vel(wheel_cmd_.right_velocity);
@@ -178,34 +180,50 @@ private:
     }
   }
 
+// ############## Begin Citation [https://github.com/Marnonel6/EKF_SLAM_from_scratch/blob/main/nuturtle_control/src/turtle_control.cpp]
   /// \brief Sensor_data topic callback
   void sensor_data_callback(const nuturtlebot_msgs::msg::SensorData & msg)
   {
     joint_states_.header.stamp = msg.stamp;
     joint_states_.name = {"wheel_left_joint", "wheel_right_joint"};
-    if (prev_encoder_stamp_ == -1.0) {
+
+    if (prev_encoder_stamp_ == -1.0) 
+    {
       joint_states_.position = {0.0, 0.0};
       joint_states_.velocity = {0.0, 0.0};
-    } else {
+    } 
+    else 
+    {
       // Change in wheel angle from encoder ticks
       joint_states_.position = {msg.left_encoder / encoder_ticks_per_rad_,
         msg.right_encoder / encoder_ticks_per_rad_};
       double passed_time = msg.stamp.sec + msg.stamp.nanosec * 1e-9 - prev_encoder_stamp_;
+
       // Encoder ticks to rad/s
       joint_states_.velocity = {joint_states_.position.at(0) / passed_time,
         joint_states_.position.at(1) / passed_time};
     }
     prev_encoder_stamp_ = msg.stamp.sec + msg.stamp.nanosec * 1e-9;
+
+    // Publish joint states
     joint_states_publisher_->publish(joint_states_);
   }
+// ########### End Citation
 
   /// \brief Ensures all values are passed via .yaml file
   void check_yaml_params()
   {
-    if (wheelradius_ == -1.0 || track_width_ == -1.0 || motor_cmd_max_ == -1.0 ||
+    if (wheel_radius_ == -1.0 || track_width_ == -1.0 || motor_cmd_max_ == -1.0 ||
       motor_cmd_per_rad_sec_ == -1.0 || encoder_ticks_per_rad_ == -1.0 ||
       collision_radius_ == -1.0)
     {
+      RCLCPP_DEBUG(this->get_logger(), "Param: %f", wheel_radius_);
+      RCLCPP_DEBUG(this->get_logger(), "Param: %f", track_width_);
+      RCLCPP_DEBUG(this->get_logger(), "Param: %f", motor_cmd_max_);
+      RCLCPP_DEBUG(this->get_logger(), "Param: %f", motor_cmd_per_rad_sec_);
+      RCLCPP_DEBUG(this->get_logger(), "Param: %f", encoder_ticks_per_rad_);
+      RCLCPP_DEBUG(this->get_logger(), "Param: %f", collision_radius_);
+      
       throw std::runtime_error("Missing parameters in diff_params.yaml!");
     }
   }

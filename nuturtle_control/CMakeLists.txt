@@ -19,6 +19,7 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(nuturtlebot_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(turtlelib REQUIRED)
 
 if(NOT CMAKE_CROSSCOMPILING)
@@ -28,11 +29,13 @@ if(NOT CMAKE_CROSSCOMPILING)
     doxygen_add_docs(doxygen src/ README.md ALL)
 endif()
 
-# rosidl_generate_interfaces(${PROJECT_NAME}_srv
-#   "srv/InitialConfig.srv"
-#   "srv/Control.srv"
-#   LIBRARY_NAME ${PROJECT_NAME}
-# )
+rosidl_generate_interfaces(${PROJECT_NAME}_srv
+  "srv/InitialPose.srv"
+  "srv/Control.srv"
+  LIBRARY_NAME ${PROJECT_NAME}
+)
+
+rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME}_srv "rosidl_typesupport_cpp")
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -47,29 +50,29 @@ if(BUILD_TESTING)
 endif()
 
 add_executable(turtle_control src/turtle_control.cpp)
-# add_executable(odometry src/odometry.cpp)
-# add_executable(circle src/circle.cpp)
+add_executable(odometry src/odometry.cpp)
+add_executable(circle src/circle.cpp)
 
 ament_target_dependencies(turtle_control rclcpp geometry_msgs std_msgs nuturtlebot_msgs sensor_msgs)
 target_link_libraries(turtle_control turtlelib::turtlelib "${cpp_typesupport_target}")
-# ament_target_dependencies(odometry rclcpp sensor_msgs tf2_ros tf2 geometry_msgs)
-# target_link_libraries(odometry turtlelib::turtlelib "${cpp_typesupport_target}")
-# ament_target_dependencies(circle rclcpp geometry_msgs std_srvs)
-# target_link_libraries(circle "${cpp_typesupport_target}")
+ament_target_dependencies(odometry rclcpp sensor_msgs tf2_ros tf2 geometry_msgs nav_msgs)
+target_link_libraries(odometry turtlelib::turtlelib "${cpp_typesupport_target}")
+ament_target_dependencies(circle rclcpp geometry_msgs std_srvs)
+target_link_libraries(circle "${cpp_typesupport_target}")
 
 install(TARGETS
   turtle_control
-  # odometry
-  # circle
+  odometry
+  circle
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# Install launch files.
+# Install launch files, config files, and service types.
 install(DIRECTORY
-  # launch
-  # config
-  # srv
-  DESTINATION share/${PROJECT_NAME}/
+  launch
+  config
+  srv
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_package()
