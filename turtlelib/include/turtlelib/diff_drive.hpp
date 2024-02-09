@@ -47,13 +47,13 @@ namespace turtlelib
         /// \brief separation between wheels, in meters
         double wheel_sep;
 
+    public:
+
         /// \brief angle of rotation of wheels, in radians
         wheelAngles phi;
     
         /// \brief pose of the mobile robot in the world frame
         pose2D q;
-
-    public:
 
         /// \brief Initialize the kinematics for a new Diff Drive robot
         DiffDrive();

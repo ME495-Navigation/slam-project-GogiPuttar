@@ -157,8 +157,8 @@ private:
     del_wheel_angles_ = turtle_.TwistToWheels(body_twist_);
 
     // Convert rad/sec to ticks
-    wheel_cmd_.left_velocity = del_wheel_angles_.left / motor_cmd_per_rad_sec_;
-    wheel_cmd_.right_velocity = del_wheel_angles_.right / motor_cmd_per_rad_sec_;
+    wheel_cmd_.left_velocity = round(del_wheel_angles_.left / motor_cmd_per_rad_sec_);
+    wheel_cmd_.right_velocity = round(del_wheel_angles_.right / motor_cmd_per_rad_sec_);
 
     // Limit max wheel command speed and publish wheel command
     wheel_cmd_.left_velocity = limit_wheel_vel(wheel_cmd_.left_velocity);
@@ -195,9 +195,9 @@ private:
     else 
     {
       // Change in wheel angle from encoder ticks
-      joint_states_.position = {msg.left_encoder / encoder_ticks_per_rad_,
-        msg.right_encoder / encoder_ticks_per_rad_};
-        
+      joint_states_.position = {static_cast<double>(msg.left_encoder) / encoder_ticks_per_rad_,
+        static_cast<double>(msg.right_encoder) / encoder_ticks_per_rad_};
+
       double delta_t_ = msg.stamp.sec + msg.stamp.nanosec * 1e-9 - prev_encoder_stamp_;
 
       // Encoder ticks to rad/s

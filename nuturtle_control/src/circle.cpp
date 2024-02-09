@@ -55,6 +55,10 @@ public:
     // Get params - Read params from yaml file that is passed in the launch file
     int frequency = get_parameter("frequency").get_parameter_value().get<int>();
 
+    //Initialize Body Twist
+    body_twist_.linear.x = 0.0;
+    body_twist_.angular.z = 0.0;
+
     // Publishers
     cmd_vel_publisher_ = create_publisher<geometry_msgs::msg::Twist>(
       "cmd_vel", 10);
@@ -80,7 +84,8 @@ public:
 
 private:
   // State variables
-  bool stopping_flag_ = false;
+  bool stopped_ = false;
+  bool twist_changed_ = true; // Keeping track of when twists are updated
   geometry_msgs::msg::Twist body_twist_;
 
   // Create objects
@@ -97,7 +102,10 @@ private:
   {
     body_twist_.linear.x = request->radius * request->velocity;
     body_twist_.angular.z = request->velocity;
-    stopping_flag_ = false;
+
+    twist_changed_ = true;
+    stopped_ = false;
+    RCLCPP_DEBUG(this->get_logger(), "Circle started. Twist: linear.x:%f, angular.z:%f", body_twist_.linear.x, body_twist_.angular.z);
   }
 
   /// \brief reverse service callback, inverts twist
@@ -107,7 +115,9 @@ private:
   {
     body_twist_.linear.x = -body_twist_.linear.x;
     body_twist_.angular.z = -body_twist_.angular.z;
-    stopping_flag_ = false;
+
+    twist_changed_ = true;
+    RCLCPP_DEBUG(this->get_logger(), "Circle reverse. Twist: linear.x:%f, angular.z:%f", body_twist_.linear.x, body_twist_.angular.z);
   }
 
   /// \brief stop service callback, sets twist to zero and stops publishing to cmd_vel
@@ -118,14 +128,22 @@ private:
     body_twist_.linear.x = 0.0;
     body_twist_.angular.z = 0.0;
     cmd_vel_publisher_->publish(body_twist_);
-    stopping_flag_ = true;
+
+    twist_changed_ = true;
+    stopped_ = true;
+    RCLCPP_DEBUG(this->get_logger(), "Stopped. Twist: linear.x:%f, angular.z:%f", body_twist_.linear.x, body_twist_.angular.z);
   }
 
   /// \brief Main timer loop
   void timer_callback()
-  {
-    if (stopping_flag_ == false) {
-      cmd_vel_publisher_->publish(body_twist_);
+  {    
+    if (!stopped_)
+    {
+      if (true) // Change 'true' to 'twist_changed' to publish cmd_vel only once, instead of at timer frequency.
+      {  
+        cmd_vel_publisher_->publish(body_twist_);
+        twist_changed_ = false;
+      }
     }
   }
 };

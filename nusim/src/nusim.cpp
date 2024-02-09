@@ -54,6 +54,7 @@
 #include "visualization_msgs/msg/marker.hpp"
 #include "turtlelib/geometry2d.hpp"
 #include "turtlelib/se2d.hpp"
+#include "turtlelib/diff_drive.hpp"
 
 using namespace std::chrono_literals;
 
@@ -96,7 +97,10 @@ public:
     auto obstacles_r_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto arena_x_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto arena_y_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto wheel_radius_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto track_width_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto encoder_ticks_per_rad_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto motor_cmd_per_rad_sec_des = rcl_interfaces::msg::ParameterDescriptor{};
 
     rate_des.description = "Timer callback frequency [Hz]";
     x0_des.description = "Initial x coordinate of the robot [m]";
@@ -107,7 +111,10 @@ public:
     obstacles_r_des.description = "Radius of cylindrical obstacles [m]";
     arena_x_des.description = "Length of arena along x [m]";
     arena_y_des.description = "Length of arena along y [m]";
+    wheel_radius_des.description = "Radius of the wheels [m]";
+    track_width_des.description = "Separation between the wheels [m]";
     encoder_ticks_per_rad_des.description = "The number of encoder 'ticks' per radian [ticks/rad]";
+    motor_cmd_per_rad_sec_des.description = "Radius per second in every motor command unit [(rad/s) / mcu]. Stupid name, I know!";
 
     // Declare default parameters values
     declare_parameter("rate", 200, rate_des);     // Hz for timer_callback
@@ -119,11 +126,13 @@ public:
     declare_parameter("obstacles.r", 0.0, obstacles_r_des); // Meters
     declare_parameter("arena_x_length", 0.0, arena_x_des);  // Meters
     declare_parameter("arena_y_length", 0.0, arena_y_des);  // Meters
-    declare_parameter("encoder_ticks_per_rad", -1.0, encoder_ticks_per_rad_des);
+    declare_parameter("wheel_radius", -1.0, wheel_radius_des); // Meters
+    declare_parameter("track_width", -1.0, track_width_des);  // Meters
+    declare_parameter("encoder_ticks_per_rad", -1.0, encoder_ticks_per_rad_des); // Ticks per radian
+    declare_parameter("motor_cmd_per_rad_sec", -1.0, motor_cmd_per_rad_sec_des); // MCU per radian/s
     
-
     // Get params - Read params from yaml file that is passed in the launch file
-    int rate = get_parameter("rate").get_parameter_value().get<int>();
+    rate = get_parameter("rate").get_parameter_value().get<int>();
     x0_ = get_parameter("x0").get_parameter_value().get<double>();
     y0_ = get_parameter("y0").get_parameter_value().get<double>();
     theta0_ = get_parameter("theta0").get_parameter_value().get<double>();
@@ -132,13 +141,17 @@ public:
     obstacles_r_ = get_parameter("obstacles.r").get_parameter_value().get<double>();
     arena_x_ = get_parameter("arena_x_length").get_parameter_value().get<double>();
     arena_y_ = get_parameter("arena_y_length").get_parameter_value().get<double>();
+    wheel_radius_ = get_parameter("wheel_radius").get_parameter_value().get<double>();
+    track_width_ = get_parameter("track_width").get_parameter_value().get<double>();
     encoder_ticks_per_rad_ =
       get_parameter("encoder_ticks_per_rad").get_parameter_value().get<double>();
+    motor_cmd_per_rad_sec_ =
+      get_parameter("motor_cmd_per_rad_sec").get_parameter_value().get<double>();
 
-    // Set current robot pose equal to initial pose
-    x_ = x0_;
-    y_ = y0_;
-    theta_ = theta0_;
+    check_yaml_params();
+
+    // Initialize the differential drive kinematic state
+    turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{}, turtlelib::pose2D{theta0_, x0_, y0_}};
 
     // Timer timestep [seconds]
     dt_ = 1.0 / static_cast<double>(rate);
@@ -186,10 +199,10 @@ public:
   }
 
 private:
-  // Variables
+  // Variables related to environment
   size_t timestep_;
+  int rate;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
-  double x_, y_, theta_;     // Theta in radians, x & y in meters.
   double x0_ = 0.0;          // Meters
   double y0_ = 0.0;          // Meters
   double theta0_ = 0;        // Radians
@@ -204,9 +217,15 @@ private:
   std::vector<double> obstacles_y_;
   visualization_msgs::msg::MarkerArray obstacles_;
   visualization_msgs::msg::MarkerArray walls_;
-  nuturtlebot_msgs::msg::SensorData current_sensor_data_;
-  nuturtlebot_msgs::msg::SensorData prev_sensor_data_;
+
+  // Variables related to diff drive
+  double wheel_radius_ = -1.0;
+  double track_width_ = -1.0;
+  nuturtlebot_msgs::msg::SensorData current_sensor_data_; // Encoder ticks
+  nuturtlebot_msgs::msg::SensorData prev_sensor_data_; // Encoder ticks
   double encoder_ticks_per_rad_;
+  double motor_cmd_per_rad_sec_;
+  turtlelib::DiffDrive turtle_;
 
   // Create objects
   rclcpp::TimerBase::SharedPtr timer_;
@@ -225,9 +244,9 @@ private:
     std_srvs::srv::Empty::Response::SharedPtr)
   {
     timestep_ = 0;
-    x_ = x0_;
-    y_ = y0_;
-    theta_ = theta0_;
+    turtle_.q.x = x0_;
+    turtle_.q.y = y0_;
+    turtle_.q.theta = theta0_;
   }
 
   /// \brief Teleport the robot to a specified pose
@@ -235,9 +254,9 @@ private:
     nusim::srv::Teleport::Request::SharedPtr request,
     nusim::srv::Teleport::Response::SharedPtr)
   {
-    x_ = request->x;
-    y_ = request->y;
-    theta_ = request->theta;
+    turtle_.q.x = request->x;
+    turtle_.q.y = request->y;
+    turtle_.q.theta = request->theta;
   }
 
   /// \brief Broadcast the TF frames of the robot
@@ -248,12 +267,12 @@ private:
     t_.header.stamp = get_clock()->now();
     t_.header.frame_id = "nusim/world";
     t_.child_frame_id = "red/base_footprint";
-    t_.transform.translation.x = x_;
-    t_.transform.translation.y = y_;
-    t_.transform.translation.z = 0.0;     // Turtle only exists in 2D
+    t_.transform.translation.x = turtle_.pose().x;
+    t_.transform.translation.y = turtle_.pose().y;
+    t_.transform.translation.z = 0.0;     
 
     tf2::Quaternion q_;
-    q_.setRPY(0, 0, theta_);     // Rotation around z-axis
+    q_.setRPY(0, 0, turtle_.pose().theta);     
     t_.transform.rotation.x = q_.x();
     t_.transform.rotation.y = q_.y();
     t_.transform.rotation.z = q_.z();
@@ -377,17 +396,17 @@ private:
     // Get current sensor data timestamp
     current_sensor_data_.stamp = get_clock()->now();
 
-    // Calculate time difference
-    double delta_t_ = current_sensor_data_.stamp.sec - prev_sensor_data_.stamp.sec + 1e-9 * (current_sensor_data_.stamp.nanosec - prev_sensor_data_.stamp.nanosec);
-    // RCLCPP_INFO(this->get_logger(), "Param: %f", delta_t_);
+    // Update current sensor data as integer values
+    current_sensor_data_.left_encoder = round((static_cast<double>(msg.left_velocity) * motor_cmd_per_rad_sec_) * encoder_ticks_per_rad_ * dt_ + prev_sensor_data_.left_encoder);
+    current_sensor_data_.right_encoder = round((static_cast<double>(msg.right_velocity) * motor_cmd_per_rad_sec_) * encoder_ticks_per_rad_ * dt_ + prev_sensor_data_.right_encoder);
 
-    current_sensor_data_.left_encoder = msg.left_velocity * encoder_ticks_per_rad_ * delta_t_ + prev_sensor_data_.left_encoder;
-    current_sensor_data_.right_encoder = msg.right_velocity * encoder_ticks_per_rad_ * delta_t_ + prev_sensor_data_.right_encoder;
-    // RCLCPP_INFO(this->get_logger(), "Param: %f", current_sensor_data_.left_encoder);
-
-    sensor_data_pub();
-
+    // Set previous as current    
     prev_sensor_data_ = current_sensor_data_;
+
+    // Update Transform
+    turtlelib::wheelAngles delta_wheels_{(static_cast<double>(msg.left_velocity) * motor_cmd_per_rad_sec_) * dt_, (static_cast<double>(msg.right_velocity) * motor_cmd_per_rad_sec_) * dt_};
+    turtle_.driveWheels(delta_wheels_);
+
   }
 
   /// \brief publish sensor data
@@ -405,12 +424,28 @@ private:
     obstacles_publisher_->publish(obstacles_);
     walls_publisher_->publish(walls_);
 
-    if(timestep_ == 1)
-    {
-      sensor_data_pub();
-    }
+    sensor_data_pub();
 
     broadcast_red_turtle();
+  }
+
+  /// \brief Ensures all values are passed via .yaml file
+  void check_yaml_params()
+  {
+    if (  wheel_radius_ == -1.0 ||
+          track_width_ == -1.0 ||
+          encoder_ticks_per_rad_ == -1.0 ||
+          motor_cmd_per_rad_sec_ == -1.0
+          )
+    {
+      RCLCPP_DEBUG(this->get_logger(), "Param rate: %d", rate);
+      RCLCPP_DEBUG(this->get_logger(), "Param wheel_radius: %f", wheel_radius_);
+      RCLCPP_INFO(this->get_logger(), "Param track_width: %f", track_width_);
+      RCLCPP_INFO(this->get_logger(), "Param encoder_ticks_per_rad: %f", encoder_ticks_per_rad_);
+      RCLCPP_INFO(this->get_logger(), "Param motor_cmd_per_rad_sec: %f", motor_cmd_per_rad_sec_);
+      
+      throw std::runtime_error("Missing necessary parameters in diff_params.yaml!");
+    }
   }
 
   /// \brief Calculate the euclidean distance

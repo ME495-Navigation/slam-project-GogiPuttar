@@ -158,7 +158,7 @@ private:
     nuturtle_control::srv::InitialPose::Response::SharedPtr
   )
   {
-    turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{0.0, 0.0}, turtlelib::pose2D{request->x, request->y, request->theta}};
+    turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{0.0, 0.0}, turtlelib::pose2D{request->theta, request->x, request->y}};
   }
 
   /// \brief joint_states_callback subscription
@@ -167,7 +167,7 @@ private:
     del_wheel_angles_.left = msg.position.at(0) - prev_wheel_angles_.left;
     del_wheel_angles_.right = msg.position.at(1) - prev_wheel_angles_.right;
 
-    RCLCPP_INFO(this->get_logger(), "Param: %f", del_wheel_angles_.left);
+    // RCLCPP_INFO(this->get_logger(), "Param: %f", del_wheel_angles_.left);
 
     body_twist_ = turtle_.driveWheels(del_wheel_angles_);
     body_q_.setRPY(0.0, 0.0, turtle_.pose().theta);       
