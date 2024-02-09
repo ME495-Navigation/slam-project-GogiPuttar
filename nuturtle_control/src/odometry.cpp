@@ -137,7 +137,7 @@ private:
   std::string wheel_right_ = "";
   double wheel_radius_ = -1.0;
   double track_width_ = -1.0;
-  turtlelib::wheelAngles current_wheel_angles_;
+  turtlelib::wheelAngles del_wheel_angles_;
   turtlelib::wheelAngles prev_wheel_angles_;
   turtlelib::Twist2D body_twist_;
   tf2::Quaternion body_q_;
@@ -164,17 +164,20 @@ private:
   /// \brief joint_states_callback subscription
   void joint_states_callback(const sensor_msgs::msg::JointState & msg)
   {
-    current_wheel_angles_.left = msg.position[0] - prev_wheel_angles_.left;
-    current_wheel_angles_.right = msg.position[1] - prev_wheel_angles_.right;
+    del_wheel_angles_.left = msg.position.at(0) - prev_wheel_angles_.left;
+    del_wheel_angles_.right = msg.position.at(1) - prev_wheel_angles_.right;
 
-    body_twist_ = turtle_.driveWheels(current_wheel_angles_);
-    body_q_.setRPY(0, 0, turtle_.pose().theta);       // Rotation around z-axis
+    RCLCPP_INFO(this->get_logger(), "Param: %f", del_wheel_angles_.left);
+
+    body_twist_ = turtle_.driveWheels(del_wheel_angles_);
+    body_q_.setRPY(0.0, 0.0, turtle_.pose().theta);       
 
     odometry_pub();
-    broadcast_transform();
 
-    prev_wheel_angles_.left = msg.position[0];
-    prev_wheel_angles_.right = msg.position[1];
+    broadcast_transforms();
+
+    prev_wheel_angles_.left = msg.position.at(0);
+    prev_wheel_angles_.right = msg.position.at(1);
   }
 
   /// \brief Publishes the odometry to the odom topic
@@ -197,10 +200,10 @@ private:
     odom_publisher_->publish(odom_);
   }
 
-  /// \brief Broadcasts blue robots position
-  void broadcast_transform()
+  /// \brief Broadcasts blue robot's position
+  void broadcast_transforms()
   {
-    // Broadcast TF frames
+    // Broadcast odom frame
     tf_.header.stamp = get_clock()->now();
     tf_.header.frame_id = odom_id_;
     tf_.child_frame_id = body_id_;

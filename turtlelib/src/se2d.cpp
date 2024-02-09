@@ -193,11 +193,11 @@ namespace turtlelib
         // Original Body frame is {b}
         
         // Check if angular increment is reasonable 
-        if(normalize_angle(twist.omega) != twist.omega)
-        {
-            throw std::logic_error("Angular increment is too large. Verify twist's angular velocity, or decrease timestep.");
-            return Transform2D{};
-        }
+        // if(normalize_angle(twist.omega) != twist.omega)
+        // {
+        //     throw std::logic_error("Angular increment is too large. Verify twist's angular velocity, or decrease timestep.");
+        //     return Transform2D{};
+        // }
         
         // Maximum radius of curvature according to practical standards.
         double R_max = 30.0, R = 0.0;

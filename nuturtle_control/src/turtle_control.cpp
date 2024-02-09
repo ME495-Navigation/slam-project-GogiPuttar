@@ -183,7 +183,7 @@ private:
 // ############## Begin Citation [https://github.com/Marnonel6/EKF_SLAM_from_scratch/blob/main/nuturtle_control/src/turtle_control.cpp]
   /// \brief Sensor_data topic callback
   void sensor_data_callback(const nuturtlebot_msgs::msg::SensorData & msg)
-  {
+  {    
     joint_states_.header.stamp = msg.stamp;
     joint_states_.name = {"wheel_left_joint", "wheel_right_joint"};
 
@@ -197,11 +197,12 @@ private:
       // Change in wheel angle from encoder ticks
       joint_states_.position = {msg.left_encoder / encoder_ticks_per_rad_,
         msg.right_encoder / encoder_ticks_per_rad_};
-      double passed_time = msg.stamp.sec + msg.stamp.nanosec * 1e-9 - prev_encoder_stamp_;
+        
+      double delta_t_ = msg.stamp.sec + msg.stamp.nanosec * 1e-9 - prev_encoder_stamp_;
 
       // Encoder ticks to rad/s
-      joint_states_.velocity = {joint_states_.position.at(0) / passed_time,
-        joint_states_.position.at(1) / passed_time};
+      joint_states_.velocity = {joint_states_.position.at(0) / delta_t_,
+        joint_states_.position.at(1) / delta_t_};
     }
     prev_encoder_stamp_ = msg.stamp.sec + msg.stamp.nanosec * 1e-9;
 

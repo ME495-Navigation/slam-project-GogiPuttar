@@ -48,6 +48,8 @@
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2_ros/transform_broadcaster.h"
 #include "nusim/srv/teleport.hpp"
+#include "nuturtlebot_msgs/msg/wheel_commands.hpp"
+#include "nuturtlebot_msgs/msg/sensor_data.hpp"
 #include "visualization_msgs/msg/marker_array.hpp"
 #include "visualization_msgs/msg/marker.hpp"
 #include "turtlelib/geometry2d.hpp"
@@ -94,6 +96,7 @@ public:
     auto obstacles_r_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto arena_x_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto arena_y_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto encoder_ticks_per_rad_des = rcl_interfaces::msg::ParameterDescriptor{};
 
     rate_des.description = "Timer callback frequency [Hz]";
     x0_des.description = "Initial x coordinate of the robot [m]";
@@ -104,6 +107,7 @@ public:
     obstacles_r_des.description = "Radius of cylindrical obstacles [m]";
     arena_x_des.description = "Length of arena along x [m]";
     arena_y_des.description = "Length of arena along y [m]";
+    encoder_ticks_per_rad_des.description = "The number of encoder 'ticks' per radian [ticks/rad]";
 
     // Declare default parameters values
     declare_parameter("rate", 200, rate_des);     // Hz for timer_callback
@@ -115,6 +119,8 @@ public:
     declare_parameter("obstacles.r", 0.0, obstacles_r_des); // Meters
     declare_parameter("arena_x_length", 0.0, arena_x_des);  // Meters
     declare_parameter("arena_y_length", 0.0, arena_y_des);  // Meters
+    declare_parameter("encoder_ticks_per_rad", -1.0, encoder_ticks_per_rad_des);
+    
 
     // Get params - Read params from yaml file that is passed in the launch file
     int rate = get_parameter("rate").get_parameter_value().get<int>();
@@ -126,6 +132,8 @@ public:
     obstacles_r_ = get_parameter("obstacles.r").get_parameter_value().get<double>();
     arena_x_ = get_parameter("arena_x_length").get_parameter_value().get<double>();
     arena_y_ = get_parameter("arena_y_length").get_parameter_value().get<double>();
+    encoder_ticks_per_rad_ =
+      get_parameter("encoder_ticks_per_rad").get_parameter_value().get<double>();
 
     // Set current robot pose equal to initial pose
     x_ = x0_;
@@ -149,6 +157,9 @@ public:
     // Create ~/walls publisher
     walls_publisher_ =
       create_publisher<visualization_msgs::msg::MarkerArray>("~/walls", 10);
+    // Create red/sensor_data publisher
+    sensor_data_publisher_ = create_publisher<nuturtlebot_msgs::msg::SensorData>(
+      "red/sensor_data", 10);
 
     // Create ~/reset service
     reset_server_ = create_service<std_srvs::srv::Empty>(
@@ -166,6 +177,12 @@ public:
     timer_ = create_wall_timer(
       std::chrono::milliseconds(1000 / rate),
       std::bind(&Nusim::timer_callback, this));
+
+    // Create red/wheel_cmd
+    wheel_cmd_subscriber_ = create_subscription<nuturtlebot_msgs::msg::WheelCommands>(
+      "red/wheel_cmd", 10, std::bind(
+        &Nusim::wheel_cmd_callback, this,
+        std::placeholders::_1));
   }
 
 private:
@@ -187,14 +204,20 @@ private:
   std::vector<double> obstacles_y_;
   visualization_msgs::msg::MarkerArray obstacles_;
   visualization_msgs::msg::MarkerArray walls_;
+  nuturtlebot_msgs::msg::SensorData current_sensor_data_;
+  nuturtlebot_msgs::msg::SensorData prev_sensor_data_;
+  double encoder_ticks_per_rad_;
 
   // Create objects
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<std_msgs::msg::UInt64>::SharedPtr timestep_publisher_;
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr obstacles_publisher_;
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr walls_publisher_;
+  rclcpp::Publisher<nuturtlebot_msgs::msg::SensorData>::SharedPtr sensor_data_publisher_;
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr reset_server_;
   rclcpp::Service<nusim::srv::Teleport>::SharedPtr teleport_server_;
+  rclcpp::Subscription<nuturtlebot_msgs::msg::WheelCommands>::SharedPtr wheel_cmd_subscriber_;
+
 
   /// \brief Reset the simulation
   void reset_callback(
@@ -347,14 +370,45 @@ private:
     }
   }
 
+  /// \brief wheel_cmd_callback subscription
+  void wheel_cmd_callback(const nuturtlebot_msgs::msg::WheelCommands & msg)
+  {    
+
+    // Get current sensor data timestamp
+    current_sensor_data_.stamp = get_clock()->now();
+
+    // Calculate time difference
+    double delta_t_ = current_sensor_data_.stamp.sec - prev_sensor_data_.stamp.sec + 1e-9 * (current_sensor_data_.stamp.nanosec - prev_sensor_data_.stamp.nanosec);
+    // RCLCPP_INFO(this->get_logger(), "Param: %f", delta_t_);
+
+    current_sensor_data_.left_encoder = msg.left_velocity * encoder_ticks_per_rad_ * delta_t_ + prev_sensor_data_.left_encoder;
+    current_sensor_data_.right_encoder = msg.right_velocity * encoder_ticks_per_rad_ * delta_t_ + prev_sensor_data_.right_encoder;
+    // RCLCPP_INFO(this->get_logger(), "Param: %f", current_sensor_data_.left_encoder);
+
+    sensor_data_pub();
+
+    prev_sensor_data_ = current_sensor_data_;
+  }
+
+  /// \brief publish sensor data
+  void sensor_data_pub()
+  {    
+    sensor_data_publisher_->publish(current_sensor_data_);
+  }
+
   /// \brief Main simulation time loop
   void timer_callback()
   {
     auto message = std_msgs::msg::UInt64();
-    message.data = timestep_++;
+    message.data = ++timestep_;
     timestep_publisher_->publish(message);
     obstacles_publisher_->publish(obstacles_);
     walls_publisher_->publish(walls_);
+
+    if(timestep_ == 1)
+    {
+      sensor_data_pub();
+    }
 
     broadcast_red_turtle();
   }
