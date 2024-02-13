@@ -55,10 +55,18 @@
         <!-- Remap jsp to get wheels to rotate -->
     </node>
 
-    <!-- Nusim: Load Red turtle along with Blue turtle if using nusim -->
+    <!-- Nusim: Load Red turtle along with Blue turtle in RViz if using nusim -->
     <node name="rviz2" pkg="rviz2" exec="rviz2"
     args="-d $(find-pkg-share nuturtle_control)/config/nuturtle_sim.rviz"
     if="$(eval '\'$(var load_rviz)\' == \'true\' and \'$(var robot)\' == \'nusim\'')"/>
+
+    <!-- Nusim: Launch the blue robot without jsp for nusim -->
+    <include file="$(find-pkg-share nuturtle_description)/launch/load_one.launch.py"
+        if="$(eval '\'$(var robot)\' == \'nusim\'')">
+        <arg name="color" value="blue"/>
+        <arg name="use_rviz" value="false"/>
+        <arg name="use_jsp" value="false"/> 
+    </include>
 
     <!-- Nusim & Localhost: Odometry node for both nusim and localhost -->
     <node pkg="nuturtle_control" exec="odometry" name="odometry"  
@@ -74,6 +82,7 @@
     <node pkg="nuturtle_control" exec="turtle_control" name="turtle_control"
     if="$(eval '\'$(var robot)\' == \'localhost\'')">
         <param from="$(find-pkg-share nuturtle_description)/config/$(var diff_params_file)"/>
+        <remap from="/joint_states" to="blue/joint_states"/>
     </node>
 
     <!-- Localhost: Load only Blue turtle if using localhost -->
@@ -87,11 +96,12 @@
     <node pkg="tf2_ros" exec="static_transform_publisher" name="nusim_world_to_odom" 
             args="0 0 0 0 0 0 1 /nusim/world /odom"/>
 
-    <!-- Launch the blue robot -->
-    <include file="$(find-pkg-share nuturtle_description)/launch/load_one.launch.py">
+    <!-- Localhost: Launch the blue robot with jsp for localhost -->
+    <include file="$(find-pkg-share nuturtle_description)/launch/load_one.launch.py"
+        if="$(eval '\'$(var robot)\' == \'localhost\'')">
         <arg name="color" value="blue"/>
         <arg name="use_rviz" value="false"/>
-        <arg name="use_jsp" value="false"/> 
+        <arg name="use_jsp" value="true"/> 
     </include>
 
 </launch>
