@@ -63,7 +63,8 @@
 1. ✅ Task F.6
 
 # ⬜ Task V
-1. ⬜ Task V.1
+1. ✅ Task V.1
+- Need to add laserscan and yellow markerarray to rviz
 1. ⬜ Task V.2
 1. ⬜ Task V.3
 1. ⬜ Task V.4
