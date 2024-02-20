@@ -34,6 +34,11 @@
 1. ✅ Task C.6
 1. ✅ Task C.7
 1. ⬜ Task C.8
+1. ⬜ Task C.9
+1. ⬜ Task C.10
+1. ⬜ Task C.11
+1. ⬜ Task C.12
+
 
 # ⬜ Task D
 1. ✅ Task D.1
@@ -51,10 +56,22 @@
 - Need to figure out teleop
 - Very Jittery motion
 
-# ⬜ Task F
-1. ⬜ Task F.1
-1. ⬜ Task F.2
-1. ⬜ Task F.3
+# ✅ Task F
+1. ✅ Task F.1
+1. ✅ Task F.2
+1. ✅ Task F.5
+1. ✅ Task F.6
+
+# ⬜ Task V
+1. ⬜ Task V.1
+1. ⬜ Task V.2
+1. ⬜ Task V.3
+1. ⬜ Task V.4
+
+# ⬜ Task L
+1. ⬜ Task L.1
+1. ⬜ Task L.2
+
 
 
 Incomplete: ⬜

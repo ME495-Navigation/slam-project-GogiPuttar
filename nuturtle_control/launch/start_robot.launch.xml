@@ -90,6 +90,11 @@
     args="-d $(find-pkg-share nuturtle_control)/config/nuturtle_real.rviz"
     if="$(eval '\'$(var load_rviz)\' == \'true\' and \'$(var robot)\' == \'localhost\'')"/>
 
+    <!-- Localhost: Launch the hlds_laser (laser) launch file if using localhost -->
+    <include file="$(find-pkg-share hls_lfcd_lds_driver)/launch/hlds_laser.launch.py"
+    if="$(eval '\'$(var robot)\' == \'localhost\'')">
+    </include>
+
     <!-- REMAINING BEHAVIOUR -->
 
     <!-- Static transform publisher between nusim/world and odom tf frames -->
