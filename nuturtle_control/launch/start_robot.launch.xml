@@ -42,7 +42,7 @@
     <include file="$(find-pkg-share nusim)/launch/nusim.launch.xml"
     if="$(eval '\'$(var robot)\' == \'nusim\'')">
         <!-- <arg name="rviz_config" value="$(var rviz_config)"/>  -->
-        <arg name="use_nusim_rviz" value="false"/> 
+        <arg name="use_rviz" value="false"/> 
     </include>
 
     <!-- Nusim: Turtle control node if using nusim -->
@@ -76,6 +76,7 @@
         <param name="wheel_right" value="blue/wheel_right_link"/>
         <param from="$(find-pkg-share nuturtle_description)/config/$(var diff_params_file)"/>
         <remap from="/joint_states" to="blue/joint_states"/>
+        <remap from="/path" to="blue/path"/>
     </node>
 
     <!-- Localhost: Turtle control node if using localhost -->

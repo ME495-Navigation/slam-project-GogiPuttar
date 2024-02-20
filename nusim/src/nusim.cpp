@@ -82,6 +82,17 @@ using namespace std::chrono_literals;
 ///  \param arena_x_length_ (double): Inner length of arena in x direction [m]
 ///  \param arena_y_length_ (double): Inner length of arena in y direction [m]
 
+/// \brief Generate random number
+std::mt19937 & get_random()
+{
+  // static variables inside a function are created once and persist for the remainder of the program
+  static std::random_device rd{};
+  static std::mt19937 mt{rd()};
+  // we return a reference to the pseudo-random number genrator object. This is always the
+  // same object every time get_random is called
+  return mt;
+}
+
 class Nusim : public rclcpp::Node
 {
 public:
@@ -102,6 +113,8 @@ public:
     auto track_width_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto encoder_ticks_per_rad_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto motor_cmd_per_rad_sec_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto input_noise_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto slip_fraction_des = rcl_interfaces::msg::ParameterDescriptor{};
 
     rate_des.description = "Timer callback frequency [Hz]";
     x0_des.description = "Initial x coordinate of the robot [m]";
@@ -116,6 +129,8 @@ public:
     track_width_des.description = "Separation between the wheels [m]";
     encoder_ticks_per_rad_des.description = "The number of encoder 'ticks' per radian [ticks/rad]";
     motor_cmd_per_rad_sec_des.description = "Radius per second in every motor command unit [(rad/s) / mcu]. Stupid name, I know!";
+    input_noise_des.description = "";
+    slip_fraction_des.description = "";
 
     // Declare default parameters values
     declare_parameter("rate", 200, rate_des);     // Hz for timer_callback
@@ -131,6 +146,8 @@ public:
     declare_parameter("track_width", -1.0, track_width_des);  // Meters
     declare_parameter("encoder_ticks_per_rad", -1.0, encoder_ticks_per_rad_des); // Ticks per radian
     declare_parameter("motor_cmd_per_rad_sec", -1.0, motor_cmd_per_rad_sec_des); // MCU per radian/s
+    declare_parameter("input_noise", -1.0, input_noise_des); //
+    declare_parameter("slip_fraction", -1.0, slip_fraction_des); // 
     
     // Get params - Read params from yaml file that is passed in the launch file
     rate = get_parameter("rate").get_parameter_value().get<int>();
@@ -148,11 +165,18 @@ public:
       get_parameter("encoder_ticks_per_rad").get_parameter_value().get<double>();
     motor_cmd_per_rad_sec_ =
       get_parameter("motor_cmd_per_rad_sec").get_parameter_value().get<double>();
+    input_noise_ = get_parameter("input_noise").get_parameter_value().get<double>();
+    slip_fraction_ = get_parameter("slip_fraction").get_parameter_value().get<double>();
+    
 
     check_yaml_params();
 
     // Initialize the differential drive kinematic state
     turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{}, turtlelib::pose2D{theta0_, x0_, y0_}};
+
+    // Initialize the noise generators
+    motor_control_noise_ = std::normal_distribution<>{0.0, std::sqrt(input_noise_)}; // Noise for controlling motors
+    wheel_slip_ = std::uniform_real_distribution<>{-slip_fraction_, slip_fraction_}; // Wheel slipping
 
     // Timer timestep [seconds]
     dt_ = 1.0 / static_cast<double>(rate);
@@ -234,6 +258,12 @@ private:
   geometry_msgs::msg::PoseStamped red_path_pose_stamped_;
   nav_msgs::msg::Path red_path_;
   int path_frequency_ = 100; // per timer callback
+
+  // Variables related to noise
+  double input_noise_;
+  std::normal_distribution<> motor_control_noise_{0.0, 0.0};
+  double slip_fraction_;
+  std::uniform_real_distribution<> wheel_slip_{0.0, 0.0};
 
   // Create objects
   rclcpp::TimerBase::SharedPtr timer_;
@@ -406,18 +436,42 @@ private:
   void wheel_cmd_callback(const nuturtlebot_msgs::msg::WheelCommands & msg)
   {    
 
+    nuturtlebot_msgs::msg::WheelCommands noisy_wheel_cmd_;
+    
+    if(msg.left_velocity != 0.0)
+    {
+      noisy_wheel_cmd_.left_velocity = msg.left_velocity + motor_control_noise_(get_random());
+    }
+    else
+    {
+      noisy_wheel_cmd_.left_velocity = msg.left_velocity;
+    }
+
+    if(msg.right_velocity != 0.0)
+    {
+      noisy_wheel_cmd_.right_velocity = msg.right_velocity + motor_control_noise_(get_random());
+    }
+    else
+    {
+      noisy_wheel_cmd_.right_velocity = msg.right_velocity;
+    }
+
     // Get current sensor data timestamp
     current_sensor_data_.stamp = get_clock()->now();
 
     // Update current sensor data as integer values
-    current_sensor_data_.left_encoder = round((static_cast<double>(msg.left_velocity) * motor_cmd_per_rad_sec_) * encoder_ticks_per_rad_ * dt_ + prev_sensor_data_.left_encoder);
-    current_sensor_data_.right_encoder = round((static_cast<double>(msg.right_velocity) * motor_cmd_per_rad_sec_) * encoder_ticks_per_rad_ * dt_ + prev_sensor_data_.right_encoder);
+    current_sensor_data_.left_encoder = round((static_cast<double>(noisy_wheel_cmd_.left_velocity) * motor_cmd_per_rad_sec_) * encoder_ticks_per_rad_ * dt_ + prev_sensor_data_.left_encoder);
+    current_sensor_data_.right_encoder = round((static_cast<double>(noisy_wheel_cmd_.right_velocity) * motor_cmd_per_rad_sec_) * encoder_ticks_per_rad_ * dt_ + prev_sensor_data_.right_encoder);
 
     // Set previous as current    
     prev_sensor_data_ = current_sensor_data_;
 
+    // Simulate slipping
+    double left_slip_ = wheel_slip_(get_random());  // Add slip to wheel position
+    double right_slip_ = wheel_slip_(get_random());
+
     // Update Transform
-    turtlelib::wheelAngles delta_wheels_{(static_cast<double>(msg.left_velocity) * motor_cmd_per_rad_sec_) * dt_, (static_cast<double>(msg.right_velocity) * motor_cmd_per_rad_sec_) * dt_};
+    turtlelib::wheelAngles delta_wheels_{(static_cast<double>(noisy_wheel_cmd_.left_velocity) * (1 + left_slip_) * motor_cmd_per_rad_sec_) * dt_, (static_cast<double>(noisy_wheel_cmd_.right_velocity) * (1 + right_slip_) * motor_cmd_per_rad_sec_) * dt_};
     turtle_.driveWheels(delta_wheels_);
 
   }
@@ -472,7 +526,9 @@ private:
     if (  wheel_radius_ == -1.0 ||
           track_width_ == -1.0 ||
           encoder_ticks_per_rad_ == -1.0 ||
-          motor_cmd_per_rad_sec_ == -1.0
+          motor_cmd_per_rad_sec_ == -1.0 ||
+          input_noise_ == -1.0 ||
+          slip_fraction_ == -1.0
           )
     {
       RCLCPP_DEBUG(this->get_logger(), "Param rate: %d", rate);
@@ -480,6 +536,8 @@ private:
       RCLCPP_DEBUG(this->get_logger(), "Param track_width: %f", track_width_);
       RCLCPP_DEBUG(this->get_logger(), "Param encoder_ticks_per_rad: %f", encoder_ticks_per_rad_);
       RCLCPP_DEBUG(this->get_logger(), "Param motor_cmd_per_rad_sec: %f", motor_cmd_per_rad_sec_);
+      RCLCPP_DEBUG(this->get_logger(), "Param input_noise: %f", input_noise_);
+      RCLCPP_DEBUG(this->get_logger(), "Param slip_fraction: %f", slip_fraction_);
       
       throw std::runtime_error("Missing necessary parameters in diff_params.yaml!");
     }

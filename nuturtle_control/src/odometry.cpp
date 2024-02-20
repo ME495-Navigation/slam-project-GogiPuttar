@@ -36,6 +36,7 @@
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "turtlelib/diff_drive.hpp"
 #include "nav_msgs/msg/odometry.hpp"
+#include "nav_msgs/msg/path.hpp"
 #include "tf2_ros/transform_broadcaster.h"
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2_ros/transform_broadcaster.h"
@@ -115,6 +116,8 @@ public:
     odom_publisher_ = create_publisher<nav_msgs::msg::Odometry>(
       "odom", 10);
 
+    blue_path_publisher_ = create_publisher<nav_msgs::msg::Path>("/path", 10);
+
     // Subscribers
     joint_states_subscriber_ = create_subscription<sensor_msgs::msg::JointState>(
       "joint_states", 10, std::bind(
@@ -145,12 +148,17 @@ private:
   nav_msgs::msg::Odometry odom_;
   geometry_msgs::msg::TransformStamped tf_;
   sensor_msgs::msg::JointState joint_states_;
+  int readings_ = 0;
+  nav_msgs::msg::Path blue_path_;
+  int path_frequency_ = 100;
 
   // Create objects
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_publisher_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_states_subscriber_;
   rclcpp::Service<nuturtle_control::srv::InitialPose>::SharedPtr initial_pose_server_;
+  rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr blue_path_publisher_;
+  geometry_msgs::msg::PoseStamped blue_pose_stamped_;
 
   /// \brief initial_pose_callback service
   void initial_pose_callback(
@@ -178,6 +186,12 @@ private:
 
     prev_wheel_angles_.left = msg.position.at(0);
     prev_wheel_angles_.right = msg.position.at(1);
+
+    readings_++;
+    if (readings_ % path_frequency_ == 1) {
+      update_blue_NavPath();
+      blue_path_publisher_->publish(blue_path_);
+    }
   }
 
   /// \brief Publishes the odometry to the odom topic
@@ -215,6 +229,28 @@ private:
     tf_.transform.rotation.z = body_q_.z();
     tf_.transform.rotation.w = body_q_.w();
     tf_broadcaster_->sendTransform(tf_);
+  }
+
+  /// \brief Create the red turtle's nav_msgs/Path
+  void update_blue_NavPath()
+  {
+    // Update odometry blue turtle path
+    blue_path_.header.stamp = get_clock()->now();
+    blue_path_.header.frame_id = odom_id_;
+    // Create new pose stamped
+    blue_pose_stamped_.header.stamp = get_clock()->now();
+    blue_pose_stamped_.header.frame_id = odom_id_;
+    blue_pose_stamped_.pose.position.x = turtle_.pose().x;
+    blue_pose_stamped_.pose.position.y = turtle_.pose().y;
+    blue_pose_stamped_.pose.position.z = 0.0;
+    tf2::Quaternion body_q_;
+    body_q_.setRPY(0, 0, turtle_.pose().theta);     // Rotation around z-axis
+    blue_pose_stamped_.pose.orientation.x = body_q_.x();
+    blue_pose_stamped_.pose.orientation.y = body_q_.y();
+    blue_pose_stamped_.pose.orientation.z = body_q_.z();
+    blue_pose_stamped_.pose.orientation.w = body_q_.w();
+    // Append pose stamped
+    blue_path_.poses.push_back(blue_pose_stamped_);
   }
 
   /// \brief Ensures all values are passed via the launch file

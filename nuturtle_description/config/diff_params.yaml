@@ -7,3 +7,5 @@
     encoder_ticks_per_rad : 651.898
     # encoder_ticks_per_rad : 99651.898
     collision_radius : 0.11
+    input_noise: 50.0
+    slip_fraction: 0.5
