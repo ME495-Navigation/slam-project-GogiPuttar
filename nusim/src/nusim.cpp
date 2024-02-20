@@ -47,6 +47,7 @@
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2_ros/transform_broadcaster.h"
+#include "nav_msgs/msg/path.hpp"
 #include "nusim/srv/teleport.hpp"
 #include "nuturtlebot_msgs/msg/wheel_commands.hpp"
 #include "nuturtlebot_msgs/msg/sensor_data.hpp"
@@ -173,6 +174,8 @@ public:
     // Create red/sensor_data publisher
     sensor_data_publisher_ = create_publisher<nuturtlebot_msgs::msg::SensorData>(
       "red/sensor_data", 10);
+    // Create red/path publisher
+    red_path_publisher_ = create_publisher<nav_msgs::msg::Path>("red/path", 10);
 
     // Create ~/reset service
     reset_server_ = create_service<std_srvs::srv::Empty>(
@@ -227,6 +230,11 @@ private:
   double motor_cmd_per_rad_sec_;
   turtlelib::DiffDrive turtle_;
 
+  // Variables related to visualization
+  geometry_msgs::msg::PoseStamped red_path_pose_stamped_;
+  nav_msgs::msg::Path red_path_;
+  int path_frequency_ = 100; // per timer callback
+
   // Create objects
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<std_msgs::msg::UInt64>::SharedPtr timestep_publisher_;
@@ -236,6 +244,7 @@ private:
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr reset_server_;
   rclcpp::Service<nusim::srv::Teleport>::SharedPtr teleport_server_;
   rclcpp::Subscription<nuturtlebot_msgs::msg::WheelCommands>::SharedPtr wheel_cmd_subscriber_;
+  rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr red_path_publisher_;
 
 
   /// \brief Reset the simulation
@@ -280,6 +289,10 @@ private:
 
     // Send the transformation
     tf_broadcaster_->sendTransform(t_);
+
+    if (timestep_ % path_frequency_ == 1) {
+      update_red_NavPath();
+    }
 
   }
 
@@ -409,10 +422,32 @@ private:
 
   }
 
-  /// \brief publish sensor data
+  /// \brief Publish sensor data
   void sensor_data_pub()
   {    
     sensor_data_publisher_->publish(current_sensor_data_);
+  }
+
+  /// \brief Update Simulated turtle's nav path.
+  void update_red_NavPath()
+  {
+    // Update ground truth red turtle path
+    red_path_.header.stamp = get_clock()->now();
+    red_path_.header.frame_id = "nusim/world";
+    // Create new pose stamped
+    red_path_pose_stamped_.header.stamp = get_clock()->now();
+    red_path_pose_stamped_.header.frame_id = "nusim/world";
+    red_path_pose_stamped_.pose.position.x = turtle_.pose().x;
+    red_path_pose_stamped_.pose.position.y = turtle_.pose().y;
+    red_path_pose_stamped_.pose.position.z = 0.0;
+    tf2::Quaternion q_;
+    q_.setRPY(0, 0, turtle_.pose().theta);     // Rotation around z-axis
+    red_path_pose_stamped_.pose.orientation.x = q_.x();
+    red_path_pose_stamped_.pose.orientation.y = q_.y();
+    red_path_pose_stamped_.pose.orientation.z = q_.z();
+    red_path_pose_stamped_.pose.orientation.w = q_.w();
+    // Append pose stamped
+    red_path_.poses.push_back(red_path_pose_stamped_);
   }
 
   /// \brief Main simulation time loop
@@ -427,6 +462,8 @@ private:
     sensor_data_pub();
 
     broadcast_red_turtle();
+
+    red_path_publisher_->publish(red_path_);
   }
 
   /// \brief Ensures all values are passed via .yaml file
@@ -440,9 +477,9 @@ private:
     {
       RCLCPP_DEBUG(this->get_logger(), "Param rate: %d", rate);
       RCLCPP_DEBUG(this->get_logger(), "Param wheel_radius: %f", wheel_radius_);
-      RCLCPP_INFO(this->get_logger(), "Param track_width: %f", track_width_);
-      RCLCPP_INFO(this->get_logger(), "Param encoder_ticks_per_rad: %f", encoder_ticks_per_rad_);
-      RCLCPP_INFO(this->get_logger(), "Param motor_cmd_per_rad_sec: %f", motor_cmd_per_rad_sec_);
+      RCLCPP_DEBUG(this->get_logger(), "Param track_width: %f", track_width_);
+      RCLCPP_DEBUG(this->get_logger(), "Param encoder_ticks_per_rad: %f", encoder_ticks_per_rad_);
+      RCLCPP_DEBUG(this->get_logger(), "Param motor_cmd_per_rad_sec: %f", motor_cmd_per_rad_sec_);
       
       throw std::runtime_error("Missing necessary parameters in diff_params.yaml!");
     }

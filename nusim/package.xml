@@ -19,6 +19,7 @@
   <depend>tf2</depend>
   <depend>visualization_msgs</depend>
   <depend>turtlelib</depend>
+  <depend>nav_msgs</depend>
 
   <depend>rclcpp</depend>
 
