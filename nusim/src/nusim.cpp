@@ -183,8 +183,9 @@ public:
     turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{}, turtlelib::pose2D{theta0_, x0_, y0_}};
 
     // Initialize the noise generators
-    motor_control_noise_ = std::normal_distribution<>{0.0, std::sqrt(input_noise_)}; // Noise for controlling motors
+    motor_control_noise_ = std::normal_distribution<>{0.0, std::sqrt(input_noise_)}; // Uncertainity in motor control
     wheel_slip_ = std::uniform_real_distribution<>{-slip_fraction_, slip_fraction_}; // Wheel slipping
+    laser_noise_ = std::normal_distribution<>{0.0, std::sqrt(basic_sensor_variance_)}; // Uncertainity in laser triangulation
 
     // Timer timestep [seconds]
     dt_ = 1.0 / static_cast<double>(rate);
@@ -275,6 +276,7 @@ private:
   double slip_fraction_;
   std::uniform_real_distribution<> wheel_slip_{0.0, 0.0};
   double basic_sensor_variance_;
+  std::normal_distribution<> laser_noise_{0.0, 0.0};
   double max_range_;
   double fake_sensor_frequency_ = 5.0; //Hz
   visualization_msgs::msg::MarkerArray sensed_obstacles_;
@@ -520,10 +522,15 @@ private:
 
   void sense_obstacles()
   {
+    // Get transform from robot to world
+    turtlelib::Transform2D T_world_red_{{turtle_.pose().x, turtle_.pose().y}, turtle_.pose().theta};
+    turtlelib::Transform2D T_red_world_ = T_world_red_.inv();
+
+    visualization_msgs::msg::MarkerArray sensed_obstacles_temp_;
+
     for (size_t i = 0; i < obstacles_x_.size(); i++)
     {
 
-      visualization_msgs::msg::MarkerArray sensed_obstacles_temp_;
       visualization_msgs::msg::Marker sensed_obstacle_;
 
       sensed_obstacle_.header.frame_id = "red/base_footprint";
@@ -531,17 +538,24 @@ private:
       sensed_obstacle_.id = i;
       sensed_obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
 
-      // Add noise
-      turtlelib::Vector2D obstacle_pos_;
-      turtlelib::Vector2D noisy_obstacle_pos_= obstacle_pos_;
+      // Find local coordinates of obstacle
+      turtlelib::Point2D obstacle_pos_world_{obstacles_x_.at(i), obstacles_y_.at(i)};
+      turtlelib::Point2D obstacle_pos_robot_ = T_red_world_(obstacle_pos_world_);
+      
+      // Add noise only in radially outward direcction
+      double laser_noise_now = laser_noise_(get_random());
+      turtlelib::Point2D noisy_obstacle_pos_robot_= obstacle_pos_robot_ 
+                                                    + turtlelib::Vector2D{
+                                                      laser_noise_now * cos(atan2(obstacle_pos_robot_.y, obstacle_pos_robot_.x)),
+                                                      laser_noise_now * sin(atan2(obstacle_pos_robot_.y, obstacle_pos_robot_.x))};
 
-      sensed_obstacle_.pose.position.x = noisy_obstacle_pos_.x;
-      sensed_obstacle_.pose.position.y = noisy_obstacle_pos_.y;
+      sensed_obstacle_.pose.position.x = noisy_obstacle_pos_robot_.x;
+      sensed_obstacle_.pose.position.y = noisy_obstacle_pos_robot_.y;
 
       // Set the marker's action depending on how far it is
-      if (std::sqrt(std::pow(noisy_obstacle_pos_.x, 2) + std::pow(noisy_obstacle_pos_.y, 2)) > max_range_) 
+      if (std::sqrt(std::pow(noisy_obstacle_pos_robot_.x, 2) + std::pow(noisy_obstacle_pos_robot_.y, 2)) > max_range_) 
       {
-        sensed_obstacle_.action = visualization_msgs::msg::Marker::DELETE; // Delete if further away than max range
+        sensed_obstacle_.action = visualization_msgs::msg::Marker::DELETE; // Delete if farther away than max range
       } 
       else 
       {
