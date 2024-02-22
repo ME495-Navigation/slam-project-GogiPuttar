@@ -36,8 +36,7 @@
 1. ⬜ Task C.8
 1. ✅ Task C.9
 1. ✅ Task C.10
-1. ⬜ Task C.11
-- Need to verify collision behaviour
+1. ✅ Task C.11
 1. ⬜ Task C.12
 
 

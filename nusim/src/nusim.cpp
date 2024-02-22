@@ -346,7 +346,6 @@ private:
     if (timestep_ % path_frequency_ == 1) {
       update_red_NavPath();
     }
-
   }
 
   /// \brief Create obstacles as a MarkerArray and publish them to a topic to display them in Rviz
