@@ -115,6 +115,8 @@ public:
     auto motor_cmd_per_rad_sec_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto input_noise_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto slip_fraction_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto basic_sensor_variance_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto max_range_des = rcl_interfaces::msg::ParameterDescriptor{};
 
     rate_des.description = "Timer callback frequency [Hz]";
     x0_des.description = "Initial x coordinate of the robot [m]";
@@ -129,8 +131,10 @@ public:
     track_width_des.description = "Separation between the wheels [m]";
     encoder_ticks_per_rad_des.description = "The number of encoder 'ticks' per radian [ticks/rad]";
     motor_cmd_per_rad_sec_des.description = "Radius per second in every motor command unit [(rad/s) / mcu]. Stupid name, I know!";
-    input_noise_des.description = "";
-    slip_fraction_des.description = "";
+    input_noise_des.description = "Variance of noise due to non-ideal motor behaviour [(rad/s)^2]";
+    slip_fraction_des.description = "Fractional range in which wheel can slip [-slip_fraction, +slip_fraction] [dimensionless]";
+    basic_sensor_variance_des.description = "";
+    max_range_des.description = "";
 
     // Declare default parameters values
     declare_parameter("rate", 200, rate_des);     // Hz for timer_callback
@@ -146,8 +150,10 @@ public:
     declare_parameter("track_width", -1.0, track_width_des);  // Meters
     declare_parameter("encoder_ticks_per_rad", -1.0, encoder_ticks_per_rad_des); // Ticks per radian
     declare_parameter("motor_cmd_per_rad_sec", -1.0, motor_cmd_per_rad_sec_des); // MCU per radian/s
-    declare_parameter("input_noise", -1.0, input_noise_des); //
-    declare_parameter("slip_fraction", -1.0, slip_fraction_des); // 
+    declare_parameter("input_noise", -1.0, input_noise_des); // (radian/s)^2
+    declare_parameter("slip_fraction", -1.0, slip_fraction_des); // Dimensionless (radian/radian)
+    declare_parameter("basic_sensor_variance", -1.0, basic_sensor_variance_des); // 
+    declare_parameter("max_range", -1.0, basic_sensor_variance_des); // Meters
     
     // Get params - Read params from yaml file that is passed in the launch file
     rate = get_parameter("rate").get_parameter_value().get<int>();
@@ -167,6 +173,8 @@ public:
       get_parameter("motor_cmd_per_rad_sec").get_parameter_value().get<double>();
     input_noise_ = get_parameter("input_noise").get_parameter_value().get<double>();
     slip_fraction_ = get_parameter("slip_fraction").get_parameter_value().get<double>();
+    basic_sensor_variance_ = get_parameter("basic_sensor_variance").get_parameter_value().get<double>();
+    max_range_ = get_parameter("max_range").get_parameter_value().get<double>();
     
 
     check_yaml_params();
@@ -200,6 +208,8 @@ public:
       "red/sensor_data", 10);
     // Create red/path publisher
     red_path_publisher_ = create_publisher<nav_msgs::msg::Path>("red/path", 10);
+    // Create /fake_sensor
+    fake_sensor_publisher_ = create_publisher<visualization_msgs::msg::MarkerArray>("/fake_sensor", 10);
 
     // Create ~/reset service
     reset_server_ = create_service<std_srvs::srv::Empty>(
@@ -259,11 +269,15 @@ private:
   nav_msgs::msg::Path red_path_;
   int path_frequency_ = 100; // per timer callback
 
-  // Variables related to noise
+  // Variables related to noise and sensing
   double input_noise_;
   std::normal_distribution<> motor_control_noise_{0.0, 0.0};
   double slip_fraction_;
   std::uniform_real_distribution<> wheel_slip_{0.0, 0.0};
+  double basic_sensor_variance_;
+  double max_range_;
+  double fake_sensor_frequency_ = 5.0; //Hz
+  visualization_msgs::msg::MarkerArray sensed_obstacles_;
 
   // Create objects
   rclcpp::TimerBase::SharedPtr timer_;
@@ -275,7 +289,7 @@ private:
   rclcpp::Service<nusim::srv::Teleport>::SharedPtr teleport_server_;
   rclcpp::Subscription<nuturtlebot_msgs::msg::WheelCommands>::SharedPtr wheel_cmd_subscriber_;
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr red_path_publisher_;
-
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr fake_sensor_publisher_;
 
   /// \brief Reset the simulation
   void reset_callback(
@@ -504,6 +518,54 @@ private:
     red_path_.poses.push_back(red_path_pose_stamped_);
   }
 
+  void sense_obstacles()
+  {
+    for (size_t i = 0; i < obstacles_x_.size(); i++)
+    {
+
+      visualization_msgs::msg::MarkerArray sensed_obstacles_temp_;
+      visualization_msgs::msg::Marker sensed_obstacle_;
+
+      sensed_obstacle_.header.frame_id = "red/base_footprint";
+      sensed_obstacle_.header.stamp = get_clock()->now();
+      sensed_obstacle_.id = i;
+      sensed_obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
+
+      // Add noise
+      turtlelib::Vector2D obstacle_pos_;
+      turtlelib::Vector2D noisy_obstacle_pos_= obstacle_pos_;
+
+      sensed_obstacle_.pose.position.x = noisy_obstacle_pos_.x;
+      sensed_obstacle_.pose.position.y = noisy_obstacle_pos_.y;
+
+      // Set the marker's action depending on how far it is
+      if (std::sqrt(std::pow(noisy_obstacle_pos_.x, 2) + std::pow(noisy_obstacle_pos_.y, 2)) > max_range_) 
+      {
+        sensed_obstacle_.action = visualization_msgs::msg::Marker::DELETE; // Delete if further away than max range
+      } 
+      else 
+      {
+        sensed_obstacle_.action = visualization_msgs::msg::Marker::ADD; // Add if within the max range
+      }
+
+      sensed_obstacle_.pose.position.z = obstacles_h_ / 2.0;
+      sensed_obstacle_.pose.orientation.x = 0.0;
+      sensed_obstacle_.pose.orientation.y = 0.0;
+      sensed_obstacle_.pose.orientation.z = 0.0;
+      sensed_obstacle_.pose.orientation.w = 1.0;
+      sensed_obstacle_.scale.x = obstacles_r_ * 2.0;   // Diameter in x
+      sensed_obstacle_.scale.y = obstacles_r_ * 2.0;   // Diameter in y
+      sensed_obstacle_.scale.z = obstacles_h_;         // Height
+      sensed_obstacle_.color.r = 1.0f;
+      sensed_obstacle_.color.g = 1.0f;
+      sensed_obstacle_.color.b = 0.0f;
+      sensed_obstacle_.color.a = 1.0;
+      sensed_obstacles_temp_.markers.push_back(sensed_obstacle_);
+
+      sensed_obstacles_ = sensed_obstacles_temp_;
+    }
+  }
+
   /// \brief Main simulation time loop
   void timer_callback()
   {
@@ -518,6 +580,14 @@ private:
     broadcast_red_turtle();
 
     red_path_publisher_->publish(red_path_);
+
+    sense_obstacles();
+
+    // Publish at fake_sensor_frequency_ despite the timer frequency
+    if (timestep_ % static_cast<int>(rate / fake_sensor_frequency_) == 1)
+    {
+      fake_sensor_publisher_->publish(sensed_obstacles_);
+    }
   }
 
   /// \brief Ensures all values are passed via .yaml file
@@ -528,7 +598,9 @@ private:
           encoder_ticks_per_rad_ == -1.0 ||
           motor_cmd_per_rad_sec_ == -1.0 ||
           input_noise_ == -1.0 ||
-          slip_fraction_ == -1.0
+          slip_fraction_ == -1.0 ||
+          basic_sensor_variance_ == -1.0 ||
+          max_range_ == -1.0
           )
     {
       RCLCPP_DEBUG(this->get_logger(), "Param rate: %d", rate);
@@ -538,8 +610,31 @@ private:
       RCLCPP_DEBUG(this->get_logger(), "Param motor_cmd_per_rad_sec: %f", motor_cmd_per_rad_sec_);
       RCLCPP_DEBUG(this->get_logger(), "Param input_noise: %f", input_noise_);
       RCLCPP_DEBUG(this->get_logger(), "Param slip_fraction: %f", slip_fraction_);
+      RCLCPP_DEBUG(this->get_logger(), "Param basic_sensor_variance: %f", basic_sensor_variance_);
       
       throw std::runtime_error("Missing necessary parameters in diff_params.yaml!");
+    }
+
+    if (  wheel_radius_ <= 0.0 ||
+          track_width_ <= 0.0 ||
+          encoder_ticks_per_rad_ <= 0.0 ||
+          motor_cmd_per_rad_sec_ <= 0.0 ||
+          input_noise_ < 0.0 ||
+          slip_fraction_ < 0.0 ||
+          basic_sensor_variance_ < 0.0 ||
+          max_range_ <= 0.0
+          )
+    {
+      RCLCPP_DEBUG(this->get_logger(), "Param rate: %d", rate);
+      RCLCPP_DEBUG(this->get_logger(), "Param wheel_radius: %f", wheel_radius_);
+      RCLCPP_DEBUG(this->get_logger(), "Param track_width: %f", track_width_);
+      RCLCPP_DEBUG(this->get_logger(), "Param encoder_ticks_per_rad: %f", encoder_ticks_per_rad_);
+      RCLCPP_DEBUG(this->get_logger(), "Param motor_cmd_per_rad_sec: %f", motor_cmd_per_rad_sec_);
+      RCLCPP_DEBUG(this->get_logger(), "Param input_noise: %f", input_noise_);
+      RCLCPP_DEBUG(this->get_logger(), "Param slip_fraction: %f", slip_fraction_);
+      RCLCPP_DEBUG(this->get_logger(), "Param basic_sensor_variance: %f", basic_sensor_variance_);
+      
+      throw std::runtime_error("Incorrect params in diff_params.yaml!");
     }
   }
 

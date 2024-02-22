@@ -9,3 +9,5 @@
     collision_radius : 0.11
     input_noise: 50.0
     slip_fraction: 0.5
+    basic_sensor_variance: 50.0
+    max_range: 3.5
