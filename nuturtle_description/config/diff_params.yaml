@@ -12,3 +12,4 @@
     basic_sensor_variance: 0.000004 # meter square
     # basic_sensor_variance: 0.004 # meter square
     max_range: 3.5
+    # max_range: 1.0
