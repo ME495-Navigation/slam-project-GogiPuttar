@@ -117,6 +117,7 @@ public:
     auto slip_fraction_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto basic_sensor_variance_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto max_range_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto collision_radius_des = rcl_interfaces::msg::ParameterDescriptor{};
 
     rate_des.description = "Timer callback frequency [Hz]";
     x0_des.description = "Initial x coordinate of the robot [m]";
@@ -133,8 +134,9 @@ public:
     motor_cmd_per_rad_sec_des.description = "Radius per second in every motor command unit [(rad/s) / mcu]. Stupid name, I know!";
     input_noise_des.description = "Variance of noise due to non-ideal motor behaviour [(rad/s)^2]";
     slip_fraction_des.description = "Fractional range in which wheel can slip [-slip_fraction, +slip_fraction] [dimensionless]";
-    basic_sensor_variance_des.description = "";
-    max_range_des.description = "";
+    basic_sensor_variance_des.description = "Variance in lidar [m^2]";
+    max_range_des.description = "Range of the lidar [m]";
+    collision_radius_des.description = "Collision radius of the robot [m]";
 
     // Declare default parameters values
     declare_parameter("rate", 200, rate_des);     // Hz for timer_callback
@@ -154,6 +156,7 @@ public:
     declare_parameter("slip_fraction", -1.0, slip_fraction_des); // Dimensionless (radian/radian)
     declare_parameter("basic_sensor_variance", -1.0, basic_sensor_variance_des); // 
     declare_parameter("max_range", -1.0, basic_sensor_variance_des); // Meters
+    declare_parameter("collision_radius", -1.0, collision_radius_des); // Meters
     
     // Get params - Read params from yaml file that is passed in the launch file
     rate = get_parameter("rate").get_parameter_value().get<int>();
@@ -175,6 +178,7 @@ public:
     slip_fraction_ = get_parameter("slip_fraction").get_parameter_value().get<double>();
     basic_sensor_variance_ = get_parameter("basic_sensor_variance").get_parameter_value().get<double>();
     max_range_ = get_parameter("max_range").get_parameter_value().get<double>();
+    collision_radius_ = get_parameter("collision_radius").get_parameter_value().get<double>();
     
 
     check_yaml_params();
@@ -280,6 +284,9 @@ private:
   double max_range_;
   double fake_sensor_frequency_ = 5.0; //Hz
   visualization_msgs::msg::MarkerArray sensed_obstacles_;
+  double collision_radius_;
+  bool lie_group_collision_ = true;
+  bool colliding_ = false;
 
   // Create objects
   rclcpp::TimerBase::SharedPtr timer_;
@@ -486,10 +493,15 @@ private:
     double left_slip_ = wheel_slip_(get_random());  // Add slip to wheel position
     double right_slip_ = wheel_slip_(get_random());
 
-    // Update Transform
+    // Change in wheel angles with slip
     turtlelib::wheelAngles delta_wheels_{(static_cast<double>(noisy_wheel_cmd_.left_velocity) * (1 + left_slip_) * motor_cmd_per_rad_sec_) * dt_, (static_cast<double>(noisy_wheel_cmd_.right_velocity) * (1 + right_slip_) * motor_cmd_per_rad_sec_) * dt_};
-    turtle_.driveWheels(delta_wheels_);
 
+    // Detect and perform required update to transform if colliding, otherwise update trasnform normally
+    if(!detect_and_simulate_collison(delta_wheels_))
+    {
+      // Update Transform if no collision
+      turtle_.driveWheels(delta_wheels_);
+    }
   }
 
   /// \brief Publish sensor data
@@ -520,7 +532,7 @@ private:
     red_path_.poses.push_back(red_path_pose_stamped_);
   }
 
-  void sense_obstacles()
+  void scan_obstacles()
   {
     // Get transform from robot to world
     turtlelib::Transform2D T_world_red_{{turtle_.pose().x, turtle_.pose().y}, turtle_.pose().theta};
@@ -580,6 +592,55 @@ private:
     }
   }
 
+  bool detect_and_simulate_collison(turtlelib::wheelAngles predicted_delta_wheels_)
+  {    
+    // Predicted robot motion
+    turtlelib::DiffDrive predicted_turtle_ = turtle_;
+    predicted_turtle_.driveWheels(predicted_delta_wheels_);   
+
+    turtlelib::Transform2D T_world_robot_{{predicted_turtle_.pose().x, predicted_turtle_.pose().y}, predicted_turtle_.pose().theta};
+    turtlelib::Transform2D T_robot_world_ = T_world_robot_.inv(); 
+
+    for (size_t i = 0; i < obstacles_x_.size(); i++)
+    {
+      // Find local coordinates of obstacle
+      turtlelib::Point2D obstacle_pos_world_{obstacles_x_.at(i), obstacles_y_.at(i)};
+      turtlelib::Point2D obstacle_pos_robot_ = T_robot_world_(obstacle_pos_world_);
+
+      // Detect collision
+      if (std::sqrt(std::pow(obstacle_pos_robot_.x, 2) + std::pow(obstacle_pos_robot_.y, 2)) < (collision_radius_ + obstacles_r_)) 
+      {
+        // If colliding, calculate shift of robot frame, in robot frame
+        turtlelib::Vector2D robotshift_robot_{
+        -((collision_radius_ + obstacles_r_) * cos(atan2(obstacle_pos_robot_.y, obstacle_pos_robot_.x)) - obstacle_pos_robot_.x),
+        -((collision_radius_ + obstacles_r_) * sin(atan2(obstacle_pos_robot_.y, obstacle_pos_robot_.x)) - obstacle_pos_robot_.y)
+        };
+
+        // Calculate transform corresponding to this shift
+        turtlelib::Transform2D T_robot_newrobot_{robotshift_robot_};
+
+        // Define this transformation in the world frame
+        turtlelib::Transform2D T_world_newrobot_ = T_world_robot_ * T_robot_newrobot_;
+
+        if(lie_group_collision_)
+        {
+          turtle_.q.x = T_world_newrobot_.translation().x;
+          turtle_.q.y = T_world_newrobot_.translation().y;
+          turtle_.q.theta = T_world_newrobot_.rotation();
+        }
+        turtle_.phi.left = turtlelib::normalize_angle(turtle_.phi.left + predicted_delta_wheels_.left); // TODO: wheel rotation not working properly
+        turtle_.phi.right = turtlelib::normalize_angle(turtle_.phi.right + predicted_delta_wheels_.right);
+
+        RCLCPP_ERROR(this->get_logger(), "turtle: %f B: %f", obstacle_pos_robot_.x, obstacle_pos_robot_.y);
+
+        return true; // Colliding with one obstacle, therefore, ignore other obstacles
+      } 
+    }
+    return false; // Not colliding
+
+    throw std::runtime_error("Invalid collision! Check collision simulation!");
+  }
+
   /// \brief Main simulation time loop
   void timer_callback()
   {
@@ -589,13 +650,13 @@ private:
     obstacles_publisher_->publish(obstacles_);
     walls_publisher_->publish(walls_);
 
+    scan_obstacles();
+    
     sensor_data_pub();
 
     broadcast_red_turtle();
 
     red_path_publisher_->publish(red_path_);
-
-    sense_obstacles();
 
     // Publish at fake_sensor_frequency_ despite the timer frequency
     if (timestep_ % static_cast<int>(rate / fake_sensor_frequency_) == 1)
@@ -614,7 +675,8 @@ private:
           input_noise_ == -1.0 ||
           slip_fraction_ == -1.0 ||
           basic_sensor_variance_ == -1.0 ||
-          max_range_ == -1.0
+          max_range_ == -1.0 ||
+          collision_radius_ == -1.0
           )
     {
       RCLCPP_DEBUG(this->get_logger(), "Param rate: %d", rate);
@@ -625,6 +687,8 @@ private:
       RCLCPP_DEBUG(this->get_logger(), "Param input_noise: %f", input_noise_);
       RCLCPP_DEBUG(this->get_logger(), "Param slip_fraction: %f", slip_fraction_);
       RCLCPP_DEBUG(this->get_logger(), "Param basic_sensor_variance: %f", basic_sensor_variance_);
+      RCLCPP_DEBUG(this->get_logger(), "Param max_range: %f", max_range_);
+      RCLCPP_DEBUG(this->get_logger(), "Param collision_radius: %f", collision_radius_);
       
       throw std::runtime_error("Missing necessary parameters in diff_params.yaml!");
     }
@@ -636,7 +700,8 @@ private:
           input_noise_ < 0.0 ||
           slip_fraction_ < 0.0 ||
           basic_sensor_variance_ < 0.0 ||
-          max_range_ <= 0.0
+          max_range_ <= 0.0 ||
+          collision_radius_ < 0.0
           )
     {
       RCLCPP_DEBUG(this->get_logger(), "Param rate: %d", rate);
@@ -647,6 +712,8 @@ private:
       RCLCPP_DEBUG(this->get_logger(), "Param input_noise: %f", input_noise_);
       RCLCPP_DEBUG(this->get_logger(), "Param slip_fraction: %f", slip_fraction_);
       RCLCPP_DEBUG(this->get_logger(), "Param basic_sensor_variance: %f", basic_sensor_variance_);
+      RCLCPP_DEBUG(this->get_logger(), "Param max_range: %f", max_range_);
+      RCLCPP_DEBUG(this->get_logger(), "Param collision_radius: %f", collision_radius_);
       
       throw std::runtime_error("Incorrect params in diff_params.yaml!");
     }

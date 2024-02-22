@@ -7,6 +7,7 @@
     encoder_ticks_per_rad : 651.898
     # encoder_ticks_per_rad : 99651.898
     collision_radius : 0.11
+    # collision_radius : 0.08 # better visuals for collision
     input_noise: 50.0
     slip_fraction: 0.5
     basic_sensor_variance: 0.000004 # meter square

@@ -37,6 +37,7 @@
 1. ✅ Task C.9
 1. ✅ Task C.10
 1. ⬜ Task C.11
+- Need to verify collision behaviour
 1. ⬜ Task C.12
 
 
@@ -64,7 +65,7 @@
 
 # ⬜ Task V
 1. ✅ Task V.1
-- Need to add laserscan and yellow markerarray to rviz
+- Need to add laserscan to rviz
 1. ✅ Task V.2
 1. ⬜ Task V.3
 1. ⬜ Task V.4
