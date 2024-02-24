@@ -56,6 +56,7 @@
 #include "turtlelib/geometry2d.hpp"
 #include "turtlelib/se2d.hpp"
 #include "turtlelib/diff_drive.hpp"
+#include "sensor_msgs/msg/laser_scan.hpp"
 
 using namespace std::chrono_literals;
 
@@ -118,6 +119,12 @@ public:
     auto basic_sensor_variance_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto max_range_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto collision_radius_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto lidar_variance_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto lidar_min_range_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto lidar_max_range_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto lidar_angle_increment_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto lidar_num_samples_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto lidar_resolution_des = rcl_interfaces::msg::ParameterDescriptor{};
 
     rate_des.description = "Timer callback frequency [Hz]";
     x0_des.description = "Initial x coordinate of the robot [m]";
@@ -137,6 +144,12 @@ public:
     basic_sensor_variance_des.description = "Variance in lidar [m^2]";
     max_range_des.description = "Range of the lidar [m]";
     collision_radius_des.description = "Collision radius of the robot [m]";
+    lidar_variance_des.description = "Variance in LIDAR scanning [m]";
+    lidar_min_range_des.description = "Max range of LIDAR scanning [m]";
+    lidar_max_range_des.description = "Min range of LIDAR scanning [m]";
+    lidar_angle_increment_des.description = "Angular increment LIDAR scanning [deg]";
+    lidar_num_samples_des.description = "";
+    lidar_resolution_des.description = "Distance resolution in LIDAR scanning [m]";
 
     // Declare default parameters values
     declare_parameter("rate", 200, rate_des);     // Hz for timer_callback
@@ -155,8 +168,14 @@ public:
     declare_parameter("input_noise", -1.0, input_noise_des); // (radian/s)^2
     declare_parameter("slip_fraction", -1.0, slip_fraction_des); // Dimensionless (radian/radian)
     declare_parameter("basic_sensor_variance", -1.0, basic_sensor_variance_des); // 
-    declare_parameter("max_range", -1.0, basic_sensor_variance_des); // Meters
+    declare_parameter("max_range", -1.0, basic_sensor_variance_des); // Meters^2
     declare_parameter("collision_radius", -1.0, collision_radius_des); // Meters
+    declare_parameter("lidar_variance", -1.0, lidar_variance_des); // Meters^2
+    declare_parameter("lidar_min_range", -1.0, lidar_min_range_des); // Meters
+    declare_parameter("lidar_max_range", -1.0, lidar_max_range_des); // Meters
+    declare_parameter("lidar_angle_increment", -1.0, lidar_angle_increment_des); // Degrees
+    declare_parameter("lidar_num_samples", -1.0, lidar_num_samples_des);
+    declare_parameter("lidar_resolution", -1.0, lidar_resolution_des); // Meters
     
     // Get params - Read params from yaml file that is passed in the launch file
     rate = get_parameter("rate").get_parameter_value().get<int>();
@@ -179,8 +198,13 @@ public:
     basic_sensor_variance_ = get_parameter("basic_sensor_variance").get_parameter_value().get<double>();
     max_range_ = get_parameter("max_range").get_parameter_value().get<double>();
     collision_radius_ = get_parameter("collision_radius").get_parameter_value().get<double>();
+    lidar_variance_ = get_parameter("lidar_variance").get_parameter_value().get<double>();
+    lidar_min_range_ = get_parameter("lidar_min_range").get_parameter_value().get<double>();
+    lidar_max_range_ = get_parameter("lidar_max_range").get_parameter_value().get<double>();
+    lidar_angle_increment_ = get_parameter("lidar_angle_increment").get_parameter_value().get<double>();
+    lidar_num_samples_ = get_parameter("lidar_num_samples").get_parameter_value().get<double>();
+    lidar_resolution_ = get_parameter("lidar_resolution").get_parameter_value().get<double>();
     
-
     check_yaml_params();
 
     // Initialize the differential drive kinematic state
@@ -189,7 +213,8 @@ public:
     // Initialize the noise generators
     motor_control_noise_ = std::normal_distribution<>{0.0, std::sqrt(input_noise_)}; // Uncertainity in motor control
     wheel_slip_ = std::uniform_real_distribution<>{-slip_fraction_, slip_fraction_}; // Wheel slipping
-    laser_noise_ = std::normal_distribution<>{0.0, std::sqrt(basic_sensor_variance_)}; // Uncertainity in laser triangulation
+    sensing_noise_ = std::normal_distribution<>{0.0, std::sqrt(basic_sensor_variance_)}; // Uncertainity in object estimation
+    lidar_noise_ = std::normal_distribution<>{0.0, std::sqrt(lidar_variance_)};
 
     // Timer timestep [seconds]
     dt_ = 1.0 / static_cast<double>(rate);
@@ -215,6 +240,9 @@ public:
     red_path_publisher_ = create_publisher<nav_msgs::msg::Path>("red/path", 10);
     // Create /fake_sensor
     fake_sensor_publisher_ = create_publisher<visualization_msgs::msg::MarkerArray>("/fake_sensor", 10);
+    // Create /fake_lidar_scan
+    fake_lidar_publisher_ =
+      create_publisher<sensor_msgs::msg::LaserScan>("~/fake_lidar_scan", 10);
 
     // Create ~/reset service
     reset_server_ = create_service<std_srvs::srv::Empty>(
@@ -280,13 +308,21 @@ private:
   double slip_fraction_;
   std::uniform_real_distribution<> wheel_slip_{0.0, 0.0};
   double basic_sensor_variance_;
-  std::normal_distribution<> laser_noise_{0.0, 0.0};
+  std::normal_distribution<> sensing_noise_{0.0, 0.0};
   double max_range_;
   double fake_sensor_frequency_ = 5.0; //Hz
   visualization_msgs::msg::MarkerArray sensed_obstacles_;
   double collision_radius_;
   bool lie_group_collision_ = true;
   bool colliding_ = false;
+  sensor_msgs::msg::LaserScan lidar_data_;
+  double lidar_variance_;
+  double lidar_min_range_;
+  double lidar_max_range_;
+  double lidar_angle_increment_;
+  double lidar_num_samples_;
+  double lidar_resolution_;
+  std::normal_distribution<> lidar_noise_{0.0, 0.0};
 
   // Create objects
   rclcpp::TimerBase::SharedPtr timer_;
@@ -299,6 +335,7 @@ private:
   rclcpp::Subscription<nuturtlebot_msgs::msg::WheelCommands>::SharedPtr wheel_cmd_subscriber_;
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr red_path_publisher_;
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr fake_sensor_publisher_;
+  rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr fake_lidar_publisher_;
 
   /// \brief Reset the simulation
   void reset_callback(
@@ -496,7 +533,7 @@ private:
     turtlelib::wheelAngles delta_wheels_{(static_cast<double>(noisy_wheel_cmd_.left_velocity) * (1 + left_slip_) * motor_cmd_per_rad_sec_) * dt_, (static_cast<double>(noisy_wheel_cmd_.right_velocity) * (1 + right_slip_) * motor_cmd_per_rad_sec_) * dt_};
 
     // Detect and perform required update to transform if colliding, otherwise update trasnform normally
-    if(!detect_and_simulate_collison(delta_wheels_))
+    if(!detect_and_simulate_collision(delta_wheels_))
     {
       // Update Transform if no collision
       turtle_.driveWheels(delta_wheels_);
@@ -531,7 +568,7 @@ private:
     red_path_.poses.push_back(red_path_pose_stamped_);
   }
 
-  void scan_obstacles()
+  void sense_obstacles()
   {
     // Get transform from robot to world
     turtlelib::Transform2D T_world_red_{{turtle_.pose().x, turtle_.pose().y}, turtle_.pose().theta};
@@ -553,12 +590,12 @@ private:
       turtlelib::Point2D obstacle_pos_world_{obstacles_x_.at(i), obstacles_y_.at(i)};
       turtlelib::Point2D obstacle_pos_robot_ = T_red_world_(obstacle_pos_world_);
       
-      // Add noise only in radially outward direcction
-      double laser_noise_now = laser_noise_(get_random());
-      turtlelib::Point2D noisy_obstacle_pos_robot_= obstacle_pos_robot_ 
-                                                    + turtlelib::Vector2D{
-                                                      laser_noise_now * cos(atan2(obstacle_pos_robot_.y, obstacle_pos_robot_.x)),
-                                                      laser_noise_now * sin(atan2(obstacle_pos_robot_.y, obstacle_pos_robot_.x))};
+      // Add noise
+      turtlelib::Point2D noisy_obstacle_pos_robot_ = obstacle_pos_robot_
+                                                     + turtlelib::Vector2D{
+                                                        sensing_noise_(get_random()),
+                                                        sensing_noise_(get_random())
+                                                     };
 
       sensed_obstacle_.pose.position.x = noisy_obstacle_pos_robot_.x;
       sensed_obstacle_.pose.position.y = noisy_obstacle_pos_robot_.y;
@@ -591,7 +628,7 @@ private:
     }
   }
 
-  bool detect_and_simulate_collison(turtlelib::wheelAngles predicted_delta_wheels_)
+  bool detect_and_simulate_collision(turtlelib::wheelAngles predicted_delta_wheels_)
   {    
     // Predicted robot motion
     turtlelib::DiffDrive predicted_turtle_ = turtle_;
@@ -630,14 +667,194 @@ private:
         turtle_.phi.left = turtlelib::normalize_angle(turtle_.phi.left + predicted_delta_wheels_.left); // TODO: wheel rotation not working properly
         turtle_.phi.right = turtlelib::normalize_angle(turtle_.phi.right + predicted_delta_wheels_.right);
 
-        RCLCPP_ERROR(this->get_logger(), "turtle: %f B: %f", obstacle_pos_robot_.x, obstacle_pos_robot_.y);
-
         return true; // Colliding with one obstacle, therefore, ignore other obstacles
       } 
     }
     return false; // Not colliding
 
     throw std::runtime_error("Invalid collision! Check collision simulation!");
+  }
+
+  /// \brief Fake lidar sensor
+  void lidar()
+  {
+    lidar_data_.header.frame_id = "red/base_scan";
+    lidar_data_.header.stamp = get_clock()->now();
+    lidar_data_.angle_min = 0.0;
+    lidar_data_.angle_max = turtlelib::deg2rad(360.0); // convert degrees to radians
+    lidar_data_.angle_increment = turtlelib::deg2rad(lidar_angle_increment_); // convert degrees to radians
+    // lidar_data_.time_increment = 0.0005574136157520115;
+    lidar_data_.time_increment = 0.0;
+    lidar_data_.scan_time = 1.0 / fake_sensor_frequency_;
+    lidar_data_.range_min = lidar_min_range_;
+    lidar_data_.range_max = lidar_max_range_;
+    lidar_data_.ranges.resize(lidar_num_samples_);
+
+    // Iterate over samples
+    for (int sample_index = 0; sample_index < lidar_num_samples_; sample_index++) 
+    {       
+      // Limit of laser in world frame
+      turtlelib::Point2D limit{
+                                turtle_.pose().x + lidar_max_range_ * cos(sample_index * lidar_data_.angle_increment + turtle_.pose().theta),
+                                turtle_.pose().y + lidar_max_range_ * sin(sample_index * lidar_data_.angle_increment + turtle_.pose().theta)
+                              };
+
+      // Slope of laser trace in world frame
+      double slope = (limit.y - turtle_.pose().y) / (limit.x - turtle_.pose().x  + 1e-7);
+
+      // Length of laser trace
+      double length = lidar_max_range_;
+
+      double lidar_reading = lidar_max_range_;
+
+      bool wall_measured = false; // Estimate distance to wall only once
+
+      // Determine closest intersection between laser (line) and obstacles (circles), 
+      // determine closest obstacle outside of minimum distance, and
+      // snap intersection point according to laser resolution.
+      // Reference: [https://mathworld.wolfram.com/Circle-LineIntersection.html]
+      for (size_t i = 0; i < obstacles_x_.size(); i++) 
+      { 
+        // Determinant. D = x_1 * y_2 - x_2 * y_1, relative to the obstacle
+        double D = (turtle_.pose().x - obstacles_x_.at(i)) // x_1
+                    * (limit.y - obstacles_y_.at(i)) // y_2
+                    - (limit.x - obstacles_x_.at(i)) // x_2 
+                    * (turtle_.pose().y - obstacles_y_.at(i)); // y_1
+
+        // Discriminant. delta = r^2 * (d_r)^2 - D^2
+        double delta = std::pow(obstacles_r_, 2) * std::pow(length, 2) - std::pow(D, 2); 
+
+        // RCLCPP_INFO(this->get_logger(), "A: %d, B: %f", sample_index, limit.x);
+
+
+        // delta < 0 => No intersection.
+        if (delta < 0.0)
+        {
+          // Estimate where laser hits the wall, if not already estimated
+          if(!wall_measured)
+          {
+            // North Wall reading
+            if(limit.y > arena_y_/2.0)
+            {
+              turtlelib::Vector2D laser_vector{ 0, arena_y_/2.0 - turtle_.pose().y};
+              laser_vector.x = laser_vector.y / (slope  + 1e-7);
+
+              if(lidar_reading > turtlelib::magnitude(laser_vector))
+              {
+                lidar_reading = turtlelib::magnitude(laser_vector);
+              }
+            }
+            // West Wall reading
+            if(limit.x < -arena_x_/2.0)
+            {
+              turtlelib::Vector2D laser_vector{ -arena_x_/2.0 - turtle_.pose().x, 0};
+              laser_vector.y = laser_vector.x * slope;
+
+              if(lidar_reading > turtlelib::magnitude(laser_vector))
+              {
+                lidar_reading = turtlelib::magnitude(laser_vector);
+              }
+            }
+            // South Wall reading
+            if(limit.y < -arena_y_/2.0)
+            {
+              turtlelib::Vector2D laser_vector{ 0, -arena_y_/2.0 - turtle_.pose().y};
+              laser_vector.x = laser_vector.y / (slope  + 1e-7);
+
+              if(lidar_reading > turtlelib::magnitude(laser_vector))
+              {
+                lidar_reading = turtlelib::magnitude(laser_vector);
+              }
+            }
+            // East Wall reading
+            if(limit.x > arena_x_/2.0)
+            {
+              turtlelib::Vector2D laser_vector{ arena_x_/2.0 - turtle_.pose().x, 0};
+              laser_vector.y = laser_vector.x * slope;
+
+              if(lidar_reading > turtlelib::magnitude(laser_vector))
+              {
+                lidar_reading = turtlelib::magnitude(laser_vector);
+              }
+            }
+            wall_measured = true;
+          }
+        }
+        // delta = 0 => Tangent.
+        else if (delta == 0.0)
+        {
+          double d_x = limit.x - turtle_.pose().x;
+          double d_y = limit.y - turtle_.pose().y;
+
+          // One solution
+
+          turtlelib::Vector2D laser_vector{ 
+                                            D * d_y /(std::pow(length, 2)) + obstacles_x_.at(i) - turtle_.pose().x,
+                                            -D * d_x /(std::pow(length, 2)) + obstacles_y_.at(i) - turtle_.pose().y
+                                          };
+
+          // This formula is for infinite lines however, our LIDAR is unidirectional.
+          if((laser_vector.x / (limit.x - turtle_.pose().x + 1e-7)) > 0.0)
+          {
+            if(lidar_reading > turtlelib::magnitude(laser_vector))
+            {
+              lidar_reading = turtlelib::magnitude(laser_vector);
+            }
+          }
+        }
+
+        // delta > 0 => Secant.
+        else if (delta > 0.0)
+        {
+          double d_x = limit.x - turtle_.pose().x;
+          double d_y = limit.y - turtle_.pose().y;
+
+          // Two solutions
+
+          // Solution 1
+          turtlelib::Vector2D laser_vector_1{ 
+                                            (D * d_y + (std::fabs(d_y)/d_y) * d_x * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_x_.at(i) - turtle_.pose().x,
+                                            (-D * d_x + std::fabs(d_y) * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_y_.at(i) - turtle_.pose().y
+                                          };
+
+          // This formula is for infinite lines however, our LIDAR is unidirectional.
+          if((laser_vector_1.x / (limit.x - turtle_.pose().x + 1e-7)) > 0.0)
+          {
+            if(lidar_reading > turtlelib::magnitude(laser_vector_1))
+            {
+              lidar_reading = turtlelib::magnitude(laser_vector_1);
+            }
+          }
+
+          // Solution 2
+          turtlelib::Vector2D laser_vector_2{ 
+                                            (D * d_y - (std::fabs(d_y)/d_y) * d_x * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_x_.at(i) - turtle_.pose().x,
+                                            (-D * d_x - std::fabs(d_y) * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_y_.at(i) - turtle_.pose().y
+                                          };
+
+          // This formula is for infinite lines however, our LIDAR is unidirectional.
+          if((laser_vector_2.x / (limit.x - turtle_.pose().x + 1e-7)) > 0.0)
+          {
+            if(lidar_reading > turtlelib::magnitude(laser_vector_2))
+            {
+              lidar_reading = turtlelib::magnitude(laser_vector_2);
+            }
+          }
+        }
+      }
+
+      // Check lidar ranges
+      if (lidar_reading >= lidar_max_range_ || lidar_reading < lidar_min_range_) 
+      { 
+        lidar_data_.ranges.at(sample_index) = 0.0;
+      } 
+      else 
+      {
+        // Snap to lidar resolution
+        lidar_data_.ranges.at(sample_index) = lidar_resolution_ * round((lidar_reading + lidar_noise_(get_random())) / lidar_resolution_) ;
+      }
+    }
+
   }
 
   /// \brief Main simulation time loop
@@ -649,7 +866,9 @@ private:
     obstacles_publisher_->publish(obstacles_);
     walls_publisher_->publish(walls_);
 
-    scan_obstacles();
+    lidar();
+
+    sense_obstacles();
     
     sensor_data_pub();
 
@@ -661,6 +880,7 @@ private:
     if (timestep_ % static_cast<int>(rate / fake_sensor_frequency_) == 1)
     {
       fake_sensor_publisher_->publish(sensed_obstacles_);
+      fake_lidar_publisher_->publish(lidar_data_);
     }
   }
 
@@ -675,7 +895,13 @@ private:
           slip_fraction_ == -1.0 ||
           basic_sensor_variance_ == -1.0 ||
           max_range_ == -1.0 ||
-          collision_radius_ == -1.0
+          collision_radius_ == -1.0 ||
+          lidar_variance_ == -1.0 ||
+          lidar_min_range_ == -1.0 ||
+          lidar_max_range_ == -1.0 ||
+          lidar_angle_increment_ == -1.0 ||
+          lidar_num_samples_ == -1.0 ||
+          lidar_resolution_ == -1.0
           )
     {
       RCLCPP_DEBUG(this->get_logger(), "Param rate: %d", rate);
@@ -688,6 +914,12 @@ private:
       RCLCPP_DEBUG(this->get_logger(), "Param basic_sensor_variance: %f", basic_sensor_variance_);
       RCLCPP_DEBUG(this->get_logger(), "Param max_range: %f", max_range_);
       RCLCPP_DEBUG(this->get_logger(), "Param collision_radius: %f", collision_radius_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_variance: %f", lidar_variance_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_min_range: %f", lidar_min_range_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_max_range: %f", lidar_max_range_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_angle_increment: %f", lidar_angle_increment_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_num_samples: %f", lidar_num_samples_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_resolution: %f", lidar_resolution_);
       
       throw std::runtime_error("Missing necessary parameters in diff_params.yaml!");
     }
@@ -700,7 +932,12 @@ private:
           slip_fraction_ < 0.0 ||
           basic_sensor_variance_ < 0.0 ||
           max_range_ <= 0.0 ||
-          collision_radius_ < 0.0
+          collision_radius_ < 0.0 ||
+          lidar_min_range_ < 0.0 ||
+          lidar_max_range_ < 0.0 ||
+          lidar_angle_increment_ <= 0.0 ||
+          lidar_num_samples_ <= 0.0 ||
+          lidar_resolution_ < 0.0
           )
     {
       RCLCPP_DEBUG(this->get_logger(), "Param rate: %d", rate);
@@ -713,6 +950,12 @@ private:
       RCLCPP_DEBUG(this->get_logger(), "Param basic_sensor_variance: %f", basic_sensor_variance_);
       RCLCPP_DEBUG(this->get_logger(), "Param max_range: %f", max_range_);
       RCLCPP_DEBUG(this->get_logger(), "Param collision_radius: %f", collision_radius_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_variance: %f", lidar_variance_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_min_range: %f", lidar_min_range_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_max_range: %f", lidar_max_range_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_angle_increment: %f", lidar_angle_increment_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_num_samples: %f", lidar_num_samples_);
+      RCLCPP_DEBUG(this->get_logger(), "Param lidar_resolution: %f", lidar_resolution_);
       
       throw std::runtime_error("Incorrect params in diff_params.yaml!");
     }
