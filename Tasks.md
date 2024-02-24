@@ -37,7 +37,7 @@
 1. ✅ Task C.9
 1. ✅ Task C.10
 1. ✅ Task C.11
-1. ⬜ Task C.12
+1. ✅ Task C.12
 
 
 # ⬜ Task D
