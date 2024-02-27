@@ -611,6 +611,30 @@ src/diff_drive.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/diff_drive.cpp.s
 .PHONY : src/diff_drive.cpp.s
 
+src/ekf.o: src/ekf.cpp.o
+.PHONY : src/ekf.o
+
+# target to build an object file
+src/ekf.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/ekf.cpp.o
+.PHONY : src/ekf.cpp.o
+
+src/ekf.i: src/ekf.cpp.i
+.PHONY : src/ekf.i
+
+# target to preprocess a source file
+src/ekf.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/ekf.cpp.i
+.PHONY : src/ekf.cpp.i
+
+src/ekf.s: src/ekf.cpp.s
+.PHONY : src/ekf.s
+
+# target to generate assembly for a file
+src/ekf.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/ekf.cpp.s
+.PHONY : src/ekf.cpp.s
+
 src/frame_main.o: src/frame_main.cpp.o
 .PHONY : src/frame_main.o
 
@@ -730,6 +754,30 @@ tests/test_diff_drive.s: tests/test_diff_drive.cpp.s
 tests/test_diff_drive.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_diff_drive.cpp.s
 .PHONY : tests/test_diff_drive.cpp.s
+
+tests/test_ekf.o: tests/test_ekf.cpp.o
+.PHONY : tests/test_ekf.o
+
+# target to build an object file
+tests/test_ekf.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_ekf.cpp.o
+.PHONY : tests/test_ekf.cpp.o
+
+tests/test_ekf.i: tests/test_ekf.cpp.i
+.PHONY : tests/test_ekf.i
+
+# target to preprocess a source file
+tests/test_ekf.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_ekf.cpp.i
+.PHONY : tests/test_ekf.cpp.i
+
+tests/test_ekf.s: tests/test_ekf.cpp.s
+.PHONY : tests/test_ekf.s
+
+# target to generate assembly for a file
+tests/test_ekf.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_ekf.cpp.s
+.PHONY : tests/test_ekf.cpp.s
 
 tests/test_geometry2d.o: tests/test_geometry2d.cpp.o
 .PHONY : tests/test_geometry2d.o
@@ -851,6 +899,9 @@ help:
 	@echo "... src/diff_drive.o"
 	@echo "... src/diff_drive.i"
 	@echo "... src/diff_drive.s"
+	@echo "... src/ekf.o"
+	@echo "... src/ekf.i"
+	@echo "... src/ekf.s"
 	@echo "... src/frame_main.o"
 	@echo "... src/frame_main.i"
 	@echo "... src/frame_main.s"
@@ -866,6 +917,9 @@ help:
 	@echo "... tests/test_diff_drive.o"
 	@echo "... tests/test_diff_drive.i"
 	@echo "... tests/test_diff_drive.s"
+	@echo "... tests/test_ekf.o"
+	@echo "... tests/test_ekf.i"
+	@echo "... tests/test_ekf.s"
 	@echo "... tests/test_geometry2d.o"
 	@echo "... tests/test_geometry2d.i"
 	@echo "... tests/test_geometry2d.s"

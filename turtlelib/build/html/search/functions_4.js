@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['magnitude_72',['magnitude',['../geometry2d_8hpp.html#acab5ba90dd396376761b7c712a485318',1,'turtlelib']]]
+  ['getheight_89',['getHeight',['../classSVG.html#a71321e0f34d881169019cc2ded7da8bd',1,'SVG']]],
+  ['getwidth_90',['getWidth',['../classSVG.html#ab9f3b513d1352a8973bb64ee69d40ced',1,'SVG']]]
 ];

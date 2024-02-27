@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classturtlelib_1_1DiffDrive-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">turtlelib::DiffDrive Class Reference</div>  </div>
@@ -77,6 +78,16 @@ $(function() {
  <a href="classturtlelib_1_1DiffDrive.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="diff__drive_8hpp_source.html">diff_drive.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for turtlelib::DiffDrive:</div>
+<div class="dyncontent">
+<div class="center"><img src="classturtlelib_1_1DiffDrive__coll__graph.png" border="0" usemap="#aturtlelib_1_1DiffDrive_coll__map" alt="Collaboration graph"/></div>
+<map name="aturtlelib_1_1DiffDrive_coll__map" id="aturtlelib_1_1DiffDrive_coll__map">
+<area shape="rect" title="models the kinematics of a differential drive robot with a given wheel track and wheel radius" alt="" coords="103,95,242,121"/>
+<area shape="rect" href="structturtlelib_1_1wheelAngles.html" title="represent a mobile robot&#39;s pose" alt="" coords="5,5,169,32"/>
+<area shape="rect" href="structturtlelib_1_1Pose2D.html" title="represent a mobile robot&#39;s pose" alt="" coords="194,5,325,32"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -84,10 +95,10 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1DiffDrive.html#af12802e0426ecc1c43346d3b6a439278">DiffDrive</a> ()</td></tr>
 <tr class="memdesc:af12802e0426ecc1c43346d3b6a439278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the kinematics for a new Diff Drive robot. <br /></td></tr>
 <tr class="separator:af12802e0426ecc1c43346d3b6a439278"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa79f0a9c6f639b07dd5387abd49043d7"><td class="memItemLeft" align="right" valign="top"><a id="aa79f0a9c6f639b07dd5387abd49043d7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1DiffDrive.html#aa79f0a9c6f639b07dd5387abd49043d7">DiffDrive</a> (double radius, double sep, <a class="el" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> wheels, <a class="el" href="structturtlelib_1_1pose2D.html">pose2D</a> pose)</td></tr>
-<tr class="memdesc:aa79f0a9c6f639b07dd5387abd49043d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the kinematics for a general Diff Drive robot. <br /></td></tr>
-<tr class="separator:aa79f0a9c6f639b07dd5387abd49043d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa4fc55bbadaa30a553c0f6b888cd93e"><td class="memItemLeft" align="right" valign="top"><a id="afa4fc55bbadaa30a553c0f6b888cd93e"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1DiffDrive.html#afa4fc55bbadaa30a553c0f6b888cd93e">DiffDrive</a> (double radius, double sep, <a class="el" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a> wheels, <a class="el" href="structturtlelib_1_1Pose2D.html">Pose2D</a> pose)</td></tr>
+<tr class="memdesc:afa4fc55bbadaa30a553c0f6b888cd93e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the kinematics for a general Diff Drive robot. <br /></td></tr>
+<tr class="separator:afa4fc55bbadaa30a553c0f6b888cd93e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18306012fbf84e7f4cdea49d1965822a"><td class="memItemLeft" align="right" valign="top"><a id="a18306012fbf84e7f4cdea49d1965822a"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1DiffDrive.html#a18306012fbf84e7f4cdea49d1965822a">DiffDrive</a> (double radius, double sep)</td></tr>
 <tr class="memdesc:a18306012fbf84e7f4cdea49d1965822a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the radius and wheel separation for a diff drive robot. <br /></td></tr>
@@ -107,9 +118,20 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>separation</b> () c
 <tr class="memitem:ab28c2b99f7cfe5ffba17e5d1674f9a72"><td class="memItemLeft" align="right" valign="top"><a id="ab28c2b99f7cfe5ffba17e5d1674f9a72"></a>
 <a class="el" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a>&#160;</td><td class="memItemRight" valign="bottom"><b>wheels</b> () const</td></tr>
 <tr class="separator:ab28c2b99f7cfe5ffba17e5d1674f9a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9400d601c373dcb2b580bffb15cbf23e"><td class="memItemLeft" align="right" valign="top"><a id="a9400d601c373dcb2b580bffb15cbf23e"></a>
-<a class="el" href="structturtlelib_1_1pose2D.html">pose2D</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pose</b> () const</td></tr>
-<tr class="separator:a9400d601c373dcb2b580bffb15cbf23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0224921bd3b1b410126f1cf2fc088052"><td class="memItemLeft" align="right" valign="top"><a id="a0224921bd3b1b410126f1cf2fc088052"></a>
+<a class="el" href="structturtlelib_1_1Pose2D.html">Pose2D</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pose</b> () const</td></tr>
+<tr class="separator:a0224921bd3b1b410126f1cf2fc088052"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a02e3c6d49a5d45e22d539482666a1432"><td class="memItemLeft" align="right" valign="top"><a id="a02e3c6d49a5d45e22d539482666a1432"></a>
+<a class="el" href="structturtlelib_1_1wheelAngles.html">wheelAngles</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1DiffDrive.html#a02e3c6d49a5d45e22d539482666a1432">phi</a></td></tr>
+<tr class="memdesc:a02e3c6d49a5d45e22d539482666a1432"><td class="mdescLeft">&#160;</td><td class="mdescRight">angle of rotation of wheels, in radians <br /></td></tr>
+<tr class="separator:a02e3c6d49a5d45e22d539482666a1432"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbe72932be54d91ab3757e83885ee9c8"><td class="memItemLeft" align="right" valign="top"><a id="afbe72932be54d91ab3757e83885ee9c8"></a>
+<a class="el" href="structturtlelib_1_1Pose2D.html">Pose2D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1DiffDrive.html#afbe72932be54d91ab3757e83885ee9c8">q</a></td></tr>
+<tr class="memdesc:afbe72932be54d91ab3757e83885ee9c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">pose of the mobile robot in the world frame <br /></td></tr>
+<tr class="separator:afbe72932be54d91ab3757e83885ee9c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>models the kinematics of a differential drive robot with a given wheel track and wheel radius </p>

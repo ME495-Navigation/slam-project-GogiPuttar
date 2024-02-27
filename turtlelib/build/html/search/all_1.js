@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['deg2rad_6',['deg2rad',['../geometry2d_8hpp.html#a4d87f8e178c9a51fb90ae09d3ed2457e',1,'turtlelib']]],
-  ['diff_5fdrive_2ehpp_7',['diff_drive.hpp',['../diff__drive_8hpp.html',1,'']]],
-  ['diffdrive_8',['DiffDrive',['../classturtlelib_1_1DiffDrive.html#af12802e0426ecc1c43346d3b6a439278',1,'turtlelib::DiffDrive::DiffDrive()'],['../classturtlelib_1_1DiffDrive.html#aa79f0a9c6f639b07dd5387abd49043d7',1,'turtlelib::DiffDrive::DiffDrive(double radius, double sep, wheelAngles wheels, pose2D pose)'],['../classturtlelib_1_1DiffDrive.html#a18306012fbf84e7f4cdea49d1965822a',1,'turtlelib::DiffDrive::DiffDrive(double radius, double sep)'],['../classturtlelib_1_1DiffDrive.html',1,'turtlelib::DiffDrive']]],
-  ['dot_9',['dot',['../geometry2d_8hpp.html#a16f49542608190be6da6e21b7dbe10e6',1,'turtlelib']]]
+  ['covariance_5fmatrix_6',['covariance_matrix',['../classturtlelib_1_1EKFSlam.html#aecc27cc20792d025252ae34e2a7fd3ea',1,'turtlelib::EKFSlam']]]
 ];

@@ -13,7 +13,7 @@ namespace turtlelib
 {
 
     /// \brief represent a mobile robot's pose
-    struct pose2D
+    struct Pose2D
     {
         /// \brief angle with the world frame
         double theta = 0.0;
@@ -53,13 +53,13 @@ namespace turtlelib
         wheelAngles phi;
     
         /// \brief pose of the mobile robot in the world frame
-        pose2D q;
+        Pose2D q;
 
         /// \brief Initialize the kinematics for a new Diff Drive robot
         DiffDrive();
 
         /// \brief Initialize the kinematics for a general Diff Drive robot
-        explicit DiffDrive(double radius, double sep, wheelAngles wheels, pose2D pose);
+        explicit DiffDrive(double radius, double sep, wheelAngles wheels, Pose2D pose);
 
         /// \brief Initialize the radius and wheel separation for a diff drive robot
         explicit DiffDrive(double radius, double sep);
@@ -80,7 +80,7 @@ namespace turtlelib
         wheelAngles wheels() const;
 
         // Get pose
-        pose2D pose() const;
+        Pose2D pose() const;
 
         // /// \brief create a transformation that is a pure translation
         // /// \param trans - the vector by which to translate

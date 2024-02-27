@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['normalize_5fangle_17',['normalize_angle',['../geometry2d_8hpp.html#aa5346908b3d20a3e4c4bddbbbfbf8b44',1,'turtlelib']]]
+  ['left_20',['left',['../structturtlelib_1_1wheelAngles.html#af0960b18145e5e14d49dced925b84b45',1,'turtlelib::wheelAngles']]]
 ];

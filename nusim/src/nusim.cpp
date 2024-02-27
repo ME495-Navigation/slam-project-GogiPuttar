@@ -141,8 +141,8 @@ public:
     motor_cmd_per_rad_sec_des.description = "Radius per second in every motor command unit [(rad/s) / mcu]. Stupid name, I know!";
     input_noise_des.description = "Variance of noise due to non-ideal motor behaviour [(rad/s)^2]";
     slip_fraction_des.description = "Fractional range in which wheel can slip [-slip_fraction, +slip_fraction] [dimensionless]";
-    basic_sensor_variance_des.description = "Variance in lidar [m^2]";
-    max_range_des.description = "Range of the lidar [m]";
+    basic_sensor_variance_des.description = "Variance in landmark sensing [m^2]";
+    max_range_des.description = "Range of landmark sensing [m]";
     collision_radius_des.description = "Collision radius of the robot [m]";
     lidar_variance_des.description = "Variance in LIDAR scanning [m]";
     lidar_min_range_des.description = "Max range of LIDAR scanning [m]";
@@ -167,8 +167,8 @@ public:
     declare_parameter("motor_cmd_per_rad_sec", -1.0, motor_cmd_per_rad_sec_des); // MCU per radian/s
     declare_parameter("input_noise", -1.0, input_noise_des); // (radian/s)^2
     declare_parameter("slip_fraction", -1.0, slip_fraction_des); // Dimensionless (radian/radian)
-    declare_parameter("basic_sensor_variance", -1.0, basic_sensor_variance_des); // 
-    declare_parameter("max_range", -1.0, basic_sensor_variance_des); // Meters^2
+    declare_parameter("basic_sensor_variance", -1.0, basic_sensor_variance_des); // Meters^2
+    declare_parameter("max_range", -1.0, basic_sensor_variance_des); // Meters
     declare_parameter("collision_radius", -1.0, collision_radius_des); // Meters
     declare_parameter("lidar_variance", -1.0, lidar_variance_des); // Meters^2
     declare_parameter("lidar_min_range", -1.0, lidar_min_range_des); // Meters
@@ -208,7 +208,7 @@ public:
     check_yaml_params();
 
     // Initialize the differential drive kinematic state
-    turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{}, turtlelib::pose2D{theta0_, x0_, y0_}};
+    turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{}, turtlelib::Pose2D{theta0_, x0_, y0_}};
 
     // Initialize the noise generators
     motor_control_noise_ = std::normal_distribution<>{0.0, std::sqrt(input_noise_)}; // Uncertainity in motor control
@@ -780,6 +780,7 @@ private:
             wall_measured = true;
           }
         }
+        
         // delta = 0 => Tangent.
         else if (delta == 0.0)
         {
@@ -817,7 +818,7 @@ private:
                                             (-D * d_x + std::fabs(d_y) * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_y_.at(i) - turtle_.pose().y
                                           };
 
-          // This formula is for infinite lines however, our LIDAR is unidirectional.
+          // This formula is for infinite lines. However, our LIDAR is unidirectional.
           if((laser_vector_1.x / (limit.x - turtle_.pose().x + 1e-7)) > 0.0)
           {
             if(lidar_reading > turtlelib::magnitude(laser_vector_1))
@@ -832,7 +833,7 @@ private:
                                             (-D * d_x - std::fabs(d_y) * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_y_.at(i) - turtle_.pose().y
                                           };
 
-          // This formula is for infinite lines however, our LIDAR is unidirectional.
+          // This formula is for infinite lines. However, our LIDAR is unidirectional.
           if((laser_vector_2.x / (limit.x - turtle_.pose().x + 1e-7)) > 0.0)
           {
             if(lidar_reading > turtlelib::magnitude(laser_vector_2))

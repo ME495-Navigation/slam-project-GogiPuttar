@@ -59,7 +59,7 @@ using namespace std::chrono_literals;
 ///  \param prev_encoder_stamp_ (double): Previous encoder time stamp
 ///  \param body_twist_ (turtlelib::Twist2D): Desired twist for robot
 ///  \param del_wheel_angles_ (turtlelib::wheelAngles): Wheel velocities
-///  \param turtle_ (turtlelib::DiffDrive): Diff_drive robot
+///  \param odom_turtle_ (turtlelib::DiffDrive): Diff_drive robot
 ///  \param wheel_cmd_ (nuturtlebot_msgs::msg::WheelCommands): Desired wheel command
 ///  \param joint_states_ (sensor_msgs::msg::JointState): Joint states for blue robot
 
@@ -107,7 +107,7 @@ public:
     check_yaml_params();
 
     // Create Diff Drive Object
-    turtle_ = turtlelib::DiffDrive(wheel_radius_, track_width_);
+    odom_turtle_ = turtlelib::DiffDrive(wheel_radius_, track_width_);
 
     // Initialize the transform broadcaster
     tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
@@ -144,7 +144,7 @@ private:
   turtlelib::wheelAngles prev_wheel_angles_;
   turtlelib::Twist2D body_twist_;
   tf2::Quaternion body_q_;
-  turtlelib::DiffDrive turtle_;
+  turtlelib::DiffDrive odom_turtle_;
   nav_msgs::msg::Odometry odom_;
   geometry_msgs::msg::TransformStamped tf_;
   sensor_msgs::msg::JointState joint_states_;
@@ -166,7 +166,7 @@ private:
     nuturtle_control::srv::InitialPose::Response::SharedPtr
   )
   {
-    turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{0.0, 0.0}, turtlelib::pose2D{request->theta, request->x, request->y}};
+    odom_turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{0.0, 0.0}, turtlelib::Pose2D{request->theta, request->x, request->y}};
   }
 
   /// \brief joint_states_callback subscription
@@ -177,8 +177,8 @@ private:
 
     // RCLCPP_INFO(this->get_logger(), "Param: %f", del_wheel_angles_.left);
 
-    body_twist_ = turtle_.driveWheels(del_wheel_angles_);
-    body_q_.setRPY(0.0, 0.0, turtle_.pose().theta);       
+    body_twist_ = odom_turtle_.driveWheels(del_wheel_angles_);
+    body_q_.setRPY(0.0, 0.0, odom_turtle_.pose().theta);       
 
     odometry_pub();
 
@@ -201,8 +201,8 @@ private:
     odom_.header.frame_id = odom_id_;
     odom_.child_frame_id = body_id_;
     odom_.header.stamp = get_clock()->now();
-    odom_.pose.pose.position.x = turtle_.pose().x;
-    odom_.pose.pose.position.y = turtle_.pose().y;
+    odom_.pose.pose.position.x = odom_turtle_.pose().x;
+    odom_.pose.pose.position.y = odom_turtle_.pose().y;
     odom_.pose.pose.position.z = 0.0;
     odom_.pose.pose.orientation.x = body_q_.x();
     odom_.pose.pose.orientation.y = body_q_.y();
@@ -221,8 +221,8 @@ private:
     tf_.header.stamp = get_clock()->now();
     tf_.header.frame_id = odom_id_;
     tf_.child_frame_id = body_id_;
-    tf_.transform.translation.x = turtle_.pose().x;
-    tf_.transform.translation.y = turtle_.pose().y;
+    tf_.transform.translation.x = odom_turtle_.pose().x;
+    tf_.transform.translation.y = odom_turtle_.pose().y;
     tf_.transform.translation.z = 0.0; 
     tf_.transform.rotation.x = body_q_.x();
     tf_.transform.rotation.y = body_q_.y();
@@ -240,11 +240,11 @@ private:
     // Create new pose stamped
     blue_pose_stamped_.header.stamp = get_clock()->now();
     blue_pose_stamped_.header.frame_id = odom_id_;
-    blue_pose_stamped_.pose.position.x = turtle_.pose().x;
-    blue_pose_stamped_.pose.position.y = turtle_.pose().y;
+    blue_pose_stamped_.pose.position.x = odom_turtle_.pose().x;
+    blue_pose_stamped_.pose.position.y = odom_turtle_.pose().y;
     blue_pose_stamped_.pose.position.z = 0.0;
     tf2::Quaternion body_q_;
-    body_q_.setRPY(0, 0, turtle_.pose().theta);     // Rotation around z-axis
+    body_q_.setRPY(0, 0, odom_turtle_.pose().theta);     // Rotation around z-axis
     blue_pose_stamped_.pose.orientation.x = body_q_.x();
     blue_pose_stamped_.pose.orientation.y = body_q_.y();
     blue_pose_stamped_.pose.orientation.z = body_q_.z();
@@ -265,12 +265,24 @@ private:
   /// \brief Ensures all values are passed via .yaml file
   void check_yaml_params()
   {
-    if (wheel_radius_ == -1.0 || track_width_ == -1.0)
+    if (
+          wheel_radius_ == -1.0 ||
+          track_width_ == -1.0
+        )
     {
       RCLCPP_DEBUG(this->get_logger(), "Param: %f", wheel_radius_);
       RCLCPP_DEBUG(this->get_logger(), "Param: %f", track_width_);
       
       throw std::runtime_error("Missing parameters in diff_params.yaml!");
+    }
+    if (  wheel_radius_ <= 0.0 ||
+          track_width_ <= 0.0
+        )
+    {
+      RCLCPP_DEBUG(this->get_logger(), "Param wheel_radius: %f", wheel_radius_);
+      RCLCPP_DEBUG(this->get_logger(), "Param track_width: %f", track_width_);
+      
+      throw std::runtime_error("Incorrect params in diff_params.yaml!");
     }
   }
 };

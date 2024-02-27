@@ -15,7 +15,7 @@ namespace turtlelib
     {}
 
     // Create a general Diff Drive.
-    DiffDrive::DiffDrive(double radius, double sep, wheelAngles wheels, pose2D pose) :
+    DiffDrive::DiffDrive(double radius, double sep, wheelAngles wheels, Pose2D pose) :
     wheel_radius{radius}, wheel_sep{sep}, phi{normalize_angle(wheels.left), normalize_angle(wheels.right)}, q{normalize_angle(pose.theta), pose.x, pose.y} 
     {}
 
@@ -95,13 +95,13 @@ namespace turtlelib
     }
 
     // Get pose
-    pose2D DiffDrive::DiffDrive::pose() const
+    Pose2D DiffDrive::DiffDrive::pose() const
     {
         return q;
     }
 
     // // Create a pure translation transform.
-    // DiffDrive::DiffDrive(double left_wheel_angle, double right_wheel_angle, pose2D pose) :
+    // DiffDrive::DiffDrive(double left_wheel_angle, double right_wheel_angle, Pose2D pose) :
     // phi_l{left_wheel_angle}, phi_r{right_wheel_angle}, q{pose}
     // {}
 

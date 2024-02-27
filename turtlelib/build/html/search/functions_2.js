@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['getheight_68',['getHeight',['../classSVG.html#a71321e0f34d881169019cc2ded7da8bd',1,'SVG']]],
-  ['getwidth_69',['getWidth',['../classSVG.html#ab9f3b513d1352a8973bb64ee69d40ced',1,'SVG']]]
+  ['deg2rad_85',['deg2rad',['../geometry2d_8hpp.html#a4d87f8e178c9a51fb90ae09d3ed2457e',1,'turtlelib']]],
+  ['diffdrive_86',['DiffDrive',['../classturtlelib_1_1DiffDrive.html#af12802e0426ecc1c43346d3b6a439278',1,'turtlelib::DiffDrive::DiffDrive()'],['../classturtlelib_1_1DiffDrive.html#afa4fc55bbadaa30a553c0f6b888cd93e',1,'turtlelib::DiffDrive::DiffDrive(double radius, double sep, wheelAngles wheels, Pose2D pose)'],['../classturtlelib_1_1DiffDrive.html#a18306012fbf84e7f4cdea49d1965822a',1,'turtlelib::DiffDrive::DiffDrive(double radius, double sep)']]],
+  ['dot_87',['dot',['../geometry2d_8hpp.html#a16f49542608190be6da6e21b7dbe10e6',1,'turtlelib']]]
 ];

@@ -245,7 +245,32 @@ namespace turtlelib
 
         // Unanticipated error
         throw std::runtime_error("TWIST INTEGRATION FAILED.");
-        return Transform2D{};
     }
 
+    Twist2D differentiate_transform(const Transform2D & T_bB)
+    {
+        // Takes in T_bB and outputs Vb that results in T_bB
+
+        // Check for pure translation
+        if(almost_equal(T_bB.translation().y, 0.0) && almost_equal(T_bB.rotation(), 0.0))
+        {
+            return Twist2D{0, T_bB.translation().x, 0};
+        }
+        else
+        {
+            // y = R (1 - cos(theta))
+            double R = fabs(T_bB.translation().y / (1 - cos(T_bB.rotation())));
+            // double R = fabs(T_bB.translation().y);
+            // double R = fabs(-0.222);
+
+            // return Twist2D{R, R, R};
+
+            // Populate twist
+            // Vb.x = R * theta_dot * cos(theta)
+            return Twist2D{T_bB.rotation(), R * T_bB.rotation(), 0};
+        }
+
+        // Unanticipated error
+        throw std::runtime_error("TRANSFORM DIFFERENTIATION FAILED.");
+    }
 }
