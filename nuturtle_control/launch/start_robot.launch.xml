@@ -65,7 +65,7 @@
         if="$(eval '\'$(var robot)\' == \'nusim\'')">
         <arg name="color" value="blue"/>
         <arg name="use_rviz" value="false"/>
-        <arg name="use_jsp" value="false"/> 
+        <arg name="use_jsp" value="none"/> 
     </include>
 
     <!-- Nusim & Localhost: Odometry node for both nusim and localhost -->
@@ -107,7 +107,7 @@
         if="$(eval '\'$(var robot)\' == \'localhost\'')">
         <arg name="color" value="blue"/>
         <arg name="use_rviz" value="false"/>
-        <arg name="use_jsp" value="true"/> 
+        <arg name="use_jsp" value="none"/> 
     </include>
 
 </launch>

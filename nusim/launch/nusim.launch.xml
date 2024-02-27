@@ -17,6 +17,7 @@
     <!-- Pass required arguments to the Python launch file -->
     <arg name="color" value="red" />
     <arg name="use_rviz" value="false" />
+    <arg name="use_jsp" value="jsp" />
   </include>
 
   <!-- Argument to specify configuration file for simulator. -->

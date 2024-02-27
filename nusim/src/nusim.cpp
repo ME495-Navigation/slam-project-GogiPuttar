@@ -664,9 +664,12 @@ private:
           turtle_.q.y = T_world_newrobot_.translation().y;
           turtle_.q.theta = T_world_newrobot_.rotation();
         }
+          
         turtle_.phi.left = turtlelib::normalize_angle(turtle_.phi.left + predicted_delta_wheels_.left); // TODO: wheel rotation not working properly
         turtle_.phi.right = turtlelib::normalize_angle(turtle_.phi.right + predicted_delta_wheels_.right);
 
+        RCLCPP_DEBUG(this->get_logger(), "turtle: %f B: %f", obstacle_pos_robot_.x, obstacle_pos_robot_.y);
+        // RCLCPP_ERROR(this->get_logger(), "turtle: %f B: %f", 5.0, 10.0);
         return true; // Colliding with one obstacle, therefore, ignore other obstacles
       } 
     }
@@ -690,17 +693,20 @@ private:
     lidar_data_.range_max = lidar_max_range_;
     lidar_data_.ranges.resize(lidar_num_samples_);
 
+    // Offset between LIDAR and Footprint (fixed, unless things go very ugly)
+    turtlelib::Pose2D lidar_pose_{turtle_.pose().theta, turtle_.pose().x - 0.032*cos(turtle_.pose().theta), turtle_.pose().y - 0.032*sin(turtle_.pose().theta)};
+
     // Iterate over samples
     for (int sample_index = 0; sample_index < lidar_num_samples_; sample_index++) 
     {       
       // Limit of laser in world frame
       turtlelib::Point2D limit{
-                                turtle_.pose().x + lidar_max_range_ * cos(sample_index * lidar_data_.angle_increment + turtle_.pose().theta),
-                                turtle_.pose().y + lidar_max_range_ * sin(sample_index * lidar_data_.angle_increment + turtle_.pose().theta)
+                                lidar_pose_.x + lidar_max_range_ * cos(sample_index * lidar_data_.angle_increment + lidar_pose_.theta),
+                                lidar_pose_.y + lidar_max_range_ * sin(sample_index * lidar_data_.angle_increment + lidar_pose_.theta)
                               };
 
       // Slope of laser trace in world frame
-      double slope = (limit.y - turtle_.pose().y) / (limit.x - turtle_.pose().x  + 1e-7);
+      double slope = (limit.y - lidar_pose_.y) / (limit.x - lidar_pose_.x  + 1e-7);
 
       // Length of laser trace
       double length = lidar_max_range_;
@@ -716,10 +722,10 @@ private:
       for (size_t i = 0; i < obstacles_x_.size(); i++) 
       { 
         // Determinant. D = x_1 * y_2 - x_2 * y_1, relative to the obstacle
-        double D = (turtle_.pose().x - obstacles_x_.at(i)) // x_1
+        double D = (lidar_pose_.x - obstacles_x_.at(i)) // x_1
                     * (limit.y - obstacles_y_.at(i)) // y_2
                     - (limit.x - obstacles_x_.at(i)) // x_2 
-                    * (turtle_.pose().y - obstacles_y_.at(i)); // y_1
+                    * (lidar_pose_.y - obstacles_y_.at(i)); // y_1
 
         // Discriminant. delta = r^2 * (d_r)^2 - D^2
         double delta = std::pow(obstacles_r_, 2) * std::pow(length, 2) - std::pow(D, 2); 
@@ -736,7 +742,7 @@ private:
             // North Wall reading
             if(limit.y > arena_y_/2.0)
             {
-              turtlelib::Vector2D laser_vector{ 0, arena_y_/2.0 - turtle_.pose().y};
+              turtlelib::Vector2D laser_vector{ 0, arena_y_/2.0 - lidar_pose_.y};
               laser_vector.x = laser_vector.y / (slope  + 1e-7);
 
               if(lidar_reading > turtlelib::magnitude(laser_vector))
@@ -747,7 +753,7 @@ private:
             // West Wall reading
             if(limit.x < -arena_x_/2.0)
             {
-              turtlelib::Vector2D laser_vector{ -arena_x_/2.0 - turtle_.pose().x, 0};
+              turtlelib::Vector2D laser_vector{ -arena_x_/2.0 - lidar_pose_.x, 0};
               laser_vector.y = laser_vector.x * slope;
 
               if(lidar_reading > turtlelib::magnitude(laser_vector))
@@ -758,7 +764,7 @@ private:
             // South Wall reading
             if(limit.y < -arena_y_/2.0)
             {
-              turtlelib::Vector2D laser_vector{ 0, -arena_y_/2.0 - turtle_.pose().y};
+              turtlelib::Vector2D laser_vector{ 0, -arena_y_/2.0 - lidar_pose_.y};
               laser_vector.x = laser_vector.y / (slope  + 1e-7);
 
               if(lidar_reading > turtlelib::magnitude(laser_vector))
@@ -769,7 +775,7 @@ private:
             // East Wall reading
             if(limit.x > arena_x_/2.0)
             {
-              turtlelib::Vector2D laser_vector{ arena_x_/2.0 - turtle_.pose().x, 0};
+              turtlelib::Vector2D laser_vector{ arena_x_/2.0 - lidar_pose_.x, 0};
               laser_vector.y = laser_vector.x * slope;
 
               if(lidar_reading > turtlelib::magnitude(laser_vector))
@@ -784,18 +790,18 @@ private:
         // delta = 0 => Tangent.
         else if (delta == 0.0)
         {
-          double d_x = limit.x - turtle_.pose().x;
-          double d_y = limit.y - turtle_.pose().y;
+          double d_x = limit.x - lidar_pose_.x;
+          double d_y = limit.y - lidar_pose_.y;
 
           // One solution
 
           turtlelib::Vector2D laser_vector{ 
-                                            D * d_y /(std::pow(length, 2)) + obstacles_x_.at(i) - turtle_.pose().x,
-                                            -D * d_x /(std::pow(length, 2)) + obstacles_y_.at(i) - turtle_.pose().y
+                                            D * d_y /(std::pow(length, 2)) + obstacles_x_.at(i) - lidar_pose_.x,
+                                            -D * d_x /(std::pow(length, 2)) + obstacles_y_.at(i) - lidar_pose_.y
                                           };
 
           // This formula is for infinite lines however, our LIDAR is unidirectional.
-          if((laser_vector.x / (limit.x - turtle_.pose().x + 1e-7)) > 0.0)
+          if((laser_vector.x / (limit.x - lidar_pose_.x + 1e-7)) > 0.0)
           {
             if(lidar_reading > turtlelib::magnitude(laser_vector))
             {
@@ -807,19 +813,19 @@ private:
         // delta > 0 => Secant.
         else if (delta > 0.0)
         {
-          double d_x = limit.x - turtle_.pose().x;
-          double d_y = limit.y - turtle_.pose().y;
+          double d_x = limit.x - lidar_pose_.x;
+          double d_y = limit.y - lidar_pose_.y;
 
           // Two solutions
 
           // Solution 1
           turtlelib::Vector2D laser_vector_1{ 
-                                            (D * d_y + (std::fabs(d_y)/d_y) * d_x * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_x_.at(i) - turtle_.pose().x,
-                                            (-D * d_x + std::fabs(d_y) * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_y_.at(i) - turtle_.pose().y
+                                            (D * d_y + (std::fabs(d_y)/d_y) * d_x * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_x_.at(i) - lidar_pose_.x,
+                                            (-D * d_x + std::fabs(d_y) * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_y_.at(i) - lidar_pose_.y
                                           };
 
           // This formula is for infinite lines. However, our LIDAR is unidirectional.
-          if((laser_vector_1.x / (limit.x - turtle_.pose().x + 1e-7)) > 0.0)
+          if((laser_vector_1.x / (limit.x - lidar_pose_.x + 1e-7)) > 0.0)
           {
             if(lidar_reading > turtlelib::magnitude(laser_vector_1))
             {
@@ -829,12 +835,12 @@ private:
 
           // Solution 2
           turtlelib::Vector2D laser_vector_2{ 
-                                            (D * d_y - (std::fabs(d_y)/d_y) * d_x * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_x_.at(i) - turtle_.pose().x,
-                                            (-D * d_x - std::fabs(d_y) * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_y_.at(i) - turtle_.pose().y
+                                            (D * d_y - (std::fabs(d_y)/d_y) * d_x * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_x_.at(i) - lidar_pose_.x,
+                                            (-D * d_x - std::fabs(d_y) * std::sqrt(delta))/(std::pow(length, 2)) + obstacles_y_.at(i) - lidar_pose_.y
                                           };
 
           // This formula is for infinite lines. However, our LIDAR is unidirectional.
-          if((laser_vector_2.x / (limit.x - turtle_.pose().x + 1e-7)) > 0.0)
+          if((laser_vector_2.x / (limit.x - lidar_pose_.x + 1e-7)) > 0.0)
           {
             if(lidar_reading > turtlelib::magnitude(laser_vector_2))
             {

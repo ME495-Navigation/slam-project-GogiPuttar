@@ -72,7 +72,6 @@ using namespace std::chrono_literals;
 ///  \param wheel_radius_ (double): The radius of the wheels [m]
 ///  \param track_width_ (double): The distance between the wheels [m]
 ///  \param obstacles_r_ (double): Radius of cylindrical obstacles [m]
-///  \param obstacles_h_ (double): Height of cylindrical obstacles [m]
 
 class slam : public rclcpp::Node
 {
@@ -88,7 +87,6 @@ public:
     auto wheel_radius_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto track_width_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto obstacles_r_des = rcl_interfaces::msg::ParameterDescriptor{};
-    auto obstacles_h_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto basic_sensor_variance_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto max_range_des = rcl_interfaces::msg::ParameterDescriptor{};
 
@@ -99,7 +97,6 @@ public:
     wheel_radius_des.description = "The radius of the wheels [m]";
     track_width_des.description = "The distance between the wheels [m]";
     obstacles_r_des.description = "Radius of cylindrical obstacles [m]";
-    obstacles_h_des.description = "Height of cylindrical obstacles [m]";
     basic_sensor_variance_des.description = "Variance in landmark sensing [m^2]";
     max_range_des.description = "Range of landmark sensing [m]";
 
@@ -110,8 +107,7 @@ public:
     declare_parameter("wheel_right", "green/wheel_right_link", wheel_right_des);
     declare_parameter("wheel_radius", -1.0, wheel_radius_des);
     declare_parameter("track_width", -1.0, track_width_des);
-    declare_parameter("obstacles.r", 0.0, obstacles_r_des);
-    declare_parameter("obstacles.h", 0.0, obstacles_h_des);
+    declare_parameter("obstacles.r", -1.0, obstacles_r_des);
     declare_parameter("basic_sensor_variance", -1.0, basic_sensor_variance_des); // Meters^2
     declare_parameter("max_range", -1.0, basic_sensor_variance_des); // Meters
 
@@ -123,7 +119,6 @@ public:
     wheel_radius_ = get_parameter("wheel_radius").get_parameter_value().get<double>();
     track_width_ = get_parameter("track_width").get_parameter_value().get<double>();
     obstacles_r_ = get_parameter("obstacles.r").get_parameter_value().get<double>();
-    obstacles_h_ = get_parameter("obstacles.h").get_parameter_value().get<double>();
     basic_sensor_variance_ = get_parameter("basic_sensor_variance").get_parameter_value().get<double>();
     max_range_ = get_parameter("max_range").get_parameter_value().get<double>();
 
@@ -175,8 +170,8 @@ private:
   std::string wheel_right_ = "";
   double wheel_radius_ = -1.0;
   double track_width_ = -1.0;
-  double obstacles_r_;    // Size of obstacles
-  double obstacles_h_;
+  double obstacles_r_ = -1.0;    // Size of obstacles
+  double obstacles_h_ = 0.25;
   bool Flag_obstacle_seen_ = false;
   int readings_ = 0;
   turtlelib::wheelAngles del_wheel_angles_;
@@ -230,6 +225,9 @@ private:
 
     broadcast_transforms();
 
+    // SLAM estimate of landmarks
+    create_obstacles_array();
+
     prev_wheel_angles_.left = msg.position.at(0);
     prev_wheel_angles_.right = msg.position.at(1);
 
@@ -247,21 +245,21 @@ private:
     
     turtlelib::Transform2D slam_tf_change_ = slam_tf_prev_.inv() * slam_tf_now_;
     // Twist that gets us from the previous sensor callback tf to this one.
-    estimator_ptr_->predict(turtlelib::differentiate_transform(slam_tf_prev_.inv() * slam_tf_now_));
-
-    RCLCPP_INFO(this->get_logger(), "Called %f", turtlelib::differentiate_transform(slam_tf_change_).x);
+    estimator_ptr_->predict(turtlelib::differentiate_transform(slam_tf_change_));
 
     slam_tf_prev_ = slam_tf_now_;
 
     visualization_msgs::msg::MarkerArray sensed_landmarks = msg;
 
-    // for (size_t j = 0; j < sensed_landmarks.markers.size(); j++) {
-    //   if (sensed_landmarks.markers[j].action == visualization_msgs::msg::Marker::ADD) { // Only use landmarks that the sensor currently sees
-    //     estimator_.Correct(
-    //       sensed_landmarks.markers[j].pose.position.x,
-    //       sensed_landmarks.markers[j].pose.position.y, j);
-    //   }
-    // }
+    // j = 1, 2, 3...
+    for (size_t j = 1; j <= sensed_landmarks.markers.size() - 2; j++) 
+    {
+      // Only use landmarks that the sensor currently sees
+      if (sensed_landmarks.markers[j-1].action == visualization_msgs::msg::Marker::ADD) 
+      { 
+        estimator_ptr_->correct(sensed_landmarks.markers[j-1].pose.position.x, sensed_landmarks.markers[j-1].pose.position.y, j);
+      }
+    }
   }
 
   /// \brief circle fitting topic callback (Preform data association)
@@ -300,13 +298,15 @@ private:
     if (  wheel_radius_ == -1.0 ||
           track_width_ == -1.0 ||
           basic_sensor_variance_ == -1.0 ||
-          max_range_ == -1.0
+          max_range_ == -1.0 ||
+          obstacles_r_ == -1.0
           )
     {
       RCLCPP_DEBUG(this->get_logger(), "Param wheel_radius: %f", wheel_radius_);
       RCLCPP_DEBUG(this->get_logger(), "Param track_width: %f", track_width_);
       RCLCPP_DEBUG(this->get_logger(), "Param basic_sensor_variance: %f", basic_sensor_variance_);
       RCLCPP_DEBUG(this->get_logger(), "Param max_range: %f", max_range_);
+      RCLCPP_DEBUG(this->get_logger(), "Param obstacles_r_: %f", obstacles_r_);
       
       throw std::runtime_error("Missing necessary parameters in diff_params.yaml!");
     }
@@ -314,13 +314,15 @@ private:
     if (  wheel_radius_ <= 0.0 ||
           track_width_ <= 0.0 ||
           basic_sensor_variance_ < 0.0 ||
-          max_range_ <= 0.0
+          max_range_ <= 0.0 ||
+          obstacles_r_ <= 0.0
           )
     {
       RCLCPP_DEBUG(this->get_logger(), "Param wheel_radius: %f", wheel_radius_);
       RCLCPP_DEBUG(this->get_logger(), "Param track_width: %f", track_width_);
       RCLCPP_DEBUG(this->get_logger(), "Param basic_sensor_variance: %f", basic_sensor_variance_);
       RCLCPP_DEBUG(this->get_logger(), "Param max_range: %f", max_range_);
+      RCLCPP_DEBUG(this->get_logger(), "Param obstacles_r_: %f", obstacles_r_);
       
       throw std::runtime_error("Incorrect params in diff_params.yaml!");
     }
@@ -375,48 +377,47 @@ private:
     tf2_.transform.rotation.z = body_q2_.z();
     tf2_.transform.rotation.w = body_q2_.w();
     tf_broadcaster_2_->sendTransform(tf2_);
-
-    // SLAM estimate of landmarks
-    // create_obstacles_array();
   }
 
   /// \brief Create obstacles MarkerArray as seen by SLAM and publish them to a topic to display them in Rviz
-  // void create_obstacles_array()
-  // {
+  void create_obstacles_array()
+  {
 
-  //   arma::colvec zai = EKFSlam_.EKFSlam_zai();
-  //   visualization_msgs::msg::MarkerArray obstacles_;
+    arma::colvec map_vector = estimator_ptr_->map();
+    visualization_msgs::msg::MarkerArray obstacles_;
 
-  //   for (auto i = 3; i < static_cast<int>(zai.size()); i = i + 2) {
-  //     if (zai(i) != 0) {
-  //       visualization_msgs::msg::Marker obstacle_;
-  //       obstacle_.header.frame_id = "map";
-  //       obstacle_.header.stamp = get_clock()->now();
-  //       obstacle_.id = i;
-  //       obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
-  //       obstacle_.action = visualization_msgs::msg::Marker::ADD;
-  //       obstacle_.pose.position.x = zai(i);
-  //       obstacle_.pose.position.y = zai(i + 1);
-  //       obstacle_.pose.position.z = obstacles_h_ / 2.0;
-  //       obstacle_.pose.orientation.x = 0.0;
-  //       obstacle_.pose.orientation.y = 0.0;
-  //       obstacle_.pose.orientation.z = 0.0;
-  //       obstacle_.pose.orientation.w = 1.0;
-  //       obstacle_.scale.x = obstacles_r_ * 2.0;       // Diameter in x
-  //       obstacle_.scale.y = obstacles_r_ * 2.0;       // Diameter in y
-  //       obstacle_.scale.z = obstacles_h_;             // Height
-  //       obstacle_.color.r = 0.0f;
-  //       obstacle_.color.g = 1.0f;
-  //       obstacle_.color.b = 0.0f;
-  //       obstacle_.color.a = 1.0;
-  //       obstacles_.markers.push_back(obstacle_);
-  //       Flag_obstacle_seen_ = true;
-  //     }
-  //   }
-  //   if (Flag_obstacle_seen_ == true) {
-  //     obstacles_publisher_->publish(obstacles_);
-  //   }
-  // }
+    for (int landmark = 0; landmark < turtlelib::num_landmarks - 2; landmark++) {
+      // if (map_vector(landmark) != 0) {
+        visualization_msgs::msg::Marker obstacle_;
+        obstacle_.header.frame_id = "map";
+        obstacle_.header.stamp = get_clock()->now();
+        obstacle_.id = landmark;
+        obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
+        obstacle_.action = visualization_msgs::msg::Marker::ADD;
+        obstacle_.pose.position.x = map_vector(2*landmark);
+        obstacle_.pose.position.y = map_vector(2*landmark + 1);
+        obstacle_.pose.position.z = obstacles_h_ / 2.0;
+        obstacle_.pose.orientation.x = 0.0;
+        obstacle_.pose.orientation.y = 0.0;
+        obstacle_.pose.orientation.z = 0.0;
+        obstacle_.pose.orientation.w = 1.0;
+        obstacle_.scale.x = obstacles_r_ * 2.0;       // Diameter in x
+        obstacle_.scale.y = obstacles_r_ * 2.0;       // Diameter in y
+        obstacle_.scale.z = obstacles_h_;             // Height
+        obstacle_.color.r = 0.0f;
+        obstacle_.color.g = 1.0f;
+        obstacle_.color.b = 0.0f;
+        obstacle_.color.a = 1.0;
+        obstacles_.markers.push_back(obstacle_);
+        Flag_obstacle_seen_ = true;
+
+        // RCLCPP_INFO(this->get_logger(), "Called %f", obstacles_r_);
+      // }
+    }
+    if (Flag_obstacle_seen_ == true) {
+      obstacles_publisher_->publish(obstacles_);
+    }
+  }
 
   /// \brief Create the green turtle's nav_msgs/Path
   void update_green_NavPath()

@@ -45,18 +45,18 @@ namespace turtlelib
         arma::mat A{num_dof+2*num_landmarks, num_dof+2*num_landmarks,arma::fill::eye};
         /// \brief Process noise for the robot motion. Q ∈ num_dof x num_dof.
         const arma::mat Q{arma::mat{num_dof,num_dof,arma::fill::eye}*w};
-        // /// \brief Previously seen landmark id's
-        // std::unordered_set<int> seen_landmarks{};
-        // /// \brief Actual measurement
-        // arma::colvec zj{2,arma::fill::zeros};
-        // /// \brief Estimate measurement
-        // arma::colvec zj_hat{2,arma::fill::zeros};
-        // /// \brief H matrix
-        // arma::mat Hj{};
-        // /// \brief Kalman gain
-        // arma::mat Ki{};
-        // /// \brief Noise
-        // arma::mat R{2*n,2*n,arma::fill::eye};
+        /// \brief Previously seen landmark IDs, j: 1, 2, 3...
+        std::unordered_set<int> seen_landmarks{};
+        /// \brief Actual measurement. z_j ∈ 2 x 1. Relative r_j and phi_j bearing measurements of a landmarks.
+        arma::colvec z_j{2,arma::fill::zeros};
+        /// \brief Estimate measurement. ˆz_j ∈ 2 x 1. Relative ˆr_j and ˆphi_j bearing predictions of a landmarks, based on pose prediction.
+        arma::colvec z_j_hat{2,arma::fill::zeros};
+        /// \brief H matrix
+        arma::mat H_i{2, 3+2*num_landmarks, arma::fill::zeros};
+        /// \brief Kalman gain
+        arma::mat K_i{3+2*num_landmarks, 2, arma::fill::zeros};
+        /// \brief Sensor noise 
+        arma::mat R{2,2,arma::fill::eye};
         // /// \brief Noise for j landmark
         // arma::mat Rj{};
         // /// \brief Data association index
@@ -81,27 +81,23 @@ namespace turtlelib
 
         void update_state_vector();
 
+        void update_pose_and_map();
+
         /// \brief predict/estimate the robot state and propogate the uncertainty
         /// \param twist - twist control at time t
         void predict(Twist2D twist);
 
-        // /// \brief correction calculations
-        // /// \param x - landmark x-coordinate
-        // /// \param y - landmark y-coordinate
-        // /// \param j - landmark index j
-        // void EKFSlam_Correct(double x, double y, size_t j);
+        /// \brief correction calculations
+        /// \param x - landmark x-coordinate
+        /// \param y - landmark y-coordinate
+        /// \param j - landmark index j
+        void correct(double x, double y, size_t j);
 
         // /// \brief data association with the Mahalanobis distance
         // /// \param x - landmark x-coordinate
         // /// \param y - landmark y-coordinate
         // /// \return landmark index j (size_t)
         // size_t Data_association(double x, double y);
-
-        // /// \brief get SLAM corrected configuration
-        // Robot_configuration EKFSlam_config();
-
-        // /// \brief get X from ekf slam update
-        // arma::colvec EKFSlam_X();
 
         /// \brief set the initial state of the robot
         Pose2D pose() const;
