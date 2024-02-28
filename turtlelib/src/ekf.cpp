@@ -152,75 +152,75 @@ namespace turtlelib
 
     void EKFSlam::correct(double x, double y, size_t j)
     {
-    // Convert relative measurements to range-bearing
-    // r_j = (x^2 + y^2)^0.5
-    // ϕ_j = atan2(y, x)
-    double r_j = magnitude(Vector2D{x, y});
-    double phi_j = std::atan2(y, x);      // Normalize ?? TODO ??
+        // Convert relative measurements to range-bearing
+        // r_j = (x^2 + y^2)^0.5
+        // ϕ_j = atan2(y, x)
+        double r_j = magnitude(Vector2D{x, y});
+        double phi_j = std::atan2(y, x);      // Normalize ?? TODO ??
 
-    // If landmark has not been seen before, add it to the map
-    // Our pose variables are predictions (distributions), so our map is also a prediction. 
-    if (seen_landmarks.find(j) == seen_landmarks.end()) 
-    {
-        // Initialize the landmark prediction as x and y predictions in map frame
-        m(2 * (j-1)) = q(1) + r_j * cos(phi_j + q(0)); // ˆm_{x,j}
-        m(2 * (j-1) + 1) = q(2) + r_j * sin(phi_j + q(0)); // ˆm_{y,j}
-        // Insert the new landmark index in the unordered_set
-        seen_landmarks.insert(j);
-        update_state_vector();
-    }
-    // Actual Measurement of that landmark. Not a distribution.
-    z_j(0) = r_j;
-    z_j(1) = phi_j;
+        // If landmark has not been seen before, add it to the map
+        // Since our pose variables are predictions (distributions), our map is also a prediction. 
+        if (seen_landmarks.find(j) == seen_landmarks.end()) 
+        {
+            // Initialize the landmark prediction as x and y predictions in map frame
+            m(2 * (j-1)) = q(1) + r_j * cos(phi_j + q(0)); // ˆm_{x,j}
+            m(2 * (j-1) + 1) = q(2) + r_j * sin(phi_j + q(0)); // ˆm_{y,j}
+            // Insert the new landmark index in the unordered_set
+            seen_landmarks.insert(j);
+            update_state_vector();
+        }
+        // Actual Measurement of that landmark. Not a distribution.
+        z_j(0) = r_j;
+        z_j(1) = phi_j;
 
-    // Relative predictions of landmark position, as cartesian coordinates
-    // δ_{x,j} = ˆm_{x,j} − ˆx_t
-    // δ_{y,j} = ˆm_{y,j} − ˆy_t
-    // d_j = δ_{x,j}^2 + δ_{y,j}^2
-    Vector2D delta_j{m(2*(j-1)) - q(1), m(2*(j-1)+1) - q(2)};
-    double d_j = magnitude(delta_j);
+        // Relative predictions of landmark position, as cartesian coordinates
+        // δ_{x,j} = ˆm_{x,j} − ˆx_t
+        // δ_{y,j} = ˆm_{y,j} − ˆy_t
+        // d_j = δ_{x,j}^2 + δ_{y,j}^2
+        Vector2D delta_j{m(2*(j-1)) - q(1), m(2*(j-1)+1) - q(2)};
+        double d_j = std::pow(magnitude(delta_j), 2);
 
-    // Relative predictions of landmark position, as range-bearing
-    double r_j_hat = std::sqrt(d_j);
-    double phi_j_hat = normalize_angle(atan2(delta_j.y, delta_j.x) - q(0));
-    z_j_hat(0) = r_j_hat;
-    z_j_hat(1) = phi_j_hat;
+        // Relative predictions of landmark position, as range-bearing
+        double r_j_hat = std::sqrt(d_j);
+        double phi_j_hat = normalize_angle(atan2(delta_j.y, delta_j.x) - q(0));
+        z_j_hat(0) = r_j_hat;
+        z_j_hat(1) = phi_j_hat;
 
-    // Calculate H matrix
-    arma::mat zeros_2_first{2, 2 * (j-1), arma::fill::zeros}; // Dependence on landmarks having smaller indices
-    arma::mat zeros_2_second{2, 2 * num_landmarks - 2 * j, arma::fill::zeros}; // Dependence on landmarks having larger indices
-    arma::mat small_H_first{2, 3, arma::fill::zeros}; // Dependence on pose
-    arma::mat small_H_second{2, 2, arma::fill::zeros}; // Dependence on sensed landmark
+        // Calculate H matrix
+        arma::mat zeros_2_first{2, 2 * (j-1), arma::fill::zeros}; // Dependence on landmarks having smaller indices
+        arma::mat zeros_2_second{2, 2 * num_landmarks - 2 * j, arma::fill::zeros}; // Dependence on landmarks having larger indices
+        arma::mat small_H_first{2, 3, arma::fill::zeros}; // Dependence on pose
+        arma::mat small_H_second{2, 2, arma::fill::zeros}; // Dependence on sensed landmark
 
-    small_H_first(0, 0) = 0.0;
-    small_H_first(0, 1) = -delta_j.x / std::sqrt(d_j);
-    small_H_first(0, 2) = -delta_j.y / std::sqrt(d_j);
-    small_H_first(1, 0) = -1;
-    small_H_first(1, 1) = delta_j.y / d_j;
-    small_H_first(1, 2) = -delta_j.x / d_j;
+        small_H_first(0, 0) = 0.0;
+        small_H_first(0, 1) = -delta_j.x / std::sqrt(d_j);
+        small_H_first(0, 2) = -delta_j.y / std::sqrt(d_j);
+        small_H_first(1, 0) = -1;
+        small_H_first(1, 1) = delta_j.y / d_j;
+        small_H_first(1, 2) = -delta_j.x / d_j;
 
-    small_H_second(0, 0) = delta_j.x / std::sqrt(d_j);
-    small_H_second(0, 1) = delta_j.y / std::sqrt(d_j);
-    small_H_second(1, 0) = -delta_j.y / d_j;
-    small_H_second(1, 1) = delta_j.x / d_j;
+        small_H_second(0, 0) = delta_j.x / std::sqrt(d_j);
+        small_H_second(0, 1) = delta_j.y / std::sqrt(d_j);
+        small_H_second(1, 0) = -delta_j.y / d_j;
+        small_H_second(1, 1) = delta_j.x / d_j;
 
-    H_i = arma::join_horiz(arma::join_horiz(small_H_first, zeros_2_first), arma::join_horiz(small_H_second, zeros_2_second));
+        H_i = arma::join_horiz(arma::join_horiz(small_H_first, zeros_2_first), arma::join_horiz(small_H_second, zeros_2_second));
 
-    // Sensor noise matrix
-    R = arma::mat{2, 2, arma::fill::eye} * R_noise;
-    // Rj = R.submat(j, j, j + 1, j + 1);
+        // Sensor noise matrix
+        R = arma::mat{2, 2, arma::fill::eye} * R_noise;
+        // Rj = R.submat(j, j, j + 1, j + 1);
 
-    // Kalman gain
-    // K_i = Σ¯_t H_{i}^{T} (H_i Σ¯_t H_{i}^{T} + R)^{-1}
-    K_i = sigma * H_i.t() * (H_i * sigma * H_i.t() + R).i();
+        // Kalman gain
+        // K_i = Σ¯_t H_{i}^{T} (H_i Σ¯_t H_{i}^{T} + R)^{-1}
+        K_i = sigma * H_i.t() * (H_i * sigma * H_i.t() + R).i();
 
-    // Update state to corrected prediction
-    // Σ_t = (I − K_i H_i) Σ¯_t
-    Xi = Xi + K_i * (z_j - z_j_hat);    
-    update_pose_and_map();
+        // Update state to corrected prediction
+        // Σ_t = (I − K_i H_i) Σ¯_t
+        Xi = Xi + K_i * (z_j - z_j_hat);    
+        update_pose_and_map();
 
-    // Update covariance
-    sigma = (I - K_i * H_i) * sigma;
+        // Update covariance
+        sigma = (I - K_i * H_i) * sigma;
     }
 
     // size_t EKFSlam::Data_association(double x, double y)
@@ -374,6 +374,24 @@ namespace turtlelib
     arma::mat EKFSlam::state_matrix() const
     {
         return A;
+    }
+
+    /// \brief set the initial state of the robot
+    arma::mat EKFSlam::actual_measurement() const
+    {
+        return z_j;
+    }
+
+    /// \brief set the initial state of the robot
+    arma::mat EKFSlam::predicted_measurement() const
+    {
+        return z_j_hat;
+    }
+
+    /// \brief set the initial state of the robot
+    arma::mat EKFSlam::sensor_matrix() const
+    {
+        return H_i;
     }
     
 }

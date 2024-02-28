@@ -47,6 +47,7 @@ namespace turtlelib
         const arma::mat Q{arma::mat{num_dof,num_dof,arma::fill::eye}*w};
         /// \brief Previously seen landmark IDs, j: 1, 2, 3...
         std::unordered_set<int> seen_landmarks{};
+    public:
         /// \brief Actual measurement. z_j ∈ 2 x 1. Relative r_j and phi_j bearing measurements of a landmarks.
         arma::colvec z_j{2,arma::fill::zeros};
         /// \brief Estimate measurement. ˆz_j ∈ 2 x 1. Relative ˆr_j and ˆphi_j bearing predictions of a landmarks, based on pose prediction.
@@ -64,7 +65,7 @@ namespace turtlelib
         // /// \brief Temporary State of the robot at time t
         // arma::colvec X_temp{};
 
-    public:
+    // public:
         /// \brief start at origin and default the uncertainty
         EKFSlam();
 
@@ -116,6 +117,16 @@ namespace turtlelib
 
         /// \brief set the initial state of the robot
         arma::mat state_matrix() const;
+
+        /// \brief set the initial state of the robot
+        arma::mat actual_measurement() const;
+
+        /// \brief set the initial state of the robot
+        arma::mat predicted_measurement() const;
+
+        /// \brief set the initial state of the robot
+        arma::mat sensor_matrix() const;
+        
     };
 }
 

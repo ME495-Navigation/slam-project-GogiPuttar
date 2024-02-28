@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classturtlelib_1_1EKFSlam-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">turtlelib::EKFSlam Class Reference</div>  </div>
@@ -97,9 +98,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a623a17a1b6fd6579ffede2a33226adf9"><td class="memItemLeft" align="right" valign="top"><a id="a623a17a1b6fd6579ffede2a33226adf9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>update_state_vector</b> ()</td></tr>
 <tr class="separator:a623a17a1b6fd6579ffede2a33226adf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1eb36a51c493dd54699a1993ac9c358"><td class="memItemLeft" align="right" valign="top"><a id="ae1eb36a51c493dd54699a1993ac9c358"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>update_pose_and_map</b> ()</td></tr>
+<tr class="separator:ae1eb36a51c493dd54699a1993ac9c358"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c80dfaa8afeb964426e262e8ca3893e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a4c80dfaa8afeb964426e262e8ca3893e">predict</a> (<a class="el" href="structturtlelib_1_1Twist2D.html">Twist2D</a> <a class="el" href="classturtlelib_1_1EKFSlam.html#a4aea149c718a3ec75fdda1bfcead376f">twist</a>)</td></tr>
 <tr class="memdesc:a4c80dfaa8afeb964426e262e8ca3893e"><td class="mdescLeft">&#160;</td><td class="mdescRight">predict/estimate the robot state and propogate the uncertainty  <a href="classturtlelib_1_1EKFSlam.html#a4c80dfaa8afeb964426e262e8ca3893e">More...</a><br /></td></tr>
 <tr class="separator:a4c80dfaa8afeb964426e262e8ca3893e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f35f725dd128b730261dfb69b565ecc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a6f35f725dd128b730261dfb69b565ecc">correct</a> (double x, double y, size_t j)</td></tr>
+<tr class="memdesc:a6f35f725dd128b730261dfb69b565ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">correction calculations  <a href="classturtlelib_1_1EKFSlam.html#a6f35f725dd128b730261dfb69b565ecc">More...</a><br /></td></tr>
+<tr class="separator:a6f35f725dd128b730261dfb69b565ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6980fc87c63bd16794d6c6913960e84a"><td class="memItemLeft" align="right" valign="top"><a id="a6980fc87c63bd16794d6c6913960e84a"></a>
 <a class="el" href="structturtlelib_1_1Pose2D.html">Pose2D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a6980fc87c63bd16794d6c6913960e84a">pose</a> () const</td></tr>
 <tr class="memdesc:a6980fc87c63bd16794d6c6913960e84a"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
@@ -124,6 +131,41 @@ arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a746e375fcf291c95e6c3795e4efc51a2">state_matrix</a> () const</td></tr>
 <tr class="memdesc:a746e375fcf291c95e6c3795e4efc51a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
 <tr class="separator:a746e375fcf291c95e6c3795e4efc51a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64de54f0df0b67abe82b46875e15cb62"><td class="memItemLeft" align="right" valign="top"><a id="a64de54f0df0b67abe82b46875e15cb62"></a>
+arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a64de54f0df0b67abe82b46875e15cb62">actual_measurement</a> () const</td></tr>
+<tr class="memdesc:a64de54f0df0b67abe82b46875e15cb62"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="separator:a64de54f0df0b67abe82b46875e15cb62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeda54f8e379aa46aec347f2b66f2c0d1"><td class="memItemLeft" align="right" valign="top"><a id="aeda54f8e379aa46aec347f2b66f2c0d1"></a>
+arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#aeda54f8e379aa46aec347f2b66f2c0d1">predicted_measurement</a> () const</td></tr>
+<tr class="memdesc:aeda54f8e379aa46aec347f2b66f2c0d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="separator:aeda54f8e379aa46aec347f2b66f2c0d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace50ab89e0aae331577d6f9027b8602e"><td class="memItemLeft" align="right" valign="top"><a id="ace50ab89e0aae331577d6f9027b8602e"></a>
+arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#ace50ab89e0aae331577d6f9027b8602e">sensor_matrix</a> () const</td></tr>
+<tr class="memdesc:ace50ab89e0aae331577d6f9027b8602e"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="separator:ace50ab89e0aae331577d6f9027b8602e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:add450b6bc60148749f9fcfaae703e1d5"><td class="memItemLeft" align="right" valign="top"><a id="add450b6bc60148749f9fcfaae703e1d5"></a>
+arma::colvec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#add450b6bc60148749f9fcfaae703e1d5">z_j</a> {2,arma::fill::zeros}</td></tr>
+<tr class="memdesc:add450b6bc60148749f9fcfaae703e1d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Actual measurement. z_j ∈ 2 x 1. Relative r_j and phi_j bearing measurements of a landmarks. <br /></td></tr>
+<tr class="separator:add450b6bc60148749f9fcfaae703e1d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b7887a19cb52990a4b14ea16875b490"><td class="memItemLeft" align="right" valign="top"><a id="a8b7887a19cb52990a4b14ea16875b490"></a>
+arma::colvec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a8b7887a19cb52990a4b14ea16875b490">z_j_hat</a> {2,arma::fill::zeros}</td></tr>
+<tr class="memdesc:a8b7887a19cb52990a4b14ea16875b490"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimate measurement. ˆz_j ∈ 2 x 1. Relative ˆr_j and ˆphi_j bearing predictions of a landmarks, based on pose prediction. <br /></td></tr>
+<tr class="separator:a8b7887a19cb52990a4b14ea16875b490"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0aad90af34c87559ade0332b1a3f2ab4"><td class="memItemLeft" align="right" valign="top"><a id="a0aad90af34c87559ade0332b1a3f2ab4"></a>
+arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a0aad90af34c87559ade0332b1a3f2ab4">H_i</a> {2, 3+2*num_landmarks, arma::fill::zeros}</td></tr>
+<tr class="memdesc:a0aad90af34c87559ade0332b1a3f2ab4"><td class="mdescLeft">&#160;</td><td class="mdescRight">H matrix. <br /></td></tr>
+<tr class="separator:a0aad90af34c87559ade0332b1a3f2ab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a063967f09bf496ef927c1fd0e99e799b"><td class="memItemLeft" align="right" valign="top"><a id="a063967f09bf496ef927c1fd0e99e799b"></a>
+arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a063967f09bf496ef927c1fd0e99e799b">K_i</a> {3+2*num_landmarks, 2, arma::fill::zeros}</td></tr>
+<tr class="memdesc:a063967f09bf496ef927c1fd0e99e799b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kalman gain. <br /></td></tr>
+<tr class="separator:a063967f09bf496ef927c1fd0e99e799b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6560bb1b1a372843957f76ab34c12fd8"><td class="memItemLeft" align="right" valign="top"><a id="a6560bb1b1a372843957f76ab34c12fd8"></a>
+arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a6560bb1b1a372843957f76ab34c12fd8">R</a> {2,2,arma::fill::eye}</td></tr>
+<tr class="memdesc:a6560bb1b1a372843957f76ab34c12fd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor noise. <br /></td></tr>
+<tr class="separator:a6560bb1b1a372843957f76ab34c12fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Kinematics of a differential drive robot. </p>
@@ -163,6 +205,50 @@ arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6f35f725dd128b730261dfb69b565ecc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f35f725dd128b730261dfb69b565ecc">&#9670;&nbsp;</a></span>correct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void turtlelib::EKFSlam::correct </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>j</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>correction calculations </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>- landmark x-coordinate </td></tr>
+    <tr><td class="paramname">y</td><td>- landmark y-coordinate </td></tr>
+    <tr><td class="paramname">j</td><td>- landmark index j </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="af1a1b00386590cd66ab99e3aa7e968eb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af1a1b00386590cd66ab99e3aa7e968eb">&#9670;&nbsp;</a></span>initialize_pose()</h2>
 

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['magnitude_21',['magnitude',['../geometry2d_8hpp.html#acab5ba90dd396376761b7c712a485318',1,'turtlelib']]],
-  ['map_22',['map',['../classturtlelib_1_1EKFSlam.html#ae117bffe9ff1508718fb24761040d773',1,'turtlelib::EKFSlam']]]
+  ['k_5fi_23',['K_i',['../classturtlelib_1_1EKFSlam.html#a063967f09bf496ef927c1fd0e99e799b',1,'turtlelib::EKFSlam']]]
 ];

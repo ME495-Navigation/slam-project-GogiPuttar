@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['r_5fnoise_43',['R_noise',['../ekf_8hpp.html#a71e4c4c1a2651ccd65c65798ef1ec95c',1,'turtlelib']]],
-  ['rad2deg_44',['rad2deg',['../geometry2d_8hpp.html#a61c288863ff74346e761950749593acd',1,'turtlelib']]],
-  ['right_45',['right',['../structturtlelib_1_1wheelAngles.html#a53b2b5971ec358505d27db41dd726877',1,'turtlelib::wheelAngles']]],
-  ['rotation_46',['rotation',['../classturtlelib_1_1Transform2D.html#ab053e48454bcfaf84fb34a756dd0c26a',1,'turtlelib::Transform2D']]]
+  ['phi_40',['phi',['../classturtlelib_1_1DiffDrive.html#a02e3c6d49a5d45e22d539482666a1432',1,'turtlelib::DiffDrive']]],
+  ['pi_41',['PI',['../geometry2d_8hpp.html#a506fa4b4fbcbaee2fb5362b4b8179bad',1,'turtlelib']]],
+  ['point2d_42',['Point2D',['../structturtlelib_1_1Point2D.html',1,'turtlelib']]],
+  ['pose_43',['pose',['../classturtlelib_1_1EKFSlam.html#a6980fc87c63bd16794d6c6913960e84a',1,'turtlelib::EKFSlam']]],
+  ['pose2d_44',['Pose2D',['../structturtlelib_1_1Pose2D.html',1,'turtlelib']]],
+  ['predict_45',['predict',['../classturtlelib_1_1EKFSlam.html#a4c80dfaa8afeb964426e262e8ca3893e',1,'turtlelib::EKFSlam']]],
+  ['predicted_5fmeasurement_46',['predicted_measurement',['../classturtlelib_1_1EKFSlam.html#aeda54f8e379aa46aec347f2b66f2c0d1',1,'turtlelib::EKFSlam']]]
 ];
