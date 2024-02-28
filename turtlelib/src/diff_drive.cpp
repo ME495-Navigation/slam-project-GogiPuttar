@@ -31,7 +31,7 @@ namespace turtlelib
         Transform2D T_wb{Vector2D{q.x, q.y}, q.theta};
 
         // Get body twist from wheel rotations
-        Twist2D V_b;
+        Twist2D V_b; // use constructor
         V_b.omega = (wheel_radius / wheel_sep) * (delta_phi.right - delta_phi.left);
         V_b.x = (wheel_radius / 2) * (delta_phi.right + delta_phi.left);
         V_b.y = 0;
@@ -99,7 +99,7 @@ namespace turtlelib
     {
         return q;
     }
-
+    // no commented out code
     // // Create a pure translation transform.
     // DiffDrive::DiffDrive(double left_wheel_angle, double right_wheel_angle, pose2D pose) :
     // phi_l{left_wheel_angle}, phi_r{right_wheel_angle}, q{pose}

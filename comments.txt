@@ -1,0 +1,6 @@
+Many doxygen warnings
+some test failures
+
+ros2 launch with teleop keyboard has an unnecessary joint_state_publisher gui and one of the robot models does not launch properly.  The simulated and odometry robots move at the wrong speed (fails the 0.1m/s test) and there is intermittent glitching of one of the robot models.
+
+I am grading a much later version than what was cloned originally in order to provide more feedback to you.
