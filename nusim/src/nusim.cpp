@@ -74,14 +74,27 @@ using namespace std::chrono_literals;
 ///  \param x0_ (double): Initial x coordinate of the robot [m]
 ///  \param y0_ (double): Initial y coordinate of the robot [m]
 ///  \param theta0_ (double): Initial theta angle of the robot [radians]
-///  \param x_ (double): Current x coordinate of the robot [m]
-///  \param y_ (double): Current y coordinate of the robot [m]
 ///  \param theta_ (double): Current theta angle of the robot [radians]
 ///  \param obstacles_x_ (std::vector<double>): Vector of x coordinates for each obstacle [m]
 ///  \param obstacles_y_ (std::vector<double>): Vector of y coordinates for each obstacle [m]
 ///  \param obstacles_r_ (double): Radius of cylindrical obstacles [m]
 ///  \param arena_x_length_ (double): Inner length of arena in x direction [m]
 ///  \param arena_y_length_ (double): Inner length of arena in y direction [m]
+///  \param wheel_radius_ (double): Inner length of arena in y direction [m]
+///  \param track_width_ (double): Inner length of arena in y direction [m]
+///  \param encoder_ticks_per_rad_ (double): Inner length of arena in y direction [m]
+///  \param motor_cmd_per_rad_sec (double): Inner length of arena in y direction [m]
+///  \param input_noise_ (double): Inner length of arena in y direction [m]
+///  \param slip_fraction_ (double): Inner length of arena in y direction [m]
+///  \param basic_sensor_variance_ (double): Inner length of arena in y direction [m]
+///  \param max_range_ (double): Inner length of arena in y direction [m]
+///  \param collision_radius_ (double): Inner length of arena in y direction [m]
+///  \param lidar_variance_ (double): Inner length of arena in y direction [m]
+///  \param lidar_min_range_ (double): Inner length of arena in y direction [m]
+///  \param lidar_max_range_ (double): Inner length of arena in y direction [m]
+///  \param lidar_angle_increment_ (double): Inner length of arena in y direction [m]
+///  \param lidar_num_samples_ (double): Inner length of arena in y direction [m]
+///  \param lidar_resolution_des_ (double): Inner length of arena in y direction [m]
 
 /// \brief Generate random number
 std::mt19937 & get_random()
@@ -100,7 +113,7 @@ public:
   Nusim()
   : Node("nusim"), timestep_(0)
   {
-    // Parameter descirption
+    // Parameter description
     auto rate_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto x0_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto y0_des = rcl_interfaces::msg::ParameterDescriptor{};
@@ -205,6 +218,7 @@ public:
     lidar_num_samples_ = get_parameter("lidar_num_samples").get_parameter_value().get<double>();
     lidar_resolution_ = get_parameter("lidar_resolution").get_parameter_value().get<double>();
     
+    // Check all params
     check_yaml_params();
 
     // Initialize the differential drive kinematic state
@@ -497,6 +511,7 @@ private:
 
     nuturtlebot_msgs::msg::WheelCommands noisy_wheel_cmd_;
     
+    // Add process noise if wheel is moving
     if(msg.left_velocity != 0.0)
     {
       noisy_wheel_cmd_.left_velocity = msg.left_velocity + motor_control_noise_(get_random());
@@ -568,6 +583,7 @@ private:
     red_path_.poses.push_back(red_path_pose_stamped_);
   }
 
+  /// \brief Sense all obstacles
   void sense_obstacles()
   {
     // Get transform from robot to world
@@ -628,6 +644,7 @@ private:
     }
   }
 
+  /// \brief Indicate and handle collisions
   bool detect_and_simulate_collision(turtlelib::wheelAngles predicted_delta_wheels_)
   {    
     // Predicted robot motion
@@ -669,7 +686,6 @@ private:
         turtle_.phi.right = turtlelib::normalize_angle(turtle_.phi.right + predicted_delta_wheels_.right);
 
         RCLCPP_DEBUG(this->get_logger(), "turtle: %f B: %f", obstacle_pos_robot_.x, obstacle_pos_robot_.y);
-        // RCLCPP_ERROR(this->get_logger(), "turtle: %f B: %f", 5.0, 10.0);
         return true; // Colliding with one obstacle, therefore, ignore other obstacles
       } 
     }
@@ -678,7 +694,7 @@ private:
     throw std::runtime_error("Invalid collision! Check collision simulation!");
   }
 
-  /// \brief Fake lidar sensor
+  /// \brief Fake lidar data
   void lidar()
   {
     lidar_data_.header.frame_id = "red/base_scan";
@@ -729,9 +745,6 @@ private:
 
         // Discriminant. delta = r^2 * (d_r)^2 - D^2
         double delta = std::pow(obstacles_r_, 2) * std::pow(length, 2) - std::pow(D, 2); 
-
-        // RCLCPP_INFO(this->get_logger(), "A: %d, B: %f", sample_index, limit.x);
-
 
         // delta < 0 => No intersection.
         if (delta < 0.0)
@@ -861,7 +874,6 @@ private:
         lidar_data_.ranges.at(sample_index) = lidar_resolution_ * round((lidar_reading + lidar_noise_(get_random())) / lidar_resolution_) ;
       }
     }
-
   }
 
   /// \brief Main simulation time loop
@@ -891,7 +903,7 @@ private:
     }
   }
 
-  /// \brief Ensures all values are passed via .yaml file
+  /// \brief Ensures all values are passed via .yaml file, and they're reasonable
   void check_yaml_params()
   {
     if (  wheel_radius_ == -1.0 ||

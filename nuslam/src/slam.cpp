@@ -72,6 +72,8 @@ using namespace std::chrono_literals;
 ///  \param wheel_radius_ (double): The radius of the wheels [m]
 ///  \param track_width_ (double): The distance between the wheels [m]
 ///  \param obstacles_r_ (double): Radius of cylindrical obstacles [m]
+///  \param basic_sensor_variance_ (double): Sensor noise variance [m]
+///  \param max_range_ (double): Maximum range of sensing [m]
 
 class slam : public rclcpp::Node
 {
@@ -129,9 +131,9 @@ public:
     check_yaml_params();
 
     // Update object with params
-    slam_turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_};
-    // Extended Kalman Filter SLAM object
-    estimator_ptr_ = std::make_unique<turtlelib::EKFSlam>(slam_turtle_.pose());
+    odom_turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_};
+    // Extended Kalman Filter SLAM state estimator
+    estimator_ptr_ = std::make_unique<turtlelib::EKFSlam>(odom_turtle_.pose());
 
     // Publishers
     odom_publisher_ = create_publisher<nav_msgs::msg::Odometry>(
@@ -179,7 +181,7 @@ private:
   turtlelib::Twist2D body_twist_;
   tf2::Quaternion body_q_;
   tf2::Quaternion body_q2_;
-  turtlelib::DiffDrive slam_turtle_;
+  turtlelib::DiffDrive odom_turtle_;
   std::unique_ptr<turtlelib::EKFSlam> estimator_ptr_;
   nav_msgs::msg::Odometry odom_;
   geometry_msgs::msg::TransformStamped tf_;
@@ -213,24 +215,24 @@ private:
     del_wheel_angles_.left = msg.position.at(0) - prev_wheel_angles_.left;
     del_wheel_angles_.right = msg.position.at(1) - prev_wheel_angles_.right;
 
-    // RCLCPP_INFO(this->get_logger(), "Param: %f", del_wheel_angles_.left);
+    prev_wheel_angles_.left = msg.position.at(0);
+    prev_wheel_angles_.right = msg.position.at(1);
 
     // Rely on wheel odometry until slam update.
-    body_twist_ = slam_turtle_.driveWheels(del_wheel_angles_);
-    body_q_.setRPY(0.0, 0.0, slam_turtle_.pose().theta);    
+    body_twist_ = odom_turtle_.driveWheels(del_wheel_angles_);
+    body_q_.setRPY(0.0, 0.0, odom_turtle_.pose().theta);    
 
+    // Publish odometry
     odometry_pub();
 
+    // Broadcast transforms
     broadcast_map_odom_transform();
-
     broadcast_transforms();
 
     // SLAM estimate of landmarks
     create_obstacles_array();
 
-    prev_wheel_angles_.left = msg.position.at(0);
-    prev_wheel_angles_.right = msg.position.at(1);
-
+    // Publish Nav Path
     readings_++;
     if (readings_ % path_frequency_ == 1) {
       update_green_NavPath();
@@ -238,12 +240,13 @@ private:
     }
   }
 
-  /// \brief fake lidar sensor topic callback
+  /// \brief Fake landmark sensor topic callback
   void fake_sensor_callback(const visualization_msgs::msg::MarkerArray & msg)
   {
-    slam_tf_now_ = turtlelib::Transform2D{turtlelib::Vector2D{slam_turtle_.pose().x, slam_turtle_.pose().y}, slam_turtle_.pose().theta};
-    
+    // Relative transform between successive sensing
+    slam_tf_now_ = turtlelib::Transform2D{turtlelib::Vector2D{odom_turtle_.pose().x, odom_turtle_.pose().y}, odom_turtle_.pose().theta};
     turtlelib::Transform2D slam_tf_change_ = slam_tf_prev_.inv() * slam_tf_now_;
+
     // Twist that gets us from the previous sensor callback tf to this one.
     estimator_ptr_->predict(turtlelib::differentiate_transform(slam_tf_change_));
 
@@ -251,8 +254,9 @@ private:
 
     visualization_msgs::msg::MarkerArray sensed_landmarks = msg;
 
+    // Correct for each sensor measurement
     // j = 1, 2, 3...
-    for (size_t j = 1; j <= sensed_landmarks.markers.size() - 2; j++) 
+    for (size_t j = 1; j <= sensed_landmarks.markers.size() - 0; j++) 
     {
       // Only use landmarks that the sensor currently sees
       if (sensed_landmarks.markers[j-1].action == visualization_msgs::msg::Marker::ADD) 
@@ -261,28 +265,6 @@ private:
       }
     }
   }
-
-  /// \brief circle fitting topic callback (Preform data association)
-  // void circle_fitting_callback(const visualization_msgs::msg::MarkerArray & msg)
-  // {
-  //   EKFSlam_.EKFSlam_Predict(
-  //     {slam_turtle_.pose().theta,
-  //       slam_turtle_.pose().x, slam_turtle_.pose().y});
-
-  //   visualization_msgs::msg::MarkerArray sensed_landmarks = msg;
-
-  //   for (size_t j = 0; j < sensed_landmarks.markers.size(); j++) {
-  //     // Preform data association
-  //     size_t index = EKFSlam_.Data_association(
-  //       sensed_landmarks.markers[j].pose.position.x,
-  //       sensed_landmarks.markers[j].pose.position.y);
-
-  //     // Pass x,y and the ID output from data association to the Correction step of EKF SLAM
-  //     EKFSlam_.EKFSlam_Correct(
-  //       sensed_landmarks.markers[j].pose.position.x,
-  //       sensed_landmarks.markers[j].pose.position.y, index);
-  //   }
-  // }
 
   /// \brief Ensures all values are passed via the launch file
   void check_frame_params()
@@ -334,7 +316,7 @@ private:
     nuturtle_control::srv::InitialPose::Response::SharedPtr)
   {
     // Set pose to initial pose
-    slam_turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{0.0, 0.0}, turtlelib::Pose2D{request->theta, request->x, request->y}};
+    odom_turtle_ = turtlelib::DiffDrive{wheel_radius_, track_width_, turtlelib::wheelAngles{0.0, 0.0}, turtlelib::Pose2D{request->theta, request->x, request->y}};
   }
 
   /// \brief Broadcasts green robot's position
@@ -344,8 +326,8 @@ private:
     tf_.header.stamp = get_clock()->now();
     tf_.header.frame_id = odom_id_;
     tf_.child_frame_id = body_id_;
-    tf_.transform.translation.x = slam_turtle_.pose().x;
-    tf_.transform.translation.y = slam_turtle_.pose().y;
+    tf_.transform.translation.x = odom_turtle_.pose().x;
+    tf_.transform.translation.y = odom_turtle_.pose().y;
     tf_.transform.translation.z = 0.0; 
     tf_.transform.rotation.x = body_q_.x();
     tf_.transform.rotation.y = body_q_.y();
@@ -354,15 +336,13 @@ private:
     tf_broadcaster_->sendTransform(tf_);
   }
 
-  /// \brief Broadcasts green robot's position
+  /// \brief Broadcasts transform between map and odom
   void broadcast_map_odom_transform()
   {
     green_turtle_ = estimator_ptr_->pose();
     T_map_green = {turtlelib::Vector2D{green_turtle_.x, green_turtle_.y}, green_turtle_.theta};
-    T_odom_green = {turtlelib::Vector2D{slam_turtle_.pose().x, slam_turtle_.pose().y}, slam_turtle_.pose().theta};
+    T_odom_green = {turtlelib::Vector2D{odom_turtle_.pose().x, odom_turtle_.pose().y}, odom_turtle_.pose().theta};
     T_map_odom = T_map_green * T_odom_green.inv();
-
-    // RCLCPP_INFO(this->get_logger(), "A: %f", green_turtle_.x);
 
     // Broadcast TF frames
     tf2_.header.stamp = get_clock()->now();
@@ -382,12 +362,11 @@ private:
   /// \brief Create obstacles MarkerArray as seen by SLAM and publish them to a topic to display them in Rviz
   void create_obstacles_array()
   {
-
     arma::colvec map_vector = estimator_ptr_->map();
     visualization_msgs::msg::MarkerArray obstacles_;
 
-    for (int landmark = 0; landmark < turtlelib::num_landmarks - 2; landmark++) {
-      // if (map_vector(landmark) != 0) {
+    for (int landmark = 0; landmark < turtlelib::num_landmarks - 0; landmark++) {
+      if (map_vector(landmark) != 0) {
         visualization_msgs::msg::Marker obstacle_;
         obstacle_.header.frame_id = "map";
         obstacle_.header.stamp = get_clock()->now();
@@ -410,9 +389,7 @@ private:
         obstacle_.color.a = 1.0;
         obstacles_.markers.push_back(obstacle_);
         Flag_obstacle_seen_ = true;
-
-        // RCLCPP_INFO(this->get_logger(), "Called %f", obstacles_r_);
-      // }
+      }
     }
     if (Flag_obstacle_seen_ == true) {
       obstacles_publisher_->publish(obstacles_);
@@ -447,8 +424,8 @@ private:
     odom_.header.frame_id = odom_id_;
     odom_.child_frame_id = body_id_;
     odom_.header.stamp = get_clock()->now();
-    odom_.pose.pose.position.x = slam_turtle_.pose().x;
-    odom_.pose.pose.position.y = slam_turtle_.pose().y;
+    odom_.pose.pose.position.x = odom_turtle_.pose().x;
+    odom_.pose.pose.position.y = odom_turtle_.pose().y;
     odom_.pose.pose.position.z = 0.0;
     odom_.pose.pose.orientation.x = body_q_.x();
     odom_.pose.pose.orientation.y = body_q_.y();
