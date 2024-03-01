@@ -70,7 +70,7 @@ namespace turtlelib
         void initialize_covariance();
 
         /// \brief set the initial state of the robot
-        /// \param robot_config - robot start configuration
+        /// \param Pose2D - robot start pose
         void initialize_pose(Pose2D turtle_pose_0);
 
         void update_state_vector();
@@ -82,36 +82,38 @@ namespace turtlelib
         void predict(Twist2D twist);
 
         /// \brief correction calculations
-        /// \param x - landmark x-coordinate
-        /// \param y - landmark y-coordinate
-        /// \param j - landmark index j
+        /// \param x - sensed landmark relative x-coordinate
+        /// \param y - aensed landmark relative y-coordinate
+        /// \param j - sensed landmark index j
         void correct(double x, double y, size_t j);
 
-        /// \brief set the initial state of the robot
+        // GETTERS
+        
+        /// \brief get current pose prediction/correction of the robot
         Pose2D pose() const;
 
-        /// \brief set the initial state of the robot
+        /// \brief get current map vector prediction/correction of the robot
         arma::colvec map() const;
 
-        /// \brief set the initial state of the robot
+        /// \brief get current state vector prediction/correction of the robot
         arma::colvec state_vector() const;
 
-        /// \brief set the initial state of the robot
+        /// \brief get current covariance matrix prediction/correction of the robot
         arma::mat covariance_matrix() const;
 
-        /// \brief set the initial state of the robot
+        /// \brief get current twist input to the robot
         Twist2D twist() const;
 
-        /// \brief set the initial state of the robot
+        /// \brief get current state matrix prediction of the robot
         arma::mat state_matrix() const;
 
-        /// \brief set the initial state of the robot
+        /// \brief get the current actual sensor measurement 
         arma::mat actual_measurement() const;
 
-        /// \brief set the initial state of the robot
+        /// \brief get the predicted sensor measurement based on the pose prediction
         arma::mat predicted_measurement() const;
 
-        /// \brief set the initial state of the robot
+        /// \brief get the current predicted sensor matrix 
         arma::mat sensor_matrix() const;
         
     };

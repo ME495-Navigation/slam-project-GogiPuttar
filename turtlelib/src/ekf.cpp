@@ -72,6 +72,7 @@ namespace turtlelib
         }
     }
 
+    /// \brief - Predict the state and covariance, every time a twist input is given
     void EKFSlam::predict(Twist2D twist)
     {
         // Check for proper twist
@@ -150,6 +151,7 @@ namespace turtlelib
 
     }
 
+    /// \brief Correct the state and covariance using the Kalman gain, every time a landmark is sensed
     void EKFSlam::correct(double x, double y, size_t j)
     {
         // Convert relative measurements to range-bearing
@@ -232,37 +234,39 @@ namespace turtlelib
         // Srikanth is super cool
     }
 
-    /// \brief set the initial state of the robot
+    /// GETTERS
+
+    /// \brief get current pose prediction/correction of the robot
     Pose2D EKFSlam::pose() const
     {
         return Pose2D{q(0), q(1), q(2)};
     }
 
-    /// \brief set the initial state of the robot
+    /// \brief get current map vector prediction/correction of the robot
     arma::colvec EKFSlam::map() const
     {
         return m;
     }
 
-    /// \brief set the initial state of the robot
+    /// \brief get current state vector prediction/correction of the robot
     arma::colvec EKFSlam::state_vector() const
     {
         return Xi;
     }
 
-    /// \brief set the initial state of the robot
+    /// \brief get current covariance matrix prediction/correction of the robot
     arma::mat EKFSlam::covariance_matrix() const
     {
         return sigma;
     }
 
-    /// \brief set the initial state of the robot
+    /// \brief get current twist input to the robot
     Twist2D EKFSlam::twist() const
     {
         return Twist2D{u(0), u(1), u(2)};
     }
 
-    /// \brief set the initial state of the robot
+    /// \brief get current state matrix prediction of the robot
     arma::mat EKFSlam::state_matrix() const
     {
         return A;
@@ -274,13 +278,13 @@ namespace turtlelib
         return z_i;
     }
 
-    /// \brief set the initial state of the robot
+    /// \brief get the current actual sensor measurement 
     arma::mat EKFSlam::predicted_measurement() const
     {
         return z_i_hat;
     }
 
-    /// \brief set the initial state of the robot
+    /// \brief get the current predicted sensor matrix 
     arma::mat EKFSlam::sensor_matrix() const
     {
         return H_i;
