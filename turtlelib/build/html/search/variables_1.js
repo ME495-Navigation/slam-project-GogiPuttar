@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['k_5fi_132',['K_i',['../classturtlelib_1_1EKFSlam.html#a063967f09bf496ef927c1fd0e99e799b',1,'turtlelib::EKFSlam']]]
+  ['num_5fdof_127',['num_dof',['../ekf_8hpp.html#afdd0f5a92bd3c399ce44a5dfdd830725',1,'turtlelib']]],
+  ['num_5flandmarks_128',['num_landmarks',['../ekf_8hpp.html#acfab23aff5f3ea952a1ab3d1d1135a40',1,'turtlelib']]]
 ];

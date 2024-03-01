@@ -286,29 +286,4 @@ TEST_CASE( "Transform Differentiation works", "[differentiate_transform()]")
     REQUIRE_THAT( v3.omega, WithinAbs(vn3.omega,1.0e-6));
     REQUIRE_THAT( v3.x, WithinAbs(vn3.x,1.0e-6));
     REQUIRE_THAT( v3.y, WithinAbs(vn3.y,1.0e-6)); 
-
-    // Check for small but viable twist
-
-    // Twist2D v3{3.1, 6.9, 0.0};
-    Transform2D tf4{Vector2D{0.01795, 0.000336}, 0.04}; 
-    Twist2D vn4 = differentiate_transform(tf4);
-
-    // REQUIRE_THAT( 0.0, WithinAbs(vn4.omega,1.0e-6));
-    // REQUIRE_THAT( 0.0, WithinAbs(vn4.x,1.0e-6));
-    // REQUIRE_THAT( 1.0, WithinAbs(vn4.y,1.0e-6)); 
-
-    // // Check for large radius of curvature
-
-    // Twist2D v4{0.26, -6.9, -4.2};
-    // Transform2D tf4 = integrate_twist(v4); 
-
-    // REQUIRE_THAT( tf4.rotation(), WithinAbs(0.0,1.0e-6));
-    // REQUIRE_THAT( tf4.translation().x, WithinAbs(-6.9,1.0e-6));
-    // REQUIRE_THAT( tf4.translation().y, WithinAbs(-4.2,1.0e-6));  
-
-    // Check for improper twist (angular increment is larger than 2pi)
-
-    // Twist2D v5{6.9, -6.9, -4.2};
-
-    // REQUIRE_THROWS(integrate_twist(v5));
 }

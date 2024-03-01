@@ -260,11 +260,7 @@ namespace turtlelib
         {
             // y = R (1 - cos(theta))
             double R = fabs(T_bB.translation().y / (1 - cos(T_bB.rotation())));
-            // double R = fabs(T_bB.translation().y);
-            // double R = fabs(-0.222);
-
-            // return Twist2D{R, R, R};
-
+            
             // Populate twist
             // Vb.x = R * theta_dot * cos(theta)
             return Twist2D{T_bB.rotation(), R * T_bB.rotation(), 0};

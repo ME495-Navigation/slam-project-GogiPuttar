@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['r_48',['R',['../classturtlelib_1_1EKFSlam.html#a6560bb1b1a372843957f76ab34c12fd8',1,'turtlelib::EKFSlam']]],
-  ['r_5fnoise_49',['R_noise',['../ekf_8hpp.html#a71e4c4c1a2651ccd65c65798ef1ec95c',1,'turtlelib']]],
-  ['rad2deg_50',['rad2deg',['../geometry2d_8hpp.html#a61c288863ff74346e761950749593acd',1,'turtlelib']]],
-  ['right_51',['right',['../structturtlelib_1_1wheelAngles.html#a53b2b5971ec358505d27db41dd726877',1,'turtlelib::wheelAngles']]],
-  ['rotation_52',['rotation',['../classturtlelib_1_1Transform2D.html#ab053e48454bcfaf84fb34a756dd0c26a',1,'turtlelib::Transform2D']]]
+  ['theta_57',['theta',['../structturtlelib_1_1Pose2D.html#a8309b8a6af189053049c66dee223f611',1,'turtlelib::Pose2D']]],
+  ['transform2d_58',['Transform2D',['../classturtlelib_1_1Transform2D.html#af02e23ce05599c9b378ea6bfbcc8d2dc',1,'turtlelib::Transform2D::Transform2D()'],['../classturtlelib_1_1Transform2D.html#a4ddd1cc18c672d413ebfd6752d33d554',1,'turtlelib::Transform2D::Transform2D(Vector2D trans)'],['../classturtlelib_1_1Transform2D.html#a206dfc425001c3a0ca1ab5336690f630',1,'turtlelib::Transform2D::Transform2D(double radians)'],['../classturtlelib_1_1Transform2D.html#aea373c83b9f293c2d5009db45258e994',1,'turtlelib::Transform2D::Transform2D(Vector2D trans, double radians)'],['../classturtlelib_1_1Transform2D.html',1,'turtlelib::Transform2D']]],
+  ['translation_59',['translation',['../classturtlelib_1_1Transform2D.html#a006a7b8e1a66ae557979f0a226f7571c',1,'turtlelib::Transform2D']]],
+  ['turtlelib_20library_60',['Turtlelib Library',['../index.html',1,'']]],
+  ['twist_61',['twist',['../classturtlelib_1_1EKFSlam.html#a4aea149c718a3ec75fdda1bfcead376f',1,'turtlelib::EKFSlam']]],
+  ['twist2d_62',['Twist2D',['../structturtlelib_1_1Twist2D.html',1,'turtlelib']]]
 ];

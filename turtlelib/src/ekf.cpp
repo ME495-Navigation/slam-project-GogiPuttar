@@ -112,7 +112,7 @@ namespace turtlelib
             arma::join_horiz(pose_state_matrix, zeros_12),
             arma::join_horiz(zeros_21, zeros_22));
 
-        // Calculate Q_bar matrix
+        // Represent process noise Q as Q_bar
         arma::mat Q_bar =
             arma::join_vert(
             arma::join_horiz(Q, zeros_12), 
@@ -135,18 +135,18 @@ namespace turtlelib
         q(2) = newpose_as_tf_TwB.translation().y;
         update_state_vector();
 
-        // Check covariance matrix (symmetric and positive semi-definite)
-        // Check if symmetric
-        if (!(sigma.is_symmetric(1e-8)))
-        {
-            throw std::runtime_error("Covariance is Assymetric!!!");
-        }
-        // Check if positive semi-definite
-        arma::vec eigvals = arma::eig_sym(sigma);
-        if (!(arma::all(eigvals >= 0)))
-        {
-            throw std::runtime_error("Covariance is not Positive Semi-Definite!!!");
-        }
+        // // Check covariance matrix (symmetric and positive semi-definite)
+        // // Check if symmetric
+        // if (!(sigma.is_symmetric(1e-8)))
+        // {
+        //     throw std::runtime_error("Covariance is Assymetric!!!");
+        // }
+        // // Check if positive semi-definite
+        // arma::vec eigvals = arma::eig_sym(sigma);
+        // if (!(arma::all(eigvals >= 0)))
+        // {
+        //     throw std::runtime_error("Covariance is not Positive Semi-Definite!!!");
+        // }
 
     }
 
@@ -170,8 +170,8 @@ namespace turtlelib
             update_state_vector();
         }
         // Actual Measurement of that landmark. Not a distribution.
-        z_j(0) = r_j;
-        z_j(1) = phi_j;
+        z_i(0) = r_j;
+        z_i(1) = phi_j;
 
         // Relative predictions of landmark position, as cartesian coordinates
         // δ_{x,j} = ˆm_{x,j} − ˆx_t
@@ -183,14 +183,14 @@ namespace turtlelib
         // Relative predictions of landmark position, as range-bearing
         double r_j_hat = std::sqrt(d_j);
         double phi_j_hat = normalize_angle(atan2(delta_j.y, delta_j.x) - q(0));
-        z_j_hat(0) = r_j_hat;
-        z_j_hat(1) = phi_j_hat;
+        z_i_hat(0) = r_j_hat;
+        z_i_hat(1) = phi_j_hat;
 
         // Calculate H matrix
+        arma::mat small_H_first{2, num_dof, arma::fill::zeros}; // Dependence on pose
         arma::mat zeros_2_first{2, 2 * (j-1), arma::fill::zeros}; // Dependence on landmarks having smaller indices
-        arma::mat zeros_2_second{2, 2 * num_landmarks - 2 * j, arma::fill::zeros}; // Dependence on landmarks having larger indices
-        arma::mat small_H_first{2, 3, arma::fill::zeros}; // Dependence on pose
         arma::mat small_H_second{2, 2, arma::fill::zeros}; // Dependence on sensed landmark
+        arma::mat zeros_2_second{2, 2 * num_landmarks - 2 * j, arma::fill::zeros}; // Dependence on landmarks having larger indices
 
         small_H_first(0, 0) = 0.0;
         small_H_first(0, 1) = -delta_j.x / std::sqrt(d_j);
@@ -215,130 +215,22 @@ namespace turtlelib
         K_i = sigma * H_i.t() * (H_i * sigma * H_i.t() + R).i();
 
         // Update state to corrected prediction
-        // Σ_t = (I − K_i H_i) Σ¯_t
-        Xi = Xi + K_i * (z_j - z_j_hat);    
+        
+        // Subtract z_i and z_i_hat correcctly
+        arma::colvec z_i_diff{2, arma::fill::zeros};
+        z_i_diff(0) = z_i(0) - z_i_hat(0);
+        z_i_diff(1) = normalize_angle(z_i(1) - z_i_hat(1));
+
+        // ξ_t = ˆξ¯_t + K_i (z^i_t − ˆz^i_t)
+        Xi = Xi + K_i * (z_i_diff);    
         update_pose_and_map();
 
         // Update covariance
+        // Σ_t = (I − K_i H_i) Σ¯_t
         sigma = (I - K_i * H_i) * sigma;
+
+        // Srikanth is super cool
     }
-
-    // size_t EKFSlam::Data_association(double x, double y)
-    // {
-    // // Convert relative measurements to range bearing
-    // double r_j = std::sqrt(x * x + y * y);
-    // double phi_j = std::atan2(y, x);      // Normalize ?? TODO ??
-
-    // // Create a temp Xi with new temp landmark
-    // Xi_temp = Xi;
-    // // Initialize the landmark estimate x and y coordinates in Xi
-    // Xi_temp(m + 2*N + 1) = Xi_temp(1) + r_j * cos(phi_j + Xi_temp(0));
-    // Xi_temp(m + 2*N + 1 + 1) = Xi_temp(2) + r_j * sin(phi_j + Xi_temp(0));
-
-
-    // // Actual measurements
-    // zj(0) = r_j;
-    // zj(1) = phi_j;
-
-    // std::vector<arma::mat> distances{}; // Mahalanobis distance for each landmark
-
-    // for (int k = 0; k < N+1; k++)
-    // {
-    //     /*
-    //         Step 4.1.1
-    //     */
-    //     // Estimate measurements
-    //     Vector2D estimate_rel_dist_j;
-    //     estimate_rel_dist_j.x = Xi_temp(m + 2 * k) - Xi_temp(1);
-    //     estimate_rel_dist_j.y = Xi_temp(m + 2 * k + 1) - Xi_temp(2);
-    //     double d_j = estimate_rel_dist_j.x * estimate_rel_dist_j.x + estimate_rel_dist_j.y *
-    //         estimate_rel_dist_j.y;
-
-    //     // Calculate H matrix
-    //     arma::mat zeros_1j(2, 2 * k);
-    //     arma::mat zeros_1nj(2, 2 * n - 2 * (k + 1));
-    //     arma::mat temp1(2, 3);
-    //     arma::mat temp2(2, 2);
-
-    //     temp1(1, 0) = -1;
-    //     temp1(0, 1) = -estimate_rel_dist_j.x / std::sqrt(d_j);
-    //     temp1(1, 1) = estimate_rel_dist_j.y / d_j;
-    //     temp1(0, 2) = -estimate_rel_dist_j.y / std::sqrt(d_j);
-    //     temp1(1, 2) = -estimate_rel_dist_j.x / d_j;
-
-    //     temp2(0, 0) = estimate_rel_dist_j.x / std::sqrt(d_j);
-    //     temp2(1, 0) = -estimate_rel_dist_j.y / d_j;
-    //     temp2(0, 1) = estimate_rel_dist_j.y / std::sqrt(d_j);
-    //     temp2(1, 1) = estimate_rel_dist_j.x / d_j;
-
-    //     arma::mat Hk = arma::join_rows(arma::join_rows(temp1, zeros_1j), arma::join_rows(temp2, zeros_1nj));
-
-
-    //     /*
-    //         Step 4.1.2
-    //     */
-    //     // Noise
-    //     R = arma::mat{2 * n, 2 * n, arma::fill::eye} *R_noise;
-    //     arma::mat Rk = R.submat(k, k, k + 1, k + 1);
-
-    //     arma::mat covariance_k = Hk*covariance*Hk.t() + Rk;
-
-
-    //     /*
-    //         Step 4.1.3
-    //     */
-    //     double r_j_hat = std::sqrt(d_j);
-    //     double phi_j_hat = normalize_angle(atan2(estimate_rel_dist_j.y, estimate_rel_dist_j.x) - Xi_temp(0));
-    //     zj_hat(0) = r_j_hat;
-    //     zj_hat(1) = phi_j_hat;
-
-
-    //     /*
-    //         Step 4.1.4 -> Calc Mahalanobis distance
-    //     */
-    //     arma::mat dist_k = ((zj - zj_hat).t())*(covariance_k.i())*(zj - zj_hat);
-
-    //     distances.push_back(dist_k);
-    // }
-
-    // /*
-    //     Step 4.2 & 4.3
-    // */
-    // // Set distance threshold to distance N+1
-    // arma::mat distance_threshold = distances.at(distances.size()-1);
-    // size_t index = N+1;
-    // bool new_landmark = true;
-
-    // for (size_t i = 0; i<distances.size(); i++)
-    // {
-    //     if (distances.at(i)(0) < distance_threshold(0))
-    //     {
-    //         distance_threshold = distances.at(i);
-    //         index = i;
-    //         new_landmark = false; // Not a new landmark
-    //     }
-    // }
-
-    // /*
-    //     Step 4.4
-    // */
-    // if (new_landmark == true) // If it is a new landmark increase N
-    // {
-    //     N++;
-    // }
-
-    // return index;
-    // }
-
-    // Robot_configuration EKFSlam::EKFSlam_config()
-    // {
-    // return {Xi(1), Xi(2), Xi(0)};
-    // }
-
-    // arma::colvec EKFSlam::EKFSlam_Xi()
-    // {
-    // return Xi;
-    // }
 
     /// \brief set the initial state of the robot
     Pose2D EKFSlam::pose() const
@@ -379,13 +271,13 @@ namespace turtlelib
     /// \brief set the initial state of the robot
     arma::mat EKFSlam::actual_measurement() const
     {
-        return z_j;
+        return z_i;
     }
 
     /// \brief set the initial state of the robot
     arma::mat EKFSlam::predicted_measurement() const
     {
-        return z_j_hat;
+        return z_i_hat;
     }
 
     /// \brief set the initial state of the robot

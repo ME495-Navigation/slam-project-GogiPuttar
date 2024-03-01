@@ -67,7 +67,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classturtlelib_1_1EKFSlam-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">turtlelib::EKFSlam Class Reference</div>  </div>
@@ -143,29 +142,6 @@ arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#ace50ab89e0aae331577d6f9027b8602e">sensor_matrix</a> () const</td></tr>
 <tr class="memdesc:ace50ab89e0aae331577d6f9027b8602e"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
 <tr class="separator:ace50ab89e0aae331577d6f9027b8602e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:add450b6bc60148749f9fcfaae703e1d5"><td class="memItemLeft" align="right" valign="top"><a id="add450b6bc60148749f9fcfaae703e1d5"></a>
-arma::colvec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#add450b6bc60148749f9fcfaae703e1d5">z_j</a> {2,arma::fill::zeros}</td></tr>
-<tr class="memdesc:add450b6bc60148749f9fcfaae703e1d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Actual measurement. z_j ∈ 2 x 1. Relative r_j and phi_j bearing measurements of a landmarks. <br /></td></tr>
-<tr class="separator:add450b6bc60148749f9fcfaae703e1d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b7887a19cb52990a4b14ea16875b490"><td class="memItemLeft" align="right" valign="top"><a id="a8b7887a19cb52990a4b14ea16875b490"></a>
-arma::colvec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a8b7887a19cb52990a4b14ea16875b490">z_j_hat</a> {2,arma::fill::zeros}</td></tr>
-<tr class="memdesc:a8b7887a19cb52990a4b14ea16875b490"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimate measurement. ˆz_j ∈ 2 x 1. Relative ˆr_j and ˆphi_j bearing predictions of a landmarks, based on pose prediction. <br /></td></tr>
-<tr class="separator:a8b7887a19cb52990a4b14ea16875b490"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0aad90af34c87559ade0332b1a3f2ab4"><td class="memItemLeft" align="right" valign="top"><a id="a0aad90af34c87559ade0332b1a3f2ab4"></a>
-arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a0aad90af34c87559ade0332b1a3f2ab4">H_i</a> {2, 3+2*num_landmarks, arma::fill::zeros}</td></tr>
-<tr class="memdesc:a0aad90af34c87559ade0332b1a3f2ab4"><td class="mdescLeft">&#160;</td><td class="mdescRight">H matrix. <br /></td></tr>
-<tr class="separator:a0aad90af34c87559ade0332b1a3f2ab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a063967f09bf496ef927c1fd0e99e799b"><td class="memItemLeft" align="right" valign="top"><a id="a063967f09bf496ef927c1fd0e99e799b"></a>
-arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a063967f09bf496ef927c1fd0e99e799b">K_i</a> {3+2*num_landmarks, 2, arma::fill::zeros}</td></tr>
-<tr class="memdesc:a063967f09bf496ef927c1fd0e99e799b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kalman gain. <br /></td></tr>
-<tr class="separator:a063967f09bf496ef927c1fd0e99e799b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6560bb1b1a372843957f76ab34c12fd8"><td class="memItemLeft" align="right" valign="top"><a id="a6560bb1b1a372843957f76ab34c12fd8"></a>
-arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a6560bb1b1a372843957f76ab34c12fd8">R</a> {2,2,arma::fill::eye}</td></tr>
-<tr class="memdesc:a6560bb1b1a372843957f76ab34c12fd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor noise. <br /></td></tr>
-<tr class="separator:a6560bb1b1a372843957f76ab34c12fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Kinematics of a differential drive robot. </p>

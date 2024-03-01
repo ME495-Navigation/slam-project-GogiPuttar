@@ -17,9 +17,9 @@ namespace turtlelib
     constexpr int num_landmarks=3;
     /// \brief size of robot state vector
     constexpr int num_dof=3;
-    /// \brief process noise for robot motion
+    /// \brief process noise for robot motion, variance
     constexpr double w = 0.001;
-    /// \brief noise on landmarks
+    /// \brief sensing noise on landmarks, variance
     constexpr double R_noise = 0.01;
 
     /// \brief Kinematics of a differential drive robot.
@@ -43,29 +43,22 @@ namespace turtlelib
         const arma::mat I{num_dof+2*num_landmarks,num_dof+2*num_landmarks,arma::fill::eye};
         /// \brief Linearized state transition matrix. A ∈ (num_dof + 2*num_landmarks) x (num_dof + 2*num_landmarks). A_t = g'(ξ_{t−1}, u_t)
         arma::mat A{num_dof+2*num_landmarks, num_dof+2*num_landmarks,arma::fill::eye};
-        /// \brief Process noise for the robot motion. Q ∈ num_dof x num_dof.
+        /// \brief Process noise for the robot motion, as variance. Q ∈ num_dof x num_dof.
         const arma::mat Q{arma::mat{num_dof,num_dof,arma::fill::eye}*w};
         /// \brief Previously seen landmark IDs, j: 1, 2, 3...
         std::unordered_set<int> seen_landmarks{};
-    public:
-        /// \brief Actual measurement. z_j ∈ 2 x 1. Relative r_j and phi_j bearing measurements of a landmarks.
-        arma::colvec z_j{2,arma::fill::zeros};
-        /// \brief Estimate measurement. ˆz_j ∈ 2 x 1. Relative ˆr_j and ˆphi_j bearing predictions of a landmarks, based on pose prediction.
-        arma::colvec z_j_hat{2,arma::fill::zeros};
+        /// \brief Actual measurement at i. z_i ∈ 2 x 1. Relative r_j and phi_j bearing measurements of a landmarks.
+        arma::colvec z_i{2,arma::fill::zeros};
+        /// \brief Estimate measurement. ˆz_i ∈ 2 x 1. Relative ˆr_j and ˆphi_j bearing predictions of a landmarks, based on pose prediction.
+        arma::colvec z_i_hat{2,arma::fill::zeros};
         /// \brief H matrix
-        arma::mat H_i{2, 3+2*num_landmarks, arma::fill::zeros};
+        arma::mat H_i{2, num_dof+2*num_landmarks, arma::fill::zeros};
         /// \brief Kalman gain
         arma::mat K_i{3+2*num_landmarks, 2, arma::fill::zeros};
-        /// \brief Sensor noise 
+        /// \brief Sensor noise, as variance
         arma::mat R{2,2,arma::fill::eye};
-        // /// \brief Noise for j landmark
-        // arma::mat Rj{};
-        // /// \brief Data association index
-        // int N = 0;
-        // /// \brief Temporary State of the robot at time t
-        // arma::colvec X_temp{};
 
-    // public:
+    public:
         /// \brief start at origin and default the uncertainty
         EKFSlam();
 
@@ -93,12 +86,6 @@ namespace turtlelib
         /// \param y - landmark y-coordinate
         /// \param j - landmark index j
         void correct(double x, double y, size_t j);
-
-        // /// \brief data association with the Mahalanobis distance
-        // /// \param x - landmark x-coordinate
-        // /// \param y - landmark y-coordinate
-        // /// \return landmark index j (size_t)
-        // size_t Data_association(double x, double y);
 
         /// \brief set the initial state of the robot
         Pose2D pose() const;

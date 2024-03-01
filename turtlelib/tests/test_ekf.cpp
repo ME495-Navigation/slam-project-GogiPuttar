@@ -21,9 +21,9 @@ using turtlelib::wheelAngles;
 using turtlelib::Pose2D;
 using turtlelib::DiffDrive;
 using turtlelib::EKFSlam;
+using turtlelib::w;
 using turtlelib::num_dof;
 using turtlelib::num_landmarks;
-using turtlelib::w;
 using turtlelib::PI;
 using Catch::Matchers::WithinAbs;
 
@@ -42,7 +42,7 @@ arma::mat sigma_0 =
 // State Matrix
 arma::mat A_0 = arma::eye(num_dof+2*num_landmarks, num_dof+2*num_landmarks);
 
-// Process Noise
+// Predictable process Noise
 arma::mat Q{arma::mat{num_dof,num_dof,arma::fill::eye}*w};
 arma::mat Q_bar =
             arma::join_vert(
@@ -57,7 +57,7 @@ void ekf_check_twist(EKFSlam subject, Twist2D required_twist);
 void ekf_check_state_matrix(EKFSlam subject, arma::mat required_state_matrix);
 void ekf_check_actual_measurement(EKFSlam subject, arma::vec required_actual_measurement);
 void ekf_check_predicted_measurement(EKFSlam subject, arma::vec required_predicted_measurement);
-
+void ekf_check_sensor_matrix(EKFSlam subject, arma::mat required_sensor_matrix);
 
 TEST_CASE( "Initialization works for EKFSLam", "[EKFSlam()]") 
 {
@@ -218,57 +218,22 @@ TEST_CASE( "Correction works for EKFSlam", "[correct(double, double, size_t)]")
     z_1_hat(1) = 0.0;
     ekf_check_predicted_measurement((*estimator_ptr), z_1_hat);
 
-    // // Pose
-    // ekf_check_pose((*estimator_ptr), Pose2D{0.0, -0.069, 0.0});
-    // // Map
-    // ekf_check_map((*estimator_ptr), arma::zeros<arma::vec>(2*num_landmarks));
-    // // State vector
-    // ekf_check_state_vector((*estimator_ptr), arma::join_vert(arma::vec({0.0, -0.069, 0.0}), arma::zeros<arma::vec>(6)));
-    // // Twist
-    // ekf_check_twist((*estimator_ptr), v2);
+    // Sensor matrix
+    arma::mat H_1 = arma::zeros<arma::mat>(2, num_dof+2*num_landmarks);
 
-    // // State matrix
-    // arma::mat small_A_2 = arma::zeros<arma::mat>(num_dof, num_dof);
-    // small_A_2(1,0) = -0.506320013688507;
-    // small_A_2(2,0) = 6.881398116933686;
-    // arma::mat A_2 = I + arma::join_vert(
-    //     arma::join_horiz(small_A_2, zeros_12), 
-    //     arma::join_horiz(zeros_21, zeros_22));
-    // ekf_check_state_matrix((*estimator_ptr), A_2);
+    H_1(0,0) = 0;
+    H_1(0,1) = -1;
+    H_1(0,2) = 0;
+    H_1(1,0) = -1;
+    H_1(1,1) = 0;
+    H_1(1,2) = -1/2.069;
 
-    // // Covariance matrix
-    // arma::mat sigma_2 = A_2 * sigma_1 * A_2.t() + Q_bar;
-    // ekf_check_covariance_matrix((*estimator_ptr), sigma_2);
-
-    // // 3. Check for general twist
-    // Twist2D v3{0.42, 6.9, 0};
-    // estimator_ptr->predict(v3);
-
-    // // Pose
-    // ekf_check_pose((*estimator_ptr), Pose2D{-2.6481469282, 7.2053095338, 2.7907798217});
-    // // Map
-    // ekf_check_map((*estimator_ptr), arma::zeros<arma::vec>(2*num_landmarks));
-    // // State vector
-    // ekf_check_state_vector((*estimator_ptr), arma::join_vert(arma::vec({-2.6481469282, 7.2053095338, 2.7907798217}), arma::zeros<arma::vec>(6)));
-    // // Twist
-    // ekf_check_twist((*estimator_ptr), v3);
-
-    // // State matrix
-    // arma::mat small_A_3 = arma::zeros<arma::mat>(num_dof, num_dof);
-    // small_A_3(1,0) = 1.915540192024633;
-    // small_A_3(2,0) = -6.576088583127138;
-    // arma::mat A_3 = I + arma::join_vert(
-    //     arma::join_horiz(small_A_3, zeros_12), 
-    //     arma::join_horiz(zeros_21, zeros_22));
-    // ekf_check_state_matrix((*estimator_ptr), A_3);
-
-    // // Covariance matrix
-    // arma::mat sigma_3 = A_3 * sigma_2 * A_3.t() + Q_bar;
-    // ekf_check_covariance_matrix((*estimator_ptr), sigma_3);
-
-    // // 4. Check for improper twist (y-component)
-    // Twist2D v4{0.26, -6.9, -4.2};
-    // REQUIRE_THROWS(estimator_ptr->predict(v4));
+    H_1(0,3) = 1;
+    H_1(0,4) = 0;
+    H_1(1,3) = 0;
+    H_1(1,4) = 1/2.069;
+    
+    ekf_check_sensor_matrix((*estimator_ptr), H_1);
 }
 
 
@@ -319,4 +284,21 @@ void ekf_check_predicted_measurement(EKFSlam subject, arma::vec required_predict
 {
     // REQUIRE_THAT( subject.predicted_measurement()(0), WithinAbs(required_predicted_measurement(0),1.0e-6));
     REQUIRE( arma::approx_equal(subject.predicted_measurement(), required_predicted_measurement, "reldiff", 1e-6));
+}
+
+void ekf_check_sensor_matrix(EKFSlam subject, arma::mat required_sensor_matrix)
+{
+
+    for(int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            // REQUIRE_THAT( subject.sensor_matrix()(j,i), WithinAbs(69.0,1.0e-6));
+            REQUIRE_THAT( subject.sensor_matrix()(j,i), WithinAbs(required_sensor_matrix(j,i),1.0e-6));
+        }
+    }
+
+    REQUIRE_THAT( subject.sensor_matrix().size(), WithinAbs(required_sensor_matrix.size(),1.0e-6));
+    
+    REQUIRE( arma::approx_equal(subject.sensor_matrix(), required_sensor_matrix, "absdiff", 1e-6));
 }
