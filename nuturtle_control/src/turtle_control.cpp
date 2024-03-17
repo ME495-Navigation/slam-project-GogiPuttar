@@ -134,6 +134,8 @@ private:
   double encoder_ticks_per_rad_;
   double collision_radius_;
   double prev_encoder_stamp_ = -1.0;
+  int ticks_at_0_left = 0;
+  int ticks_at_0_right = 0;
   turtlelib::Twist2D body_twist_;
   turtlelib::wheelAngles del_wheel_angles_;
   turtlelib::DiffDrive turtle_;
@@ -191,12 +193,15 @@ private:
     {
       joint_states_.position = {0.0, 0.0};
       joint_states_.velocity = {0.0, 0.0};
+
+      ticks_at_0_left = msg.left_encoder;
+      ticks_at_0_right = msg.right_encoder;
     } 
     else 
     {
       // Change in wheel angle from encoder ticks
-      joint_states_.position = {static_cast<double>(msg.left_encoder) / encoder_ticks_per_rad_,
-        static_cast<double>(msg.right_encoder) / encoder_ticks_per_rad_};
+      joint_states_.position = {static_cast<double>(msg.left_encoder - ticks_at_0_left) / encoder_ticks_per_rad_,
+        static_cast<double>(msg.right_encoder - ticks_at_0_right) / encoder_ticks_per_rad_};
 
       double delta_t_ = msg.stamp.sec + msg.stamp.nanosec * 1e-9 - prev_encoder_stamp_;
 

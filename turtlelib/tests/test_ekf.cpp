@@ -95,7 +95,7 @@ TEST_CASE( "Initialization with pose works for EKFSLam", "[EKFSlam(Pose2D)]")
     ekf_check_map(estimator, arma::zeros<arma::vec>(2*num_landmarks));
 
     // State vector
-    ekf_check_state_vector(estimator, arma::join_vert(arma::vec({pose.theta, pose.x, pose.y}), arma::zeros<arma::vec>(6)));
+    ekf_check_state_vector(estimator, arma::join_vert(arma::vec({pose.theta, pose.x, pose.y}), arma::zeros<arma::vec>(2*num_landmarks)));
 
     // Covariance matrix
     ekf_check_covariance_matrix(estimator, sigma_0);
@@ -127,7 +127,7 @@ TEST_CASE( "Prediction works for EKFSLam", "[predict(Twist2D)]")
     // Map
     ekf_check_map((*estimator_ptr), arma::zeros<arma::vec>(2*num_landmarks));
     // State vector
-    ekf_check_state_vector((*estimator_ptr), arma::join_vert(arma::vec({-3.0681469282, 6.9, 4.20}), arma::zeros<arma::vec>(6)));
+    ekf_check_state_vector((*estimator_ptr), arma::join_vert(arma::vec({-3.0681469282, 6.9, 4.20}), arma::zeros<arma::vec>(2*num_landmarks)));
     // Twist
     ekf_check_twist((*estimator_ptr), v1);
     // State matrix
@@ -146,7 +146,7 @@ TEST_CASE( "Prediction works for EKFSLam", "[predict(Twist2D)]")
     // Map
     ekf_check_map((*estimator_ptr), arma::zeros<arma::vec>(2*num_landmarks));
     // State vector
-    ekf_check_state_vector((*estimator_ptr), arma::join_vert(arma::vec({-3.0681469282, 13.781398116933687, 4.706320013688507}), arma::zeros<arma::vec>(6)));
+    ekf_check_state_vector((*estimator_ptr), arma::join_vert(arma::vec({-3.0681469282, 13.781398116933687, 4.706320013688507}), arma::zeros<arma::vec>(2*num_landmarks)));
     // Twist
     ekf_check_twist((*estimator_ptr), v2);
 
@@ -172,7 +172,7 @@ TEST_CASE( "Prediction works for EKFSLam", "[predict(Twist2D)]")
     // Map
     ekf_check_map((*estimator_ptr), arma::zeros<arma::vec>(2*num_landmarks));
     // State vector
-    ekf_check_state_vector((*estimator_ptr), arma::join_vert(arma::vec({-2.6481469282, 7.2053095338, 2.7907798217}), arma::zeros<arma::vec>(6)));
+    ekf_check_state_vector((*estimator_ptr), arma::join_vert(arma::vec({-2.6481469282, 7.2053095338, 2.7907798217}), arma::zeros<arma::vec>(2*num_landmarks)));
     // Twist
     ekf_check_twist((*estimator_ptr), v3);
 
@@ -234,6 +234,124 @@ TEST_CASE( "Correction works for EKFSlam", "[correct(double, double, size_t)]")
     H_1(1,4) = 1/2.069;
     
     ekf_check_sensor_matrix((*estimator_ptr), H_1);
+}
+
+TEST_CASE( "Data association works for EKFSlam", "[associate_index(Point2D)]") 
+{
+    Point2D first_landmark_coordinates{2.0, 0.0};
+    Point2D second_landmark_coordinates{2.8, 0.0};
+    Point2D third_landmark_coordinates{3.8, 0.0};
+    Point2D fourth_landmark_coordinates{5.0, 0.0};
+    
+    Pose2D pose{0.0, 0.0, 0.0};
+
+    std::unique_ptr<turtlelib::EKFSlam> estimator_ptr;
+    estimator_ptr = std::make_unique<turtlelib::EKFSlam>(pose);
+
+    // 1. Check for one-dimensional translation along x-axis
+    Twist2D v1{0, -0.069, 0};
+    estimator_ptr->predict(v1);
+
+    // Data association
+
+    // Preliminary Testing (Not essential)
+    // estimator_ptr->correct(2.0 + 0.069, 0, 1);
+    // size_t j = estimator_ptr->associate_index(Point2D{2.0 + 0.069 + 0.068, 0.0});
+    // REQUIRE(j == 69);
+
+    // First landmark
+    size_t j_1 = estimator_ptr->associate_index(Point2D{first_landmark_coordinates.x + 0.069, first_landmark_coordinates.y});
+    REQUIRE(j_1 == 1);
+    estimator_ptr->correct(first_landmark_coordinates.x + 0.069, first_landmark_coordinates.y, j_1);
+
+    // Noisy first landmark
+    double noise_1 = 0.0001;
+    size_t j_1n = estimator_ptr->associate_index(Point2D{first_landmark_coordinates.x + 0.069 + noise_1, first_landmark_coordinates.y});
+    REQUIRE(j_1n == 1);
+    estimator_ptr->correct(first_landmark_coordinates.x + 0.069 + noise_1, first_landmark_coordinates.y, j_1n);
+
+    // Outlier 
+    double noise_01 = 0.069;
+    size_t j_01 = estimator_ptr->associate_index(Point2D{first_landmark_coordinates.x + 0.069 + noise_01, first_landmark_coordinates.y});
+    REQUIRE(j_01 == 0);
+
+    // Second landmark
+    size_t j_2 = estimator_ptr->associate_index(Point2D{second_landmark_coordinates.x + 0.069, second_landmark_coordinates.y});
+    REQUIRE(j_2 == 2);
+    estimator_ptr->correct(second_landmark_coordinates.x + 0.069, second_landmark_coordinates.y, j_2);
+
+    // Noisy second landmark
+    double noise_2 = 0.0001;
+    size_t j_2n = estimator_ptr->associate_index(Point2D{second_landmark_coordinates.x + 0.069 + noise_2, second_landmark_coordinates.y});
+    REQUIRE(j_2n == 2);
+    estimator_ptr->correct(second_landmark_coordinates.x + 0.069 + noise_2, second_landmark_coordinates.y, j_2n);
+    
+    // Outlier
+    double noise_02 = 0.001;
+    size_t j_02 = estimator_ptr->associate_index(Point2D{second_landmark_coordinates.x + 0.069 + noise_02, second_landmark_coordinates.y});
+    REQUIRE(j_02 == 0);
+
+    // Third landmark
+    size_t j_3 = estimator_ptr->associate_index(Point2D{third_landmark_coordinates.x + 0.069, third_landmark_coordinates.y});
+    REQUIRE(j_3 == 3);
+    estimator_ptr->correct(third_landmark_coordinates.x + 0.069, 0, j_3);
+
+    // Noisy third landmark
+    double noise_3 = 0.0001;
+    size_t j_3n = estimator_ptr->associate_index(Point2D{third_landmark_coordinates.x + 0.069 + noise_3, third_landmark_coordinates.y});
+    REQUIRE(j_3n == 3);
+    estimator_ptr->correct(third_landmark_coordinates.x + 0.069 + noise_3, third_landmark_coordinates.y, j_3n);
+    
+    // Outlier
+    double noise_03 = 0.001;
+    size_t j_03 = estimator_ptr->associate_index(Point2D{third_landmark_coordinates.x + 0.069 + noise_03, third_landmark_coordinates.y});
+    REQUIRE(j_03 == 0);
+
+    // Fourth landmark
+    size_t j_4 = estimator_ptr->associate_index(Point2D{fourth_landmark_coordinates.x + 0.069, fourth_landmark_coordinates.y});
+    REQUIRE(j_4 == 4);
+    estimator_ptr->correct(fourth_landmark_coordinates.x + 0.069, 0, j_4);
+
+    // Extra landmark which can't be accomodated
+    size_t j_5 = estimator_ptr->associate_index(Point2D{6.9 + 0.069, 0.0});
+    REQUIRE(j_5 == 0);
+
+    // Noisy third landmark again
+    size_t j_3n2 = estimator_ptr->associate_index(Point2D{third_landmark_coordinates.x + 0.069 + noise_3, third_landmark_coordinates.y});
+    REQUIRE(j_3n2 == 3);
+    estimator_ptr->correct(third_landmark_coordinates.x + 0.069 + noise_3, third_landmark_coordinates.y, j_3n2);
+
+    // /// 
+    // estimator_ptr->correct(2.0 + 0.069, 0, 1);
+
+    // // Actual measurement
+    // arma::vec z_1 = arma::zeros<arma::vec>(2);
+    // z_1(0) = 2.0 + 0.069;
+    // z_1(1) = 0.0;
+    // ekf_check_actual_measurement((*estimator_ptr), z_1);
+
+    // // Predicted measurement
+    // arma::vec z_1_hat = arma::zeros<arma::vec>(2);
+    // z_1_hat(0) = 2.069;
+    // z_1_hat(1) = 0.0;
+    // ekf_check_predicted_measurement((*estimator_ptr), z_1_hat);
+
+    // // Sensor matrix
+    // arma::mat H_1 = arma::zeros<arma::mat>(2, num_dof+2*num_landmarks);
+
+    // H_1(0,0) = 0;
+    // H_1(0,1) = -1;
+    // H_1(0,2) = 0;
+    // H_1(1,0) = -1;
+    // H_1(1,1) = 0;
+    // H_1(1,2) = -1/2.069;
+
+    // H_1(0,3) = 1;
+    // H_1(0,4) = 0;
+    // H_1(1,3) = 0;
+    // H_1(1,4) = 1/2.069;
+    
+    // ekf_check_sensor_matrix((*estimator_ptr), H_1);
 }
 
 

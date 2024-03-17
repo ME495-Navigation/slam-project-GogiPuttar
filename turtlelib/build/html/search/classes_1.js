@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ekfslam_69',['EKFSlam',['../classturtlelib_1_1EKFSlam.html',1,'turtlelib']]]
+  ['diffdrive_75',['DiffDrive',['../classturtlelib_1_1DiffDrive.html',1,'turtlelib']]]
 ];

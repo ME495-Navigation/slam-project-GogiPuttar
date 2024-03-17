@@ -14,13 +14,15 @@
 namespace turtlelib
 {
     /// \brief maximum number of obstacles
-    constexpr int num_landmarks=3;
+    constexpr int num_landmarks=4;
     /// \brief size of robot state vector
     constexpr int num_dof=3;
     /// \brief process noise for robot motion, variance
-    constexpr double w = 0.001;
+    // constexpr double w = 0.01;
+    constexpr double w = 0.9;
     /// \brief sensing noise on landmarks, variance
-    constexpr double R_noise = 0.01;
+    constexpr double R_noise = 0.01; // For small sensor noise
+    // constexpr double R_noise = 0.9; // For large sensor noise
 
     /// \brief Kinematics of a differential drive robot.
     class EKFSlam
@@ -57,20 +59,22 @@ namespace turtlelib
         arma::mat K_i{3+2*num_landmarks, 2, arma::fill::zeros};
         /// \brief Sensor noise, as variance
         arma::mat R{2,2,arma::fill::eye};
+        /// \brief Number of landmarks visible
+        size_t N = 0;
 
     public:
         /// \brief start at origin and default the uncertainty
         EKFSlam();
 
         /// \brief set robot start config and default the uncertainty
-        /// \param turtle_pose_0 - robot start configuration
+        /// \param turtle_pose_0 - robot start pose
         explicit EKFSlam(Pose2D turtle_pose_0);
 
         /// \brief set the initial guess covariance matrix
         void initialize_covariance();
 
         /// \brief set the initial state of the robot
-        /// \param Pose2D - robot start pose
+        /// \param turtle_pose_0 - robot start pose
         void initialize_pose(Pose2D turtle_pose_0);
 
         void update_state_vector();
@@ -86,6 +90,11 @@ namespace turtlelib
         /// \param y - aensed landmark relative y-coordinate
         /// \param j - sensed landmark index j
         void correct(double x, double y, size_t j);
+
+        /// \brief data association
+        /// \param measurement - current measurement of unknown landmark
+        /// \returns j - index of that landmark
+        size_t associate_index(Point2D measurement);
 
         // GETTERS
         
@@ -115,7 +124,9 @@ namespace turtlelib
 
         /// \brief get the current predicted sensor matrix 
         arma::mat sensor_matrix() const;
-        
+
+        /// \brief get number of seen landmarks
+        size_t num_seen_landmarks() const;
     };
 }
 

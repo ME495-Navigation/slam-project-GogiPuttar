@@ -106,42 +106,45 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>update_pose_and_map</
 <tr class="memitem:a6f35f725dd128b730261dfb69b565ecc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a6f35f725dd128b730261dfb69b565ecc">correct</a> (double x, double y, size_t j)</td></tr>
 <tr class="memdesc:a6f35f725dd128b730261dfb69b565ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">correction calculations  <a href="classturtlelib_1_1EKFSlam.html#a6f35f725dd128b730261dfb69b565ecc">More...</a><br /></td></tr>
 <tr class="separator:a6f35f725dd128b730261dfb69b565ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6980fc87c63bd16794d6c6913960e84a"><td class="memItemLeft" align="right" valign="top"><a id="a6980fc87c63bd16794d6c6913960e84a"></a>
-<a class="el" href="structturtlelib_1_1Pose2D.html">Pose2D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a6980fc87c63bd16794d6c6913960e84a">pose</a> () const</td></tr>
-<tr class="memdesc:a6980fc87c63bd16794d6c6913960e84a"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="memitem:af27e65973910881db46016df6df85056"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#af27e65973910881db46016df6df85056">associate_index</a> (<a class="el" href="structturtlelib_1_1Point2D.html">Point2D</a> measurement)</td></tr>
+<tr class="memdesc:af27e65973910881db46016df6df85056"><td class="mdescLeft">&#160;</td><td class="mdescRight">data association  <a href="classturtlelib_1_1EKFSlam.html#af27e65973910881db46016df6df85056">More...</a><br /></td></tr>
+<tr class="separator:af27e65973910881db46016df6df85056"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6980fc87c63bd16794d6c6913960e84a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structturtlelib_1_1Pose2D.html">Pose2D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a6980fc87c63bd16794d6c6913960e84a">pose</a> () const</td></tr>
+<tr class="memdesc:a6980fc87c63bd16794d6c6913960e84a"><td class="mdescLeft">&#160;</td><td class="mdescRight">get current pose prediction/correction of the robot  <a href="classturtlelib_1_1EKFSlam.html#a6980fc87c63bd16794d6c6913960e84a">More...</a><br /></td></tr>
 <tr class="separator:a6980fc87c63bd16794d6c6913960e84a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae117bffe9ff1508718fb24761040d773"><td class="memItemLeft" align="right" valign="top"><a id="ae117bffe9ff1508718fb24761040d773"></a>
 arma::colvec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#ae117bffe9ff1508718fb24761040d773">map</a> () const</td></tr>
-<tr class="memdesc:ae117bffe9ff1508718fb24761040d773"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="memdesc:ae117bffe9ff1508718fb24761040d773"><td class="mdescLeft">&#160;</td><td class="mdescRight">get current map vector prediction/correction of the robot <br /></td></tr>
 <tr class="separator:ae117bffe9ff1508718fb24761040d773"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa41a4cd18c173a855fe031af1d9fceb"><td class="memItemLeft" align="right" valign="top"><a id="aaa41a4cd18c173a855fe031af1d9fceb"></a>
 arma::colvec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#aaa41a4cd18c173a855fe031af1d9fceb">state_vector</a> () const</td></tr>
-<tr class="memdesc:aaa41a4cd18c173a855fe031af1d9fceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="memdesc:aaa41a4cd18c173a855fe031af1d9fceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">get current state vector prediction/correction of the robot <br /></td></tr>
 <tr class="separator:aaa41a4cd18c173a855fe031af1d9fceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecc27cc20792d025252ae34e2a7fd3ea"><td class="memItemLeft" align="right" valign="top"><a id="aecc27cc20792d025252ae34e2a7fd3ea"></a>
 arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#aecc27cc20792d025252ae34e2a7fd3ea">covariance_matrix</a> () const</td></tr>
-<tr class="memdesc:aecc27cc20792d025252ae34e2a7fd3ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="memdesc:aecc27cc20792d025252ae34e2a7fd3ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">get current covariance matrix prediction/correction of the robot <br /></td></tr>
 <tr class="separator:aecc27cc20792d025252ae34e2a7fd3ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4aea149c718a3ec75fdda1bfcead376f"><td class="memItemLeft" align="right" valign="top"><a id="a4aea149c718a3ec75fdda1bfcead376f"></a>
 <a class="el" href="structturtlelib_1_1Twist2D.html">Twist2D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a4aea149c718a3ec75fdda1bfcead376f">twist</a> () const</td></tr>
-<tr class="memdesc:a4aea149c718a3ec75fdda1bfcead376f"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="memdesc:a4aea149c718a3ec75fdda1bfcead376f"><td class="mdescLeft">&#160;</td><td class="mdescRight">get current twist input to the robot <br /></td></tr>
 <tr class="separator:a4aea149c718a3ec75fdda1bfcead376f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a746e375fcf291c95e6c3795e4efc51a2"><td class="memItemLeft" align="right" valign="top"><a id="a746e375fcf291c95e6c3795e4efc51a2"></a>
 arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a746e375fcf291c95e6c3795e4efc51a2">state_matrix</a> () const</td></tr>
-<tr class="memdesc:a746e375fcf291c95e6c3795e4efc51a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="memdesc:a746e375fcf291c95e6c3795e4efc51a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">get current state matrix prediction of the robot <br /></td></tr>
 <tr class="separator:a746e375fcf291c95e6c3795e4efc51a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64de54f0df0b67abe82b46875e15cb62"><td class="memItemLeft" align="right" valign="top"><a id="a64de54f0df0b67abe82b46875e15cb62"></a>
-arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a64de54f0df0b67abe82b46875e15cb62">actual_measurement</a> () const</td></tr>
-<tr class="memdesc:a64de54f0df0b67abe82b46875e15cb62"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="memitem:a64de54f0df0b67abe82b46875e15cb62"><td class="memItemLeft" align="right" valign="top">arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a64de54f0df0b67abe82b46875e15cb62">actual_measurement</a> () const</td></tr>
+<tr class="memdesc:a64de54f0df0b67abe82b46875e15cb62"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the current actual sensor measurement  <a href="classturtlelib_1_1EKFSlam.html#a64de54f0df0b67abe82b46875e15cb62">More...</a><br /></td></tr>
 <tr class="separator:a64de54f0df0b67abe82b46875e15cb62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeda54f8e379aa46aec347f2b66f2c0d1"><td class="memItemLeft" align="right" valign="top"><a id="aeda54f8e379aa46aec347f2b66f2c0d1"></a>
-arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#aeda54f8e379aa46aec347f2b66f2c0d1">predicted_measurement</a> () const</td></tr>
-<tr class="memdesc:aeda54f8e379aa46aec347f2b66f2c0d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="memitem:aeda54f8e379aa46aec347f2b66f2c0d1"><td class="memItemLeft" align="right" valign="top">arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#aeda54f8e379aa46aec347f2b66f2c0d1">predicted_measurement</a> () const</td></tr>
+<tr class="memdesc:aeda54f8e379aa46aec347f2b66f2c0d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the predicted sensor measurement based on the pose prediction  <a href="classturtlelib_1_1EKFSlam.html#aeda54f8e379aa46aec347f2b66f2c0d1">More...</a><br /></td></tr>
 <tr class="separator:aeda54f8e379aa46aec347f2b66f2c0d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace50ab89e0aae331577d6f9027b8602e"><td class="memItemLeft" align="right" valign="top"><a id="ace50ab89e0aae331577d6f9027b8602e"></a>
 arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#ace50ab89e0aae331577d6f9027b8602e">sensor_matrix</a> () const</td></tr>
-<tr class="memdesc:ace50ab89e0aae331577d6f9027b8602e"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the initial state of the robot <br /></td></tr>
+<tr class="memdesc:ace50ab89e0aae331577d6f9027b8602e"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the current predicted sensor matrix <br /></td></tr>
 <tr class="separator:ace50ab89e0aae331577d6f9027b8602e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fe2a3d358116561b0490c60fc4e7c7a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classturtlelib_1_1EKFSlam.html#a1fe2a3d358116561b0490c60fc4e7c7a">num_seen_landmarks</a> () const</td></tr>
+<tr class="memdesc:a1fe2a3d358116561b0490c60fc4e7c7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">get number of seen landmarks  <a href="classturtlelib_1_1EKFSlam.html#a1fe2a3d358116561b0490c60fc4e7c7a">More...</a><br /></td></tr>
+<tr class="separator:a1fe2a3d358116561b0490c60fc4e7c7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Kinematics of a differential drive robot. </p>
@@ -173,7 +176,7 @@ arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <p>set robot start config and default the uncertainty </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">turtle_pose_0</td><td>- robot start configuration </td></tr>
+    <tr><td class="paramname">turtle_pose_0</td><td>- robot start pose </td></tr>
   </table>
   </dd>
 </dl>
@@ -181,6 +184,53 @@ arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a64de54f0df0b67abe82b46875e15cb62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64de54f0df0b67abe82b46875e15cb62">&#9670;&nbsp;</a></span>actual_measurement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">arma::mat turtlelib::EKFSlam::actual_measurement </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get the current actual sensor measurement </p>
+<p>set the initial state of the robot </p>
+
+</div>
+</div>
+<a id="af27e65973910881db46016df6df85056"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af27e65973910881db46016df6df85056">&#9670;&nbsp;</a></span>associate_index()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t turtlelib::EKFSlam::associate_index </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structturtlelib_1_1Point2D.html">Point2D</a>&#160;</td>
+          <td class="paramname"><em>measurement</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>data association </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">measurement</td><td>- current measurement of unknown landmark </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>j - index of that landmark </dd></dl>
+
+</div>
+</div>
 <a id="a6f35f725dd128b730261dfb69b565ecc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6f35f725dd128b730261dfb69b565ecc">&#9670;&nbsp;</a></span>correct()</h2>
 
@@ -214,11 +264,12 @@ arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 </div><div class="memdoc">
 
 <p>correction calculations </p>
+<p>Correct the state and covariance using the Kalman gain, every time a landmark is sensed.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x</td><td>- landmark x-coordinate </td></tr>
-    <tr><td class="paramname">y</td><td>- landmark y-coordinate </td></tr>
-    <tr><td class="paramname">j</td><td>- landmark index j </td></tr>
+    <tr><td class="paramname">x</td><td>- sensed landmark relative x-coordinate </td></tr>
+    <tr><td class="paramname">y</td><td>- aensed landmark relative y-coordinate </td></tr>
+    <tr><td class="paramname">j</td><td>- sensed landmark index j </td></tr>
   </table>
   </dd>
 </dl>
@@ -244,10 +295,51 @@ arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <p>set the initial state of the robot </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">robot_config</td><td>- robot start configuration </td></tr>
+    <tr><td class="paramname">turtle_pose_0</td><td>- robot start pose </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a1fe2a3d358116561b0490c60fc4e7c7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fe2a3d358116561b0490c60fc4e7c7a">&#9670;&nbsp;</a></span>num_seen_landmarks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t turtlelib::EKFSlam::num_seen_landmarks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get number of seen landmarks </p>
+<p>get the number of seen landmarks </p>
+
+</div>
+</div>
+<a id="a6980fc87c63bd16794d6c6913960e84a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6980fc87c63bd16794d6c6913960e84a">&#9670;&nbsp;</a></span>pose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structturtlelib_1_1Pose2D.html">Pose2D</a> turtlelib::EKFSlam::pose </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get current pose prediction/correction of the robot </p>
+<p>GETTERS.</p>
+<p>get current pose prediction/correction of the robot </p>
 
 </div>
 </div>
@@ -268,12 +360,35 @@ arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 </div><div class="memdoc">
 
 <p>predict/estimate the robot state and propogate the uncertainty </p>
+<ul>
+<li>Predict the state and covariance, every time a twist input is given</li>
+</ul>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">twist</td><td>- twist control at time t </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aeda54f8e379aa46aec347f2b66f2c0d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeda54f8e379aa46aec347f2b66f2c0d1">&#9670;&nbsp;</a></span>predicted_measurement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">arma::mat turtlelib::EKFSlam::predicted_measurement </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get the predicted sensor measurement based on the pose prediction </p>
+<p>get the current actual sensor measurement </p>
 
 </div>
 </div>

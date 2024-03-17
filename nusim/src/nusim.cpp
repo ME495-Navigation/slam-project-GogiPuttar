@@ -702,7 +702,7 @@ private:
     lidar_data_.angle_min = 0.0;
     lidar_data_.angle_max = turtlelib::deg2rad(360.0); // convert degrees to radians
     lidar_data_.angle_increment = turtlelib::deg2rad(lidar_angle_increment_); // convert degrees to radians
-    // lidar_data_.time_increment = 0.0005574136157520115;
+    lidar_data_.time_increment = 0.0005574136157520115;
     lidar_data_.time_increment = 0.0;
     lidar_data_.scan_time = 1.0 / fake_sensor_frequency_;
     lidar_data_.range_min = lidar_min_range_;

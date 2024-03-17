@@ -92,9 +92,15 @@
     if="$(eval '\'$(var load_rviz)\' == \'true\' and \'$(var robot)\' == \'localhost\'')"/>
 
     <!-- Localhost: Launch the hlds_laser (laser) launch file if using localhost -->
-    <include file="$(find-pkg-share hls_lfcd_lds_driver)/launch/hlds_laser.launch.py"
+    <!-- <include file="$(find-pkg-share hls_lfcd_lds_driver)/launch/hlds_laser.launch.py"
     if="$(eval '\'$(var robot)\' == \'localhost\'')">
-    </include>
+    </include> -->
+
+    <node pkg="hls_lfcd_lds_driver" exec="hlds_laser_publisher"
+        if="$(eval '\'$(var robot)\' == \'localhost\'')">
+        <param name="port" value="/dev/ttyUSB0"/>
+        <param name="frame_id" value="green/base_scan"/>
+    </node>
 
     <!-- REMAINING BEHAVIOUR -->
 

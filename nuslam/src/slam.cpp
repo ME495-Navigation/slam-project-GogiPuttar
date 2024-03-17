@@ -91,6 +91,7 @@ public:
     auto obstacles_r_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto basic_sensor_variance_des = rcl_interfaces::msg::ParameterDescriptor{};
     auto max_range_des = rcl_interfaces::msg::ParameterDescriptor{};
+    auto use_laser_des = rcl_interfaces::msg::ParameterDescriptor{};
 
     body_id_des.description = "The name of the body frame of the robot";
     odom_id_des.description = "The name of the odometry frame";
@@ -101,6 +102,7 @@ public:
     obstacles_r_des.description = "Radius of cylindrical obstacles [m]";
     basic_sensor_variance_des.description = "Variance in landmark sensing [m^2]";
     max_range_des.description = "Range of landmark sensing [m]";
+    use_laser_des.description = "Use circle fit on laser scan (true) or use fake sensor (false)";
 
     // Declare default parameters values
     declare_parameter("body_id", "green/base_footprint", body_id_des);
@@ -111,7 +113,8 @@ public:
     declare_parameter("track_width", -1.0, track_width_des);
     declare_parameter("obstacles.r", -1.0, obstacles_r_des);
     declare_parameter("basic_sensor_variance", -1.0, basic_sensor_variance_des); // Meters^2
-    declare_parameter("max_range", -1.0, basic_sensor_variance_des); // Meters
+    declare_parameter("max_range", -1.0, max_range_des); // Meters
+    declare_parameter("use_laser", false, use_laser_des);
 
     // Get params - Read params from yaml file that is passed in the launch file
     body_id_ = get_parameter("body_id").get_parameter_value().get<std::string>();
@@ -123,6 +126,7 @@ public:
     obstacles_r_ = get_parameter("obstacles.r").get_parameter_value().get<double>();
     basic_sensor_variance_ = get_parameter("basic_sensor_variance").get_parameter_value().get<double>();
     max_range_ = get_parameter("max_range").get_parameter_value().get<double>();
+    use_laser_ = get_parameter("use_laser").get_parameter_value().get<bool>();
 
     // Ensures all values are passed via the launch file
     check_frame_params();
@@ -147,10 +151,21 @@ public:
       "joint_states", 10, std::bind(
         &slam::joint_states_callback,
         this, std::placeholders::_1));
-    fake_sensor_subscriber_ = create_subscription<visualization_msgs::msg::MarkerArray>(
-    "/fake_sensor", 10, std::bind(
-        &slam::fake_sensor_callback,
-        this, std::placeholders::_1));
+
+    if (use_laser_)
+    {
+      circle_fit_subscriber_ = create_subscription<visualization_msgs::msg::MarkerArray>(
+        "/landmarks/circle_fit", 10, std::bind(
+          &slam::circle_fit_callback,
+          this, std::placeholders::_1));
+    }
+    else
+    {
+      fake_sensor_subscriber_ = create_subscription<visualization_msgs::msg::MarkerArray>(
+      "/fake_sensor", 10, std::bind(
+          &slam::fake_sensor_callback,
+          this, std::placeholders::_1));
+    }
 
     // Initial pose service
     initial_pose_server_ = create_service<nuturtle_control::srv::InitialPose>(
@@ -198,6 +213,7 @@ private:
   turtlelib::Transform2D slam_tf_prev_{};
   double basic_sensor_variance_ = -1.0;
   double max_range_ = -1.0;
+  bool use_laser_ = false;
 
   // Create objects
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_publisher_;
@@ -205,6 +221,7 @@ private:
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr obstacles_publisher_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_states_subscriber_;
   rclcpp::Subscription<visualization_msgs::msg::MarkerArray>::SharedPtr fake_sensor_subscriber_;
+  rclcpp::Subscription<visualization_msgs::msg::MarkerArray>::SharedPtr circle_fit_subscriber_;
   rclcpp::Service<nuturtle_control::srv::InitialPose>::SharedPtr initial_pose_server_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_2_;
@@ -262,6 +279,42 @@ private:
       if (sensed_landmarks.markers[j-1].action == visualization_msgs::msg::Marker::ADD) 
       { 
         estimator_ptr_->correct(sensed_landmarks.markers[j-1].pose.position.x, sensed_landmarks.markers[j-1].pose.position.y, j);
+      }
+    }
+  }
+
+  /// \brief Circle fit landmark sensor topic callback
+  void circle_fit_callback(const visualization_msgs::msg::MarkerArray & msg)
+  {
+    // Relative transform between successive sensing
+    slam_tf_now_ = turtlelib::Transform2D{turtlelib::Vector2D{odom_turtle_.pose().x, odom_turtle_.pose().y}, odom_turtle_.pose().theta};
+    turtlelib::Transform2D slam_tf_change_ = slam_tf_prev_.inv() * slam_tf_now_;
+
+    // Twist that gets us from the previous sensor callback tf to this one.
+    estimator_ptr_->predict(turtlelib::differentiate_transform(slam_tf_change_));
+
+    slam_tf_prev_ = slam_tf_now_;
+
+    visualization_msgs::msg::MarkerArray sensed_landmarks = msg;
+
+    // Correct for each sensor measurement
+    for (size_t index = 0; index < sensed_landmarks.markers.size(); index++) 
+    {
+      // Convert measurements in base_scan frame to footprint frame
+      turtlelib::Point2D landmark_position{sensed_landmarks.markers[index].pose.position.x - 0.032*cos(green_turtle_.theta), sensed_landmarks.markers[index].pose.position.y - 0.032*sin(green_turtle_.theta)};
+
+      // turtlelib::Pose2D lidar_pose_{turtle_.pose().theta, turtle_.pose().x - 0.032*cos(turtle_.pose().theta), turtle_.pose().y - 0.032*sin(turtle_.pose().theta)};
+
+      // Associate recevied landmark with the correct index
+      // j = 1, 2, 3...
+      size_t j = estimator_ptr_->associate_index(turtlelib::Point2D{
+        landmark_position.x,
+        landmark_position.y});
+            
+      if (j != 0)
+      {
+        // Correct using the landmark's measurement and id
+        estimator_ptr_->correct(landmark_position.x, landmark_position.y, j);
       }
     }
   }
@@ -365,8 +418,8 @@ private:
     arma::colvec map_vector = estimator_ptr_->map();
     visualization_msgs::msg::MarkerArray obstacles_;
 
-    for (int landmark = 0; landmark < turtlelib::num_landmarks - 0; landmark++) {
-      if (map_vector(landmark) != 0) {
+    for (int landmark = 0; landmark < estimator_ptr_->num_seen_landmarks(); landmark++) {
+      // if (map_vector(landmark) != 0) {
         visualization_msgs::msg::Marker obstacle_;
         obstacle_.header.frame_id = "map";
         obstacle_.header.stamp = get_clock()->now();
@@ -389,7 +442,7 @@ private:
         obstacle_.color.a = 1.0;
         obstacles_.markers.push_back(obstacle_);
         Flag_obstacle_seen_ = true;
-      }
+      // }
     }
     if (Flag_obstacle_seen_ == true) {
       obstacles_publisher_->publish(obstacles_);

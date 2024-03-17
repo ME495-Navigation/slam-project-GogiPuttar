@@ -587,6 +587,30 @@ test_turtlelib/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/build
 .PHONY : test_turtlelib/fast
 
+src/circle_fitting.o: src/circle_fitting.cpp.o
+.PHONY : src/circle_fitting.o
+
+# target to build an object file
+src/circle_fitting.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/circle_fitting.cpp.o
+.PHONY : src/circle_fitting.cpp.o
+
+src/circle_fitting.i: src/circle_fitting.cpp.i
+.PHONY : src/circle_fitting.i
+
+# target to preprocess a source file
+src/circle_fitting.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/circle_fitting.cpp.i
+.PHONY : src/circle_fitting.cpp.i
+
+src/circle_fitting.s: src/circle_fitting.cpp.s
+.PHONY : src/circle_fitting.s
+
+# target to generate assembly for a file
+src/circle_fitting.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/circle_fitting.cpp.s
+.PHONY : src/circle_fitting.cpp.s
+
 src/diff_drive.o: src/diff_drive.cpp.o
 .PHONY : src/diff_drive.o
 
@@ -730,6 +754,30 @@ src/svg.s: src/svg.cpp.s
 src/svg.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/turtlelib.dir/build.make CMakeFiles/turtlelib.dir/src/svg.cpp.s
 .PHONY : src/svg.cpp.s
+
+tests/test_circle_fitting.o: tests/test_circle_fitting.cpp.o
+.PHONY : tests/test_circle_fitting.o
+
+# target to build an object file
+tests/test_circle_fitting.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_circle_fitting.cpp.o
+.PHONY : tests/test_circle_fitting.cpp.o
+
+tests/test_circle_fitting.i: tests/test_circle_fitting.cpp.i
+.PHONY : tests/test_circle_fitting.i
+
+# target to preprocess a source file
+tests/test_circle_fitting.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_circle_fitting.cpp.i
+.PHONY : tests/test_circle_fitting.cpp.i
+
+tests/test_circle_fitting.s: tests/test_circle_fitting.cpp.s
+.PHONY : tests/test_circle_fitting.s
+
+# target to generate assembly for a file
+tests/test_circle_fitting.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_turtlelib.dir/build.make CMakeFiles/test_turtlelib.dir/tests/test_circle_fitting.cpp.s
+.PHONY : tests/test_circle_fitting.cpp.s
 
 tests/test_diff_drive.o: tests/test_diff_drive.cpp.o
 .PHONY : tests/test_diff_drive.o
@@ -896,6 +944,9 @@ help:
 	@echo "... frame_main"
 	@echo "... test_turtlelib"
 	@echo "... turtlelib"
+	@echo "... src/circle_fitting.o"
+	@echo "... src/circle_fitting.i"
+	@echo "... src/circle_fitting.s"
 	@echo "... src/diff_drive.o"
 	@echo "... src/diff_drive.i"
 	@echo "... src/diff_drive.s"
@@ -914,6 +965,9 @@ help:
 	@echo "... src/svg.o"
 	@echo "... src/svg.i"
 	@echo "... src/svg.s"
+	@echo "... tests/test_circle_fitting.o"
+	@echo "... tests/test_circle_fitting.i"
+	@echo "... tests/test_circle_fitting.s"
 	@echo "... tests/test_diff_drive.o"
 	@echo "... tests/test_diff_drive.i"
 	@echo "... tests/test_diff_drive.s"

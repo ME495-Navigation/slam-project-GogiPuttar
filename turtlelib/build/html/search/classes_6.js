@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['wheelangles_76',['wheelAngles',['../structturtlelib_1_1wheelAngles.html',1,'turtlelib']]]
+  ['vector2d_82',['Vector2D',['../structturtlelib_1_1Vector2D.html',1,'turtlelib']]]
 ];

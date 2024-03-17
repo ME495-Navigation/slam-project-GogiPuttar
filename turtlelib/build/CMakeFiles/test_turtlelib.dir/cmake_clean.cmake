@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/test_turtlelib.dir/tests/test_circle_fitting.cpp.o"
+  "CMakeFiles/test_turtlelib.dir/tests/test_circle_fitting.cpp.o.d"
   "CMakeFiles/test_turtlelib.dir/tests/test_diff_drive.cpp.o"
   "CMakeFiles/test_turtlelib.dir/tests/test_diff_drive.cpp.o.d"
   "CMakeFiles/test_turtlelib.dir/tests/test_ekf.cpp.o"
