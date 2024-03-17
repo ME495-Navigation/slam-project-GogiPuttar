@@ -8,3 +8,5 @@ This repository consists of several ROS packages
 - `turtlelib` - CMake Library with functions for control and SLAM of a differential drive robot
 - `nuturtle_control` - Handles the control and sensing related to the wheels of the robot
 - `nuslam` - Performs EKF SLAM using the turtlelbot
+
+https://github.com/ME495-Navigation/slam-project-GogiPuttar/assets/59332714/2776878f-69f1-487e-9ec8-3d6d252ae449
